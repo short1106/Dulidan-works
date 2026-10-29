@@ -86,7 +86,7 @@ Rajdhani, lokal gebündelt. Das Dulidan D wird nie verändert. Werte stehen in
 
 ## Regeln
 
-- Lizenzen: MIT, MIT-0, Apache 2.0, BSD, ISC; für Schriften SIL OFL 1.1. Bei Bibliotheken mit
+- Lizenzen: MIT, MIT-0, Apache 2.0, BSD, ISC, BlueOak-1.0.0, Python-2.0; für Schriften SIL OFL 1.1. Bei Bibliotheken mit
   zwei Lizenzen zur Wahl die erlaubte wählen und das vermerken. Keine GPL/AGPL. Jede Bibliothek in
   `THIRD_PARTY_LICENSES.md` eintragen. Bei Unsicherheit den Nutzer fragen.
 - Nichts von Microsoft oder anderen Herstellern kopieren (Code, Icons, Schriften, Namen).

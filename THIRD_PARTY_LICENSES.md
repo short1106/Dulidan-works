@@ -96,8 +96,8 @@ selbst in `LICENSES.chromium.html` mit, der Installer übernimmt diese Datei.
 | lodash.escaperegexp, lodash.isequal | 4.1.2, 4.5.0 | MIT | von electron-updater |
 | semver | 7.7.4 | ISC | Versionsvergleich |
 | debug, ms | 4.4.3, 2.1.3 | MIT | von builder-util-runtime |
-| sax | 1.6.1 | BlueOak-1.0.0 | von builder-util-runtime. **Noch nicht in der erlaubten Liste, bitte bestätigen.** |
-| argparse | 2.0.1 | Python-2.0 | von js-yaml (nur Kommandozeile). **Noch nicht in der erlaubten Liste, bitte bestätigen.** |
+| sax | 1.6.1 | BlueOak-1.0.0 | von builder-util-runtime |
+| argparse | 2.0.1 | Python-2.0 | von js-yaml (nur Kommandozeile) |
 
 ## Nur zum Bauen und Testen
 
