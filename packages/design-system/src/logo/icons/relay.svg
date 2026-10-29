@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d0f31"/><stop offset="1" stop-color="#0b0614"/></linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8122b5"/><stop offset="1" stop-color="#c020b8"/></linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect x="3" y="3" width="94" height="94" rx="22" fill="url(#bg)" stroke="url(#edge)" stroke-width="3"/>
+  <path d="M14 24 V14 H24 M76 14 H86 V24 M14 76 V86 H24" fill="none" stroke="#8122b5" stroke-width="2" stroke-linecap="round"/>
+  <path d="M33 64 V26 H47 A24 24 0 0 1 47 74 H33" transform="translate(70 70) scale(0.2)" fill="none" stroke="#f5b8f2" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <g filter="url(#glow)" fill="none" stroke="#f3eaff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Relay: envelope -->
+    <rect x="23" y="31" width="54" height="38" rx="5"/>
+    <path d="M26 35 L50 54 L74 35" stroke="#c020b8"/>
+  </g>
+</svg>
