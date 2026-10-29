@@ -1,0 +1,95 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--dd-bg);
+  color: var(--dd-text);
+  font-family: var(--dd-font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Window background: very fine HUD grid plus a soft violet glow */
+.app {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgb(129 34 181 / 18%), transparent 60%),
+    linear-gradient(rgb(129 34 181 / 7%) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, rgb(129 34 181 / 7%) 1px, transparent 1px) 0 0 / 32px 32px,
+    var(--dd-bg);
+}
+
+/* Card with thin glowing edge and four corner brackets */
+.placeholder-card {
+  position: relative;
+  width: min(520px, 100%);
+  padding: 40px 44px;
+  border: 1px solid var(--dd-line);
+  border-radius: var(--dd-radius-card);
+  background: rgb(21 11 36 / 85%);
+  box-shadow:
+    0 0 0 1px rgb(192 32 184 / 8%),
+    0 0 32px rgb(129 34 181 / 25%);
+  text-align: center;
+}
+
+.corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: var(--dd-accent);
+  border-style: solid;
+  border-width: 0;
+}
+.corner--tl { top: -6px; left: -6px; border-top-width: 2px; border-left-width: 2px; }
+.corner--tr { top: -6px; right: -6px; border-top-width: 2px; border-right-width: 2px; }
+.corner--bl { bottom: -6px; left: -6px; border-bottom-width: 2px; border-left-width: 2px; }
+.corner--br { bottom: -6px; right: -6px; border-bottom-width: 2px; border-right-width: 2px; }
+
+.brand {
+  margin: 0;
+  font-family: var(--dd-font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--dd-accent-light);
+}
+
+.app-name {
+  margin: 4px 0 24px;
+  font-family: var(--dd-font-display);
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--dd-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.welcome-title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.welcome-text {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  opacity: 0.85;
+}

@@ -1,0 +1,17 @@
+{
+  "name": "dulidan-works",
+  "private": true,
+  "description": "Dulidan Works: die Programmfamilie von Dulidan Studios",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @dulidan/glyph",
+    "build": "npm run build --workspace @dulidan/glyph",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

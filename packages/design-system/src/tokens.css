@@ -1,0 +1,23 @@
+/*
+ * Dulidan design tokens as CSS variables.
+ * Keep these values in sync with `colors` in index.ts.
+ */
+:root {
+  --dd-primary: #8122b5;
+  --dd-accent: #c020b8;
+  --dd-accent-light: #f5b8f2;
+  --dd-bg: #0b0614;
+  --dd-surface: #150b24;
+  --dd-text: #f3eaff;
+
+  /* Thin HUD lines: primary color with some transparency */
+  --dd-line: rgb(129 34 181 / 55%);
+  --dd-gradient: linear-gradient(135deg, var(--dd-primary), var(--dd-accent));
+
+  --dd-radius-control: 8px;
+  --dd-radius-card: 12px;
+
+  /* Real fonts (Inter, Rajdhani) are bundled locally in step 2 */
+  --dd-font-ui: system-ui, 'Segoe UI', sans-serif;
+  --dd-font-display: system-ui, 'Segoe UI', sans-serif;
+}

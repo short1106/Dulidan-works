@@ -1,0 +1,12 @@
+{
+  "name": "@dulidan/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gemeinsamer Kern: Modus-Logik, Einstellungen, Dateiformat",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

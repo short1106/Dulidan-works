@@ -1,0 +1,13 @@
+{
+  "name": "@dulidan/design-system",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gemeinsames Design der Dulidan-Works-Programme: Farben, Schrift, Bausteine",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.css": "./src/tokens.css"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}
