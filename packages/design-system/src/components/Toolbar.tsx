@@ -28,7 +28,19 @@ export function Toolbar({ label, className, children, onKeyDown, ...rest }: Tool
   }
 
   return (
-    <div role="toolbar" aria-label={label} className={cx('dd-toolbar', className)} onKeyDown={handleKeyDown} {...rest}>
+    <div
+      role="toolbar"
+      aria-label={label}
+      className={cx('dd-toolbar', className)}
+      onKeyDown={handleKeyDown}
+      onMouseDown={(event) => {
+        // A mouse click on a button must not take the focus away from the
+        // document, otherwise the first typed letters after it get lost.
+        // Keyboard users still reach every button with Tab and arrow keys.
+        if ((event.target as HTMLElement).closest('button')) event.preventDefault()
+      }}
+      {...rest}
+    >
       {children}
     </div>
   )

@@ -1,0 +1,83 @@
+/*
+ * Print and PDF: only the paper content, without the app around it.
+ * Page size (A4) and margins come from the export settings.
+ */
+@media print {
+  @page {
+    size: A4;
+  }
+
+  html,
+  body,
+  #root {
+    height: auto;
+    overflow: visible;
+    background: #ffffff !important;
+  }
+
+  .topbar,
+  .toolbar,
+  .find-panel,
+  .status-bar,
+  .april-panel,
+  .notice-area,
+  .start,
+  dialog {
+    display: none !important;
+  }
+
+  .workspace,
+  .workspace__body,
+  .page-scroller {
+    display: block;
+    height: auto;
+    overflow: visible;
+    padding: 0;
+    background: none !important;
+  }
+
+  .page {
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+    zoom: 1 !important;
+  }
+
+  .page__content {
+    min-height: 0;
+  }
+
+  /* No highlights or handles on paper */
+  .search-match,
+  .search-match.is-current {
+    background: none;
+    color: inherit;
+  }
+
+  .page__content p.is-editor-empty:first-child::before,
+  .page__content [data-resize-handle],
+  .page__content .column-resize-handle {
+    display: none;
+  }
+
+  .page__content img.ProseMirror-selectednode,
+  .page__content [data-resize-container].ProseMirror-selectednode img {
+    outline: none;
+  }
+
+  /* Keep things together across page breaks */
+  .page__content img,
+  .page__content tr,
+  .page__content blockquote {
+    break-inside: avoid;
+  }
+
+  .page__content h1,
+  .page__content h2,
+  .page__content h3 {
+    break-after: avoid;
+  }
+}

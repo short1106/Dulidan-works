@@ -3,6 +3,13 @@
  * The file side lives in node/snapshotStore.ts.
  */
 
+/** One automatic snapshot of a document. */
+export interface SnapshotInfo {
+  id: string
+  savedAt: string
+  size: number
+}
+
 /** How often a snapshot of an open document is written. */
 export const AUTOSAVE_INTERVAL_MS = 30_000
 

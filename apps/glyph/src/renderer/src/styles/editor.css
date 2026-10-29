@@ -1,0 +1,187 @@
+/*
+ * The document on the paper. These styles also define how the PDF looks,
+ * so they use print units (pt) where it matters.
+ */
+
+.page__content {
+  min-height: calc(297mm - 50mm);
+  outline: none;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12pt;
+  line-height: 1.5;
+  color: var(--dd-paper-text);
+  overflow-wrap: break-word;
+  caret-color: #8122b5;
+}
+
+.page__content > * + * {
+  margin-top: 0.6em;
+}
+
+.page__content p {
+  margin: 0;
+}
+
+.page__content h1,
+.page__content h2,
+.page__content h3 {
+  margin: 1.1em 0 0.4em;
+  line-height: 1.25;
+  font-weight: 700;
+}
+.page__content h1 { font-size: 22pt; }
+.page__content h2 { font-size: 17pt; }
+.page__content h3 { font-size: 14pt; }
+.page__content > :first-child { margin-top: 0; }
+
+.page__content ul,
+.page__content ol {
+  margin: 0.4em 0;
+  padding-left: 1.6em;
+}
+
+.page__content li > p {
+  margin: 0;
+}
+
+.page__content blockquote {
+  margin: 0.8em 0;
+  padding: 0.2em 0 0.2em 1em;
+  border-left: 3px solid #8122b5;
+  color: #4a4155;
+  font-style: italic;
+}
+
+.page__content a {
+  color: #1f5fbf;
+  text-decoration: underline;
+}
+
+.page__content code {
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  background: #f1ecf6;
+  font-size: 0.92em;
+}
+
+.page__content pre {
+  padding: 0.8em 1em;
+  border-radius: 6px;
+  background: #f1ecf6;
+  white-space: pre-wrap;
+}
+
+.page__content hr {
+  border: 0;
+  border-top: 1px solid #d8d0e2;
+  margin: 1.2em 0;
+}
+
+/* Images */
+.page__content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.page__content [data-resize-container] {
+  max-width: 100%;
+}
+
+.page__content img.ProseMirror-selectednode,
+.page__content [data-resize-container].ProseMirror-selectednode img {
+  outline: 2px solid #c020b8;
+  outline-offset: 2px;
+}
+
+.page__content [data-resize-handle] {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ffffff;
+  border-radius: 3px;
+  background: #c020b8;
+  box-shadow: 0 0 0 1px #8122b5;
+  z-index: 2;
+}
+
+/* Tables */
+.page__content table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin: 0.6em 0;
+  overflow: hidden;
+}
+
+.page__content th,
+.page__content td {
+  position: relative;
+  min-width: 2em;
+  padding: 0.35em 0.5em;
+  border: 1px solid #c9bfd6;
+  vertical-align: top;
+}
+
+.page__content th {
+  background: #f3ecfa;
+  font-weight: 600;
+  text-align: left;
+}
+
+.page__content .selectedCell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(192 32 184 / 15%);
+  pointer-events: none;
+}
+
+.page__content .column-resize-handle {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  bottom: 0;
+  width: 4px;
+  background: #c020b8;
+  pointer-events: none;
+}
+
+.page__content.resize-cursor {
+  cursor: col-resize;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+/* Placeholder text in an empty document */
+.page__content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: #9a90a6;
+  pointer-events: none;
+}
+
+/* Search results */
+.search-match {
+  background: rgb(245 184 242 / 70%);
+  border-radius: 2px;
+}
+
+.search-match.is-current {
+  background: #c020b8;
+  color: #ffffff;
+}
+
+/* Selection color on the white paper */
+.page__content ::selection {
+  background: rgb(129 34 181 / 25%);
+}
+
+/* Basic mode: easier to read on screen. The PDF stays the same. */
+@media screen {
+  .workspace--basic .page__content {
+    font-size: 14pt;
+  }
+}

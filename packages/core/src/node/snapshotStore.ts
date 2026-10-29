@@ -1,6 +1,6 @@
 import { mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { isSafeId, MAX_SNAPSHOTS, snapshotDate, snapshotId, snapshotsToDelete } from '../recovery'
+import { isSafeId, MAX_SNAPSHOTS, snapshotDate, snapshotId, snapshotsToDelete, type SnapshotInfo } from '../recovery'
 import { atomicWriteFile } from './atomicWrite'
 
 /** Extra information stored next to the snapshots of one document. */
@@ -12,12 +12,6 @@ export interface SnapshotMeta {
   /** True while the newest snapshot holds changes not saved by the user. */
   unsaved: boolean
   updatedAt: string
-}
-
-export interface SnapshotInfo {
-  id: string
-  savedAt: string
-  size: number
 }
 
 export interface RecoverableDocument extends SnapshotMeta {

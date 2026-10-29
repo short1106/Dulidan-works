@@ -1,25 +1,43 @@
-import { t } from './i18n'
+import { useEffect, useState } from 'react'
+import type { Mode } from '@dulidan/core'
+import { NoticeArea } from './dialogs/NoticeArea'
+import { QuestionDialog } from './dialogs/QuestionDialog'
+import { SavedDialog } from './dialogs/SavedDialog'
+import { SettingsDialog } from './dialogs/SettingsDialog'
+import { ModeChooser } from './first-run/ModeChooser'
+import { StartAnimation, type StartVariant } from './start/StartAnimation'
+import { applySettingsToDocument, prefersReducedMotion, settingsStore, updateSettings, useSettings } from './state/settings'
+import { Workspace } from './workspace/Workspace'
+
+/** Picks the start animation once, from the settings at startup. */
+function startVariant(): StartVariant {
+  const settings = settingsStore.get()
+  if (prefersReducedMotion() || !settings.animations) return 'static'
+  // The first start (no mode yet) gets the full show.
+  return settings.mode === 'basic' ? 'basic' : 'full'
+}
 
 /**
- * Step 1: an empty window in the Dulidan look.
- * The card in the middle is a placeholder until the editor exists.
+ * Flow: start animation -> on the first start the mode choice -> workspace.
+ * The workspace is already built behind the animation, which fades into it.
  */
 export function App(): React.JSX.Element {
-  return (
-    <main className="app">
-      <section className="placeholder-card" aria-labelledby="welcome-title">
-        <span className="corner corner--tl" aria-hidden="true" />
-        <span className="corner corner--tr" aria-hidden="true" />
-        <span className="corner corner--bl" aria-hidden="true" />
-        <span className="corner corner--br" aria-hidden="true" />
+  const settings = useSettings()
+  const [variant] = useState(startVariant)
+  const [startDone, setStartDone] = useState(false)
 
-        <p className="brand">{t.brand}</p>
-        <h1 className="app-name">{t.appName}</h1>
-        <h2 id="welcome-title" className="welcome-title">
-          {t.welcomeTitle}
-        </h2>
-        <p className="welcome-text">{t.welcomeText}</p>
-      </section>
-    </main>
+  useEffect(() => applySettingsToDocument(settings), [settings])
+
+  const chooseMode = (mode: Mode): void => void updateSettings({ mode })
+
+  return (
+    <>
+      {settings.mode === null ? <ModeChooser onChoose={chooseMode} /> : <Workspace active={startDone} />}
+      {!startDone && <StartAnimation variant={variant} onDone={() => setStartDone(true)} />}
+      <SettingsDialog />
+      <SavedDialog />
+      <QuestionDialog />
+      <NoticeArea />
+    </>
   )
 }
