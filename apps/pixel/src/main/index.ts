@@ -1,3 +1,4 @@
+import { startAutoUpdate } from '@dulidan/core/electron'
 import { join } from 'node:path'
 import { app, BrowserWindow, ipcMain, Menu, shell, type IpcMainInvokeEvent } from 'electron'
 import { normalizeSettings, type Settings } from '@dulidan/core'
@@ -150,6 +151,7 @@ if (!app.requestSingleInstanceLock()) {
   })
 
   void app.whenReady().then(async () => {
+    startAutoUpdate('pixel')
     await settings.load()
     await prefs.load()
     await recovery.start()

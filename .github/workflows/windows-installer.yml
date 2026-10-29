@@ -32,6 +32,10 @@ jobs:
       - name: Install
         run: npm ci
 
+      # Every build gets a higher version, so installed apps see that a new one exists.
+      - name: Set version
+        run: npm version 1.0.${{ github.run_number }} --no-git-tag-version --workspace @dulidan/${{ matrix.app }}
+
       - name: Check types
         run: npm run typecheck
 
@@ -44,7 +48,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: Dulidan-${{ matrix.app }}-Windows
-          path: apps/${{ matrix.app }}/release/*.exe
+          path: |
+            apps/${{ matrix.app }}/release/*.exe
+            apps/${{ matrix.app }}/release/${{ matrix.app }}.yml
           if-no-files-found: error
 
   release:
@@ -65,7 +71,7 @@ jobs:
         run: |
           ls -la dist
           gh release delete neueste-version --yes --cleanup-tag || true
-          gh release create neueste-version dist/*.exe \
+          gh release create neueste-version dist/*.exe dist/*.yml \
             --target "$GITHUB_SHA" \
             --title "Dulidan Works – neueste Version" \
             --latest \

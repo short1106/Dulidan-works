@@ -83,6 +83,22 @@ Diese Bibliotheken werden mit Glyph ausgeliefert.
 Electron bringt Chromium und Node.js mit. Deren Lizenztexte liefert Electron
 selbst in `LICENSES.chromium.html` mit, der Installer übernimmt diese Datei.
 
+## In allen Programmen enthalten (automatische Updates)
+
+| Bibliothek | Version | Lizenz | Wofür |
+| --- | --- | --- | --- |
+| electron-updater | 6.8.11 | MIT | Prüft auf neue Versionen und installiert sie |
+| builder-util-runtime | 9.7.0 | MIT | von electron-updater (Download) |
+| fs-extra, jsonfile, universalify | 10.1.0, 6.2.1, 2.0.1 | MIT | von electron-updater (Dateien) |
+| graceful-fs | 4.2.11 | ISC | von fs-extra |
+| js-yaml | 4.3.2 | MIT | liest die Update-Dateien (latest/glyph.yml usw.) |
+| lazy-val, tiny-typed-emitter | 1.0.5, 2.1.0 | MIT | von electron-updater |
+| lodash.escaperegexp, lodash.isequal | 4.1.2, 4.5.0 | MIT | von electron-updater |
+| semver | 7.7.4 | ISC | Versionsvergleich |
+| debug, ms | 4.4.3, 2.1.3 | MIT | von builder-util-runtime |
+| sax | 1.6.1 | BlueOak-1.0.0 | von builder-util-runtime. **Noch nicht in der erlaubten Liste, bitte bestätigen.** |
+| argparse | 2.0.1 | Python-2.0 | von js-yaml (nur Kommandozeile). **Noch nicht in der erlaubten Liste, bitte bestätigen.** |
+
 ## Nur zum Bauen und Testen
 
 Diese Werkzeuge laufen nur auf dem Entwicklerrechner oder bei GitHub und

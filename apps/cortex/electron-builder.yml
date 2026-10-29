@@ -11,6 +11,13 @@ files:
 extraFiles:
   - from: ../../THIRD_PARTY_LICENSES.md
     to: THIRD_PARTY_LICENSES.md
+# Update feed: release file cortex.yml, read by the installed app (packages/core/src/electron/updater.ts).
+publish:
+  provider: github
+  owner: short1106
+  repo: Dulidan-works
+  releaseType: release
+  channel: cortex
 win:
   target:
     # Setup with start menu and desktop shortcut ...

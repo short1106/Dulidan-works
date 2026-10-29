@@ -1,3 +1,4 @@
+import { startAutoUpdate } from '@dulidan/core/electron'
 import { readFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { app, BrowserWindow, dialog, ipcMain, Menu, Notification, shell, type IpcMainInvokeEvent } from 'electron'
@@ -311,6 +312,7 @@ if (!app.requestSingleInstanceLock()) {
   app.setAppUserModelId('de.dulidan.relay')
 
   void app.whenReady().then(async () => {
+    startAutoUpdate('relay')
     lockDownWindowNetwork(devServerUrl)
     await settings.load()
     await prefs.load()

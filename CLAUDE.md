@@ -25,10 +25,13 @@ Zielgruppe: Privatleute, Senioren, PC-Einsteiger, Kleinbetriebe (z. B. Handwerke
 
 Als Nächstes, in dieser Reihenfolge:
 1. ~~Eigenes App-Icon für Glyph, Pixel, Relay und Cortex~~ (erledigt 30.10.2026).
-2. Automatische Updates: Öffnet jemand eine ältere Version, aktualisiert sie sich selbst.
-   Entscheidung des Nutzers: Updates kommen von GitHub Releases, das Hauptrepo wird dafür
-   öffentlich (macht der Nutzer selbst auf GitHub). Vorher prüfen, dass keine Geheimnisse in der
-   Git-Historie stehen.
+2. Automatische Updates: umgesetzt (30.10.2026), aber noch nicht end-to-end getestet. Offen:
+   Das Repo muss öffentlich sein (macht der Nutzer selbst), dann ein Release prüfen.
+   Ablauf: Beim Start prüft die installierte Version GitHub (Release „neueste-version“),
+   lädt eine neuere Version im Hintergrund und installiert sie beim Beenden.
+   Baustein: `packages/core/src/electron/updater.ts`. Jede App hat eine eigene Feed-Datei
+   (`glyph.yml` usw.). Build-Version: `1.0.<Lauf-Nummer>` (in der CI gesetzt).
+   Die portable EXE aktualisiert sich nicht selbst.
 3. Danach das leichteste der noch fehlenden Programme bis Version 1 bauen.
 
 Details je Programm: `docs/programme.md`.

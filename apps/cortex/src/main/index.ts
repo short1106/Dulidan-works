@@ -4,7 +4,7 @@ import { extname, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, net, protocol, session, shell, type IpcMainInvokeEvent } from 'electron'
 import { normalizeSettings, type Settings } from '@dulidan/core'
-import { renderPdf } from '@dulidan/core/electron'
+import { renderPdf, startAutoUpdate } from '@dulidan/core/electron'
 import { atomicWriteFile, JsonFile, SnapshotStore } from '@dulidan/core/node'
 import { isNoteColor, safeName, type NoteColor } from '@dulidan/notes-core'
 import { NotesService, VaultError, type ListFilter, type LoadedNote } from '@dulidan/notes-core/node'
@@ -409,6 +409,7 @@ if (!app.requestSingleInstanceLock()) {
   app.setAppUserModelId('de.dulidan.cortex')
 
   void app.whenReady().then(async () => {
+    startAutoUpdate('cortex')
     await settings.load()
     await prefs.load()
     await snapshots.beginSession()

@@ -18,6 +18,13 @@ fileAssociations:
     mimeType: application/x-dulidan-pixel
     icon: icon
     role: Editor
+# Update feed: release file pixel.yml, read by the installed app (packages/core/src/electron/updater.ts).
+publish:
+  provider: github
+  owner: short1106
+  repo: Dulidan-works
+  releaseType: release
+  channel: pixel
 win:
   target:
     # Setup with start menu and desktop shortcut ...
