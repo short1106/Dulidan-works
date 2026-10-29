@@ -1,0 +1,46 @@
+# Installer settings for Dulidan Glyph (electron-builder).
+appId: de.dulidan.glyph
+productName: Dulidan Glyph
+copyright: Copyright © Dulidan Studios
+directories:
+  output: release
+  buildResources: build
+# Only the bundled app goes into the installer, no source code.
+files:
+  - out/**
+  - package.json
+extraFiles:
+  - from: ../../THIRD_PARTY_LICENSES.md
+    to: THIRD_PARTY_LICENSES.md
+fileAssociations:
+  - ext: glyph
+    name: Glyph-Dokument
+    description: Dulidan Glyph Dokument
+    mimeType: application/x-dulidan-glyph
+    icon: icon
+    role: Editor
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.ico
+nsis:
+  # Classic setup with a choice of folder, no admin rights needed.
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Dulidan Glyph
+  artifactName: Dulidan-Glyph-Setup-${version}.${ext}
+  installerLanguages: [de_DE]
+  language: '1031'
+mac:
+  category: public.app-category.productivity
+  icon: build/icon.icns
+  target: dmg
+linux:
+  executableName: dulidan-glyph
+  target: AppImage
+  category: Office
+  icon: build/icon.png

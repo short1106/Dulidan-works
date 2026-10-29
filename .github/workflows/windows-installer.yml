@@ -1,0 +1,40 @@
+# Builds the Windows installers on a Windows machine at GitHub.
+# Download: GitHub -> Actions -> "Windows-Installer" -> newest run -> Artifacts.
+name: Windows-Installer
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        app: [glyph]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Check types
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build installer
+        run: npm run dist:win --workspace @dulidan/${{ matrix.app }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Dulidan-${{ matrix.app }}-Windows-Installer
+          path: apps/${{ matrix.app }}/release/*.exe
+          if-no-files-found: error
