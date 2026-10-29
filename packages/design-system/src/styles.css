@@ -1,0 +1,4 @@
+/* Everything an app needs from the design system, in one import. */
+@import './fonts.css';
+@import './tokens.css';
+@import './components/components.css';

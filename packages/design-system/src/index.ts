@@ -1,18 +1,24 @@
 /**
- * Dulidan design system.
+ * Dulidan design system: the shared look of all Dulidan Works apps.
  *
- * Step 1 only holds the brand colors. Fonts, themes and React components
- * (buttons, cards, ...) follow in step 2.
+ * Usage in an app:
+ *   import '@dulidan/design-system/styles.css'
+ *   import { Button, Card, GlyphLogo } from '@dulidan/design-system'
  */
-
-/** Brand colors, mirrored as CSS variables in tokens.css. */
-export const colors = {
-  primary: '#8122b5',
-  accent: '#c020b8',
-  accentLight: '#f5b8f2',
-  backgroundDark: '#0b0614',
-  surfaceDark: '#150b24',
-  textOnDark: '#f3eaff'
-} as const
-
-export type ColorToken = keyof typeof colors
+export { colors, type ColorToken } from './tokens'
+export { cx } from './components/cx'
+export { Button, IconButton, type ButtonProps, type IconButtonProps } from './components/Button'
+export { TextField, type TextFieldProps } from './components/TextField'
+export { Card, CornerBrackets, type CardProps } from './components/Card'
+export { Dialog, type DialogProps } from './components/Dialog'
+export { Notice, type NoticeProps } from './components/Notice'
+export { Toolbar, ToolbarSeparator, type ToolbarProps } from './components/Toolbar'
+export {
+  MenuBar,
+  DropdownMenu,
+  type MenuEntry,
+  type MenuDefinition,
+  type MenuBarProps,
+  type DropdownMenuProps
+} from './components/Menu'
+export { GlyphLogo, LOGO_GEOMETRY, type GlyphLogoProps } from './logo/GlyphLogo'

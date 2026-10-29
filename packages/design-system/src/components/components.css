@@ -1,0 +1,390 @@
+/* Styles of the design system components. All values come from tokens.css. */
+
+.dd-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Visible keyboard focus everywhere */
+:where(.dd-button, .dd-icon-button, .dd-menubar__trigger, .dd-menu__item, .dd-dropdown__trigger, .dd-field__input):focus-visible {
+  outline: 2px solid var(--dd-focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Buttons ---------- */
+
+.dd-button,
+.dd-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--dd-control-height);
+  border: 1px solid transparent;
+  border-radius: var(--dd-radius-control);
+  font: inherit;
+  font-size: var(--dd-font-size);
+  font-weight: 500;
+  color: var(--dd-text);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--dd-motion-fast) var(--dd-ease),
+    border-color var(--dd-motion-fast) var(--dd-ease),
+    box-shadow var(--dd-motion-fast) var(--dd-ease);
+}
+
+.dd-button {
+  padding: 0 16px;
+}
+
+.dd-button:disabled,
+.dd-icon-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.dd-button--primary {
+  background: var(--dd-gradient);
+  color: var(--dd-on-primary);
+  font-weight: 600;
+}
+
+.dd-button--secondary {
+  border-color: var(--dd-line);
+  background: var(--dd-surface-raised);
+}
+
+.dd-button--ghost:hover:not(:disabled) {
+  background: var(--dd-hover);
+}
+
+/* Hover: the edge lights up */
+.dd-button--primary:hover:not(:disabled),
+.dd-button--secondary:hover:not(:disabled),
+.dd-icon-button:hover:not(:disabled) {
+  border-color: var(--dd-line-strong);
+  box-shadow: 0 0 0 1px var(--dd-line-strong), 0 0 14px var(--dd-glow);
+}
+
+.dd-button:active:not(:disabled),
+.dd-icon-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.dd-button__icon,
+.dd-icon-button__icon {
+  display: inline-flex;
+}
+
+.dd-button__icon svg,
+.dd-icon-button__icon svg {
+  width: var(--dd-icon-size);
+  height: var(--dd-icon-size);
+}
+
+.dd-icon-button {
+  min-width: var(--dd-control-height);
+  padding: 0 6px;
+}
+
+.dd-icon-button--labeled {
+  padding: 0 12px;
+}
+
+.dd-icon-button.is-active {
+  background: var(--dd-hover);
+  border-color: var(--dd-line);
+  color: var(--dd-accent-light);
+}
+
+:root[data-theme='light'] .dd-icon-button.is-active {
+  color: var(--dd-primary);
+}
+
+/* ---------- Text field ---------- */
+
+.dd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dd-field__label {
+  font-size: var(--dd-font-size-small);
+  color: var(--dd-text-muted);
+}
+
+.dd-field__input {
+  min-height: var(--dd-control-height);
+  padding: 0 12px;
+  border: var(--dd-border);
+  border-radius: var(--dd-radius-control);
+  background: var(--dd-bg);
+  color: var(--dd-text);
+  font: inherit;
+  font-size: var(--dd-font-size);
+}
+
+.dd-field__input:hover {
+  border-color: var(--dd-line-strong);
+}
+
+/* ---------- Card and HUD corners ---------- */
+
+.dd-card {
+  position: relative;
+  padding: 24px;
+  border: var(--dd-border);
+  border-radius: var(--dd-radius-card);
+  background: var(--dd-surface);
+  box-shadow: 0 0 24px var(--dd-glow);
+}
+
+.dd-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 0 solid var(--dd-accent);
+  pointer-events: none;
+}
+.dd-corner--tl { top: -5px; left: -5px; border-top-width: 2px; border-left-width: 2px; }
+.dd-corner--tr { top: -5px; right: -5px; border-top-width: 2px; border-right-width: 2px; }
+.dd-corner--bl { bottom: -5px; left: -5px; border-bottom-width: 2px; border-left-width: 2px; }
+.dd-corner--br { bottom: -5px; right: -5px; border-bottom-width: 2px; border-right-width: 2px; }
+
+/* ---------- Notice ---------- */
+
+.dd-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: var(--dd-border);
+  border-left: 3px solid var(--dd-primary);
+  border-radius: var(--dd-radius-control);
+  background: var(--dd-surface-raised);
+  color: var(--dd-text);
+  font-size: var(--dd-font-size);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 25%);
+}
+
+.dd-notice--success { border-left-color: var(--dd-success); }
+.dd-notice--error { border-left-color: var(--dd-danger); }
+
+.dd-notice__icon {
+  display: inline-flex;
+  color: var(--dd-accent-light);
+}
+.dd-notice--success .dd-notice__icon { color: var(--dd-success); }
+.dd-notice--error .dd-notice__icon { color: var(--dd-danger); }
+
+.dd-notice__text {
+  flex: 1;
+  line-height: 1.45;
+}
+
+.dd-notice__close {
+  border: 0;
+  background: transparent;
+  color: var(--dd-text-muted);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* ---------- Dialog ---------- */
+
+.dd-dialog {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--dd-text);
+  overflow: visible;
+  max-width: min(640px, calc(100vw - 48px));
+  width: 100%;
+}
+
+.dd-dialog::backdrop {
+  background: rgb(5 2 10 / 65%);
+  backdrop-filter: blur(2px);
+}
+
+.dd-dialog[open] .dd-dialog__panel {
+  animation: dd-dialog-in var(--dd-motion-medium) var(--dd-ease);
+}
+
+.dd-dialog__panel {
+  position: relative;
+  padding: 24px;
+  border: var(--dd-border);
+  border-radius: var(--dd-radius-card);
+  background: var(--dd-surface);
+  box-shadow: 0 0 40px var(--dd-glow);
+  max-height: calc(100vh - 64px);
+  overflow: auto;
+}
+
+.dd-dialog__title {
+  margin: 0 0 16px;
+  font-family: var(--dd-font-display);
+  font-size: calc(var(--dd-font-size-large) + 6px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.dd-dialog__body {
+  font-size: var(--dd-font-size);
+  line-height: 1.5;
+}
+
+.dd-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+@keyframes dd-dialog-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Toolbar ---------- */
+
+.dd-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.dd-toolbar__separator {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 6px;
+  background: var(--dd-line);
+}
+
+/* ---------- Menus ---------- */
+
+.dd-menubar {
+  display: flex;
+  gap: 2px;
+}
+
+.dd-menubar__entry,
+.dd-dropdown {
+  position: relative;
+}
+
+.dd-menubar__trigger {
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dd-text);
+  font: inherit;
+  font-size: var(--dd-font-size);
+  cursor: pointer;
+}
+
+.dd-menubar__trigger:hover,
+.dd-menubar__trigger.is-open {
+  background: var(--dd-hover);
+}
+
+.dd-dropdown__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--dd-control-height);
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: var(--dd-radius-control);
+  background: transparent;
+  color: var(--dd-text);
+  font: inherit;
+  font-size: var(--dd-font-size);
+  cursor: pointer;
+}
+
+.dd-dropdown__trigger:hover,
+.dd-dropdown__trigger[aria-expanded='true'] {
+  border-color: var(--dd-line);
+  background: var(--dd-hover);
+}
+
+.dd-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 50;
+  min-width: 240px;
+  padding: 6px;
+  border: var(--dd-border);
+  border-radius: var(--dd-radius-control);
+  background: var(--dd-surface);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 35%), 0 0 18px var(--dd-glow);
+  animation: dd-menu-in var(--dd-motion-fast) var(--dd-ease);
+}
+
+@keyframes dd-menu-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.dd-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dd-text);
+  font: inherit;
+  font-size: var(--dd-font-size);
+  text-align: left;
+  cursor: pointer;
+}
+
+.dd-menu__item:hover,
+.dd-menu__item:focus-visible {
+  background: var(--dd-hover);
+  outline-offset: -2px;
+}
+
+.dd-menu__item[aria-disabled='true'] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.dd-menu__check {
+  display: inline-flex;
+  width: 16px;
+  color: var(--dd-accent-light);
+}
+:root[data-theme='light'] .dd-menu__check { color: var(--dd-primary); }
+.dd-menu__check svg { width: 16px; height: 16px; }
+
+.dd-menu__label {
+  flex: 1;
+}
+
+.dd-menu__shortcut {
+  color: var(--dd-text-muted);
+  font-size: var(--dd-font-size-small);
+}
+
+.dd-menu__separator {
+  height: 1px;
+  margin: 5px 4px;
+  background: var(--dd-line);
+}

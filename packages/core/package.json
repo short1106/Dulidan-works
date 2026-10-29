@@ -4,9 +4,17 @@
   "private": true,
   "description": "Gemeinsamer Kern: Modus-Logik, Einstellungen, Dateiformat",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./node": "./src/node/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "fflate": "^0.8.3"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.5"
   }
 }

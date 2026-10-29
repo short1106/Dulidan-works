@@ -1,23 +1,100 @@
 /*
  * Dulidan design tokens as CSS variables.
- * Keep these values in sync with `colors` in index.ts.
+ * Keep the brand colors in sync with `colors` in tokens.ts.
+ *
+ * Switches on <html>:
+ *   data-theme="dark" | "light"   color theme (dark is the default)
+ *   data-mode="basic"             bigger controls and text for beginners
+ *   data-motion="reduced"         turns animations off or down
  */
 :root {
+  /* Brand */
   --dd-primary: #8122b5;
   --dd-accent: #c020b8;
   --dd-accent-light: #f5b8f2;
-  --dd-bg: #0b0614;
-  --dd-surface: #150b24;
-  --dd-text: #f3eaff;
-
-  /* Thin HUD lines: primary color with some transparency */
-  --dd-line: rgb(129 34 181 / 55%);
   --dd-gradient: linear-gradient(135deg, var(--dd-primary), var(--dd-accent));
 
+  /* Dark theme (Jarvis), the default */
+  --dd-bg: #0b0614;
+  --dd-surface: #150b24;
+  --dd-surface-raised: #1e1033;
+  --dd-text: #f3eaff;
+  --dd-text-muted: #c4b3dc;
+  --dd-line: rgb(129 34 181 / 55%);
+  --dd-line-strong: rgb(192 32 184 / 75%);
+  --dd-grid: rgb(129 34 181 / 7%);
+  --dd-glow: rgb(129 34 181 / 35%);
+  --dd-hover: rgb(129 34 181 / 22%);
+  --dd-focus: #f5b8f2;
+  --dd-danger: #ff7a9a;
+  --dd-success: #6fe3b4;
+  --dd-on-primary: #ffffff;
+
+  /* The writing surface is white paper in both themes */
+  --dd-paper: #ffffff;
+  --dd-paper-text: #1a1222;
+
+  /* Shape */
   --dd-radius-control: 8px;
   --dd-radius-card: 12px;
+  --dd-border: 1px solid var(--dd-line);
 
-  /* Real fonts (Inter, Rajdhani) are bundled locally in step 2 */
-  --dd-font-ui: system-ui, 'Segoe UI', sans-serif;
-  --dd-font-display: system-ui, 'Segoe UI', sans-serif;
+  /* Type */
+  --dd-font-ui: 'Inter', system-ui, sans-serif;
+  --dd-font-display: 'Rajdhani', 'Inter', system-ui, sans-serif;
+  --dd-font-size: 14px;
+  --dd-font-size-small: 12px;
+  --dd-font-size-large: 16px;
+
+  /* Sizes */
+  --dd-control-height: 34px;
+  --dd-icon-size: 18px;
+
+  /* Motion: everything under 300 ms */
+  --dd-motion-fast: 140ms;
+  --dd-motion-medium: 240ms;
+  --dd-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --dd-bg: #f4eefa;
+  --dd-surface: #ffffff;
+  --dd-surface-raised: #faf6fe;
+  --dd-text: #1d0f2e;
+  --dd-text-muted: #5b4a70;
+  --dd-line: rgb(129 34 181 / 32%);
+  --dd-line-strong: rgb(129 34 181 / 70%);
+  --dd-grid: rgb(129 34 181 / 6%);
+  --dd-glow: rgb(129 34 181 / 18%);
+  --dd-hover: rgb(129 34 181 / 10%);
+  --dd-focus: #8122b5;
+  --dd-danger: #c0264f;
+  --dd-success: #13855b;
+
+  color-scheme: light;
+}
+
+/* Basic mode: buttons at least 48 px high, text from 18 px.
+   --dd-basic-scale is set by the app from the user's font size setting. */
+:root[data-mode='basic'] {
+  --dd-basic-scale: 1;
+  --dd-font-size: calc(18px * var(--dd-basic-scale));
+  --dd-font-size-small: calc(16px * var(--dd-basic-scale));
+  --dd-font-size-large: calc(20px * var(--dd-basic-scale));
+  --dd-control-height: calc(48px * var(--dd-basic-scale));
+  --dd-icon-size: calc(22px * var(--dd-basic-scale));
+}
+
+:root[data-motion='reduced'] {
+  --dd-motion-fast: 0ms;
+  --dd-motion-medium: 0ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dd-motion-fast: 0ms;
+    --dd-motion-medium: 0ms;
+  }
 }
