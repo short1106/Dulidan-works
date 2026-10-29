@@ -8,6 +8,8 @@
 #   .../releases/latest/download/Dulidan-Relay-Setup.exe
 #   .../releases/latest/download/Dulidan-Cortex.exe
 #   .../releases/latest/download/Dulidan-Cortex-Setup.exe
+#   .../releases/latest/download/Dulidan-Radar.exe
+#   .../releases/latest/download/Dulidan-Radar-Setup.exe
 name: Windows-Installer
 
 on:
@@ -20,7 +22,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        app: [glyph, pixel, relay, cortex]
+        app: [glyph, pixel, relay, cortex, radar]
     steps:
       - uses: actions/checkout@v4
 
@@ -77,8 +79,8 @@ jobs:
             --latest \
             --notes "Automatisch gebaut aus Commit $GITHUB_SHA.
 
-          **Direkt starten (ohne Installation):** Dulidan-Glyph.exe, Dulidan-Pixel.exe, Dulidan-Relay.exe, Dulidan-Cortex.exe
-          **Installieren (mit Startmenü und Desktop-Symbol):** Dulidan-Glyph-Setup.exe, Dulidan-Pixel-Setup.exe, Dulidan-Relay-Setup.exe, Dulidan-Cortex-Setup.exe
+          **Direkt starten (ohne Installation):** Dulidan-Glyph.exe, Dulidan-Pixel.exe, Dulidan-Relay.exe, Dulidan-Cortex.exe, Dulidan-Radar.exe
+          **Installieren (mit Startmenü und Desktop-Symbol):** Dulidan-Glyph-Setup.exe, Dulidan-Pixel-Setup.exe, Dulidan-Relay-Setup.exe, Dulidan-Cortex-Setup.exe, Dulidan-Radar-Setup.exe
 
           Die Dateien sind noch nicht digital signiert. Windows zeigt beim ersten Start
           „Der Computer wurde durch Windows geschützt“: Weitere Informationen → Trotzdem ausführen."

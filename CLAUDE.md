@@ -18,7 +18,7 @@ Zielgruppe: Privatleute, Senioren, PC-Einsteiger, Kleinbetriebe (z. B. Handwerke
 | Pixel | Malen, Bildbearbeitung (Paint) | fertig (Version 1), `.pixel`-Format |
 | Relay | Mail und Kalender (Outlook) | fertig (Version 1), Logik in `packages/mail-core` |
 | Cortex | Notizen (OneNote) | fertig (Version 1), Notizen als `.md`, Logik in `packages/notes-core` |
-| Radar | Akquise per Mail und Brief | nicht angelegt; Vorlage ist `dulidan-akquise/` (s. u.), baut auf mail-core auf |
+| Radar | Akquise per Mail (Brief fehlt noch) | Version 1 gebaut (30.10.2026), `apps/radar`. Vorlage: `dulidan-akquise/` (s. u.) |
 | Ledger | Rechnungen und Angebote | nicht angelegt |
 | Grid / Prism / Vertex | Tabelle / Folien / Vektordesign | nicht angelegt |
 | April | KI in allen Programmen (Pro-Modus) | nur Platzhalter-Seitenleiste, sendet nichts |
@@ -32,7 +32,10 @@ Als Nächstes, in dieser Reihenfolge:
    Baustein: `packages/core/src/electron/updater.ts`. Jede App hat eine eigene Feed-Datei
    (`glyph.yml` usw.). Build-Version: `1.0.<Lauf-Nummer>` (in der CI gesetzt).
    Die portable EXE aktualisiert sich nicht selbst.
-3. Danach das leichteste der noch fehlenden Programme bis Version 1 bauen.
+3. ~~Radar Version 1~~ (gebaut 30.10.2026): Suche über Google Places, Website-Prüfung auf E-Mail,
+   Firmenliste mit Status und Notiz, Sperrliste, Versand mit Pausen und Tageslimit (Standard 20),
+   Modi. Offen für Radar: Antworten per IMAP erkennen, Brief-Export, Test mit echtem Konto.
+4. Als Nächstes: unklar. Der Nutzer entscheidet zwischen Ledger, Grid, Prism und Vertex.
 
 Details je Programm: `docs/programme.md`.
 

@@ -25,9 +25,16 @@ Papierkorb 30 Tage (`.papierkorb`). Suche, Anheften, Ordner, Schlagwörter, `[[V
 Schnellnotiz (Strg+Umschalt+Leertaste), Export PDF/Markdown. Erkennt Änderungen von außen.
 Nutzt `packages/editor` und `packages/notes-core`.
 
+## Radar (Akquise) – Version 1 gebaut
+Suche über Google Places (eigener Schlüssel des Nutzers), Website-Prüfung auf Mailadressen,
+Firmenliste mit Status und Notiz, Sperrliste (Adresse oder ganze Domain mit @), Versand über
+den eigenen Mailserver mit Pausen (Standard 90–240 s) und Tageslimit (Standard 20). Firmen
+aus fremden Branchen werden beim Suchen ausgelassen. Vorlagen: Zimmerei mit und ohne Website.
+Passwörter und Schlüssel nur verschlüsselt im Schlüsselspeicher von Windows.
+Noch nicht drin: Antworten per IMAP erkennen, Brief-Export. Erst nach rechtlicher Prüfung
+verkaufen (UWG, DSGVO).
+
 ## Später
-- **Radar:** Akquise per Mail und Brief, baut auf mail-core auf. Erst nach rechtlicher Prüfung
-  verkaufen (UWG, DSGVO).
 - **Ledger:** Rechnungen und Angebote. Erst nach Prüfung durch Steuerberater/Anwalt verkaufen.
 - **Grid** (Tabelle), **Prism** (Folien), **Vertex** (Vektordesign).
 - **April:** KI im Pro-Modus. Bisher nur Platzhalter-Seitenleiste in Glyph, Pixel, Relay, Cortex.

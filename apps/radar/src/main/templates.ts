@@ -1,0 +1,86 @@
+import { renderTemplate, type MailTemplate, type RenderedMail } from '@dulidan/mail-core'
+import { greeting } from './logic'
+
+export interface RadarTemplate {
+  id: 'zimmerei' | 'zimmerei_ohne_website'
+  label: string
+  subject: string
+  /** Plain text. {{anrede}} is replaced with the greeting, {{name}} with the company name. */
+  body: string
+}
+
+const SIGNATURE = `Viele Grüße
+Shaquille El Moussaoui
+Dulidan Studios
+info@dulidan-studios.com
+www.dulidan-studios.com`
+
+const OPT_OUT_OPEN = 'Ihre Adresse stammt aus einem öffentlichen Branchenverzeichnis. Wenn Sie keine weiteren Nachrichten möchten, antworten Sie einfach mit "Abmelden".'
+
+/** The texts from the Akquise tool (vorlagen/zimmerei*.txt). Edit them here. */
+export const TEMPLATES: RadarTemplate[] = [
+  {
+    id: 'zimmerei',
+    label: 'Zimmerei mit Website',
+    subject: 'Kurze Idee zu Ihrer Website',
+    body: `{{anrede}}
+
+mein Name ist Shaquille El Moussaoui, ich führe Dulidan Studios, ein kleines Kreativstudio aus Öhringen.
+
+Die meisten Zimmereien, die ich mir anschaue, haben eine Website, aber keine, die wirklich für sie arbeitet. Anfragen laufen trotzdem übers Telefon, Angebote werden von Hand getippt, und wer abends auf der Seite landet, findet oft kein Formular, das sofort weiterhilft.
+
+Genau da setze ich mittlerweile zusätzlich an: Ich baue in Websites kleine KI-gestützte Bausteine ein, zum Beispiel ein Kontaktformular, das aus der Beschreibung des Kunden direkt die wichtigsten Angaben für ein erstes Angebot herausfiltert, oder einen einfachen Chat auf der Seite, der häufige Fragen wie Preisrahmen oder Einzugsgebiet sofort beantwortet, auch nachts und am Wochenende.
+
+Nichts Kompliziertes, kein Ersatz für das persönliche Gespräch, sondern einfach weniger Leerlauf bei den immer gleichen Anfragen.
+
+Ich habe eine Beispielseite für einen Holzbaubetrieb gebaut, damit Sie sehen was ich meine:
+
+https://zimmerei-bsp.dulidan-studios.com
+
+Falls Sie Interesse haben, melden Sie sich gerne. Ich bin hier aus Öhringen, ein Termin wäre also unkompliziert.
+
+${SIGNATURE}
+
+${OPT_OUT_OPEN}`
+  },
+  {
+    id: 'zimmerei_ohne_website',
+    label: 'Zimmerei ohne Website',
+    subject: 'Kurze Idee für Ihre Zimmerei',
+    body: `{{anrede}}
+
+mein Name ist Shaquille El Moussaoui, ich führe Dulidan Studios, ein kleines Kreativstudio aus Öhringen.
+
+Mir ist aufgefallen, dass Ihr Betrieb bei Google noch ohne eigene Website auftaucht. Bei vielen Zimmereien laufen Anfragen komplett übers Telefon, Angebote werden von Hand getippt, und wer abends nach einem Zimmerer in der Gegend sucht, landet schnell bei der Konkurrenz.
+
+Genau da setze ich an: Ich baue schlichte, moderne Websites für Handwerksbetriebe, auf Wunsch mit kleinen KI-gestützten Bausteinen, zum Beispiel ein Kontaktformular, das aus der Beschreibung des Kunden direkt die wichtigsten Angaben für ein erstes Angebot herausfiltert, oder einen einfachen Chat, der häufige Fragen wie Preisrahmen oder Einzugsgebiet sofort beantwortet, auch nachts und am Wochenende.
+
+Nichts Kompliziertes, kein Ersatz für das persönliche Gespräch, sondern einfach weniger Leerlauf bei den immer gleichen Anfragen.
+
+Ich habe eine Beispielseite für einen Holzbaubetrieb gebaut, damit Sie sehen was ich meine:
+
+https://zimmerei-bsp.dulidan-studios.com
+
+Falls Sie Interesse haben, melden Sie sich gerne. Ich bin hier aus Öhringen, ein Termin wäre also unkompliziert.
+
+${SIGNATURE}
+
+${OPT_OUT_OPEN}`
+  }
+]
+
+export function templateById(id: string): RadarTemplate {
+  return TEMPLATES.find((template) => template.id === id) ?? TEMPLATES[0]
+}
+
+/** Fills a template for one company. The result is HTML for the mail and plain text for the preview. */
+export function renderLeadMail(template: RadarTemplate, contactName: string | null, companyName: string): { mail: RenderedMail; html: string } {
+  const values = { anrede: greeting(contactName, 'Guten Tag,'), name: companyName }
+  const mailTemplate: MailTemplate = { subject: template.subject, body: template.body }
+  const mail = renderTemplate(mailTemplate, values)
+  const html = mail.body
+    .split(/\n\s*\n/)
+    .map((paragraph) => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
+    .join('')
+  return { mail, html }
+}

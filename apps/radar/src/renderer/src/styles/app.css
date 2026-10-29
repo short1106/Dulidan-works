@@ -1,0 +1,92 @@
+/* Radar layout. Colors and fonts come from the design system (tokens.css). */
+.radar-shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+.radar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-right: 1px solid var(--dd-accent, #c020b8);
+}
+.radar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-family: Rajdhani, sans-serif;
+  font-weight: 700;
+}
+.radar-main {
+  padding: 24px 32px;
+  overflow: auto;
+}
+.radar-page h1 {
+  font-family: Rajdhani, sans-serif;
+}
+.radar-card {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 16px;
+}
+.radar-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.radar-form label {
+  display: grid;
+  gap: 4px;
+}
+.radar-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+.radar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.radar-table th,
+.radar-table td {
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+}
+.radar-muted {
+  opacity: 0.75;
+  font-size: 0.9em;
+}
+.radar-preview {
+  white-space: pre-wrap;
+  font-family: inherit;
+  margin: 0;
+}
+.radar-blocklist {
+  width: 100%;
+  font-family: monospace;
+}
+.radar-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.radar-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+/* Basis mode: bigger text and buttons for beginners. */
+[data-mode='basic'] .radar-main {
+  font-size: 18px;
+}
+[data-mode='basic'] .radar-nav button {
+  min-height: 48px;
+}
