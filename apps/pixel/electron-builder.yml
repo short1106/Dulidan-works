@@ -20,9 +20,15 @@ fileAssociations:
     role: Editor
 win:
   target:
+    # Setup with start menu and desktop shortcut ...
     - target: nsis
       arch: [x64]
+    # ... and one EXE that starts directly, without installing.
+    - target: portable
+      arch: [x64]
   icon: build/icon.ico
+portable:
+  artifactName: Dulidan-Pixel.${ext}
 nsis:
   oneClick: false
   perMachine: false
@@ -30,7 +36,7 @@ nsis:
   createDesktopShortcut: true
   createStartMenuShortcut: true
   shortcutName: Dulidan Pixel
-  artifactName: Dulidan-Pixel-Setup-${version}.${ext}
+  artifactName: Dulidan-Pixel-Setup.${ext}
   installerLanguages: [de_DE]
   language: '1031'
 mac:

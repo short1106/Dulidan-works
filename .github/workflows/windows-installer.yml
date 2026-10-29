@@ -1,5 +1,9 @@
-# Builds the Windows installers on a Windows machine at GitHub.
-# Download: GitHub -> Actions -> "Windows-Installer" -> newest run -> Artifacts.
+# Builds Glyph and Pixel for Windows on a Windows machine at GitHub and
+# publishes them on the release page "Neueste Version" with fixed links:
+#   .../releases/latest/download/Dulidan-Glyph.exe        (starts directly)
+#   .../releases/latest/download/Dulidan-Glyph-Setup.exe  (installs)
+#   .../releases/latest/download/Dulidan-Pixel.exe
+#   .../releases/latest/download/Dulidan-Pixel-Setup.exe
 name: Windows-Installer
 
 on:
@@ -30,11 +34,41 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Build installer
+      - name: Build EXE files
         run: npm run dist:win --workspace @dulidan/${{ matrix.app }}
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Dulidan-${{ matrix.app }}-Windows-Installer
+          name: Dulidan-${{ matrix.app }}-Windows
           path: apps/${{ matrix.app }}/release/*.exe
           if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Publish as "Neueste Version"
+        run: |
+          ls -la dist
+          gh release delete neueste-version --yes --cleanup-tag || true
+          gh release create neueste-version dist/*.exe \
+            --target "$GITHUB_SHA" \
+            --title "Dulidan Works – neueste Version" \
+            --latest \
+            --notes "Automatisch gebaut aus Commit $GITHUB_SHA.
+
+          **Direkt starten (ohne Installation):** Dulidan-Glyph.exe, Dulidan-Pixel.exe
+          **Installieren (mit Startmenü und Desktop-Symbol):** Dulidan-Glyph-Setup.exe, Dulidan-Pixel-Setup.exe
+
+          Die Dateien sind noch nicht digital signiert. Windows zeigt beim ersten Start
+          „Der Computer wurde durch Windows geschützt“: Weitere Informationen → Trotzdem ausführen."

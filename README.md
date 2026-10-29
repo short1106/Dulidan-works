@@ -55,16 +55,24 @@ Auf dem Mac oder unter Linux: `pixel-starten.command`.
 | Strg+Umschalt+N | Neue Ebene |
 | Strg+0 / Strg+1 | Einpassen / 100 % |
 
-## Fertigen Windows-Installer herunterladen
+## Fertige EXE-Dateien herunterladen (ohne Node.js)
 
-Bei jedem Hochladen baut GitHub den Installer automatisch auf einem Windows-Rechner:
-GitHub → Reiter **Actions** → **Windows-Installer** → neuester Lauf → unten bei
-**Artifacts** die Datei `Dulidan-glyph-Windows-Installer` bzw. `Dulidan-pixel-Windows-Installer`
-herunterladen und entpacken.
+Bei jedem Hochladen baut GitHub die Programme automatisch auf einem Windows-Rechner und legt sie
+auf der Seite **Releases → „Dulidan Works – neueste Version“** ab. Die Links bleiben immer gleich:
 
-Hinweis: Der Installer ist noch nicht digital signiert. Windows zeigt deshalb beim
-ersten Start „Der Computer wurde durch Windows geschützt“. Mit **Weitere Informationen →
-Trotzdem ausführen** geht es weiter.
+| Datei | Was sie macht |
+| --- | --- |
+| [Dulidan-Glyph.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Glyph.exe) | Glyph direkt starten, ohne Installation |
+| [Dulidan-Glyph-Setup.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Glyph-Setup.exe) | Glyph installieren (Startmenü, Desktop-Symbol, .glyph-Dateien per Doppelklick) |
+| [Dulidan-Pixel.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Pixel.exe) | Pixel direkt starten, ohne Installation |
+| [Dulidan-Pixel-Setup.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Pixel-Setup.exe) | Pixel installieren (Startmenü, Desktop-Symbol, .pixel-Dateien per Doppelklick) |
+
+Das Repository ist privat: Die Links funktionieren, wenn du bei GitHub angemeldet bist.
+
+Die Dateien sind noch nicht digital signiert. Windows zeigt deshalb beim ersten Start
+„Der Computer wurde durch Windows geschützt“. Mit **Weitere Informationen → Trotzdem ausführen**
+geht es weiter. Die Direkt-EXE braucht beim Start ein paar Sekunden länger, weil sie sich
+jedes Mal kurz entpackt; die installierte Version startet schneller.
 
 ## Was du in Glyph ausprobieren kannst
 
