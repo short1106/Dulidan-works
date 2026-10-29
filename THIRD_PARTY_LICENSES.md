@@ -4,6 +4,14 @@ Diese Datei listet alle fremden Bibliotheken, die Dulidan Works verwendet.
 Erlaubt sind nur MIT, Apache 2.0, BSD und ISC, bei Schriften die SIL Open
 Font License (OFL). Keine GPL, keine AGPL.
 
+## In Dulidan Pixel enthalten
+
+Pixel nutzt keine eigenen zusätzlichen Bibliotheken. Ausgeliefert werden:
+electron 45.1.0 (MIT), react und react-dom 19.3.1 (MIT), scheduler 0.28.0 (MIT),
+fflate 0.8.3 (MIT, für das .pixel-Format), lucide-react 1.63.0 (ISC, Symbole)
+sowie die Schriften Inter und Rajdhani (OFL, siehe unten). Malen, Füllen,
+Ebenen und Start-Animation sind selbst geschrieben, mit Canvas 2D aus Chromium.
+
 ## In Dulidan Glyph enthalten
 
 Diese Bibliotheken werden mit Glyph ausgeliefert.

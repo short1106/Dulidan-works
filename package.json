@@ -8,8 +8,10 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspace @dulidan/glyph",
-    "build": "npm run build --workspace @dulidan/glyph",
+    "dev:pixel": "npm run dev --workspace @dulidan/pixel",
+    "build": "npm run build --workspaces --if-present",
     "dist:win": "npm run dist:win --workspace @dulidan/glyph",
+    "dist:win:pixel": "npm run dist:win --workspace @dulidan/pixel",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present"
   },

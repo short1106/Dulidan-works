@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        app: [glyph]
+        app: [glyph, pixel]
     steps:
       - uses: actions/checkout@v4
 

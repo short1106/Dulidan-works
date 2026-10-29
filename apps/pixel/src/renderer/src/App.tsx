@@ -7,6 +7,7 @@ import { MODE_CARDS, SettingsDialog } from './dialogs/SettingsDialog'
 import { t } from './i18n'
 import { applySettingsToDocument, prefersReducedMotion, settingsStore, updateSettings, useSettings } from './state/settings'
 import { Workspace } from './ui/Workspace'
+import { createPixelScene } from './start/pixelScene'
 
 /** Picks the start animation once, from the settings at startup. */
 function bootVariant(): BootVariant {
@@ -22,6 +23,7 @@ function bootVariant(): BootVariant {
 export function App(): React.JSX.Element {
   const settings = useSettings()
   const [variant] = useState(bootVariant)
+  const [scene] = useState(createPixelScene)
   const [bootDone, setBootDone] = useState(false)
 
   useEffect(() => applySettingsToDocument(settings), [settings])
@@ -40,7 +42,7 @@ export function App(): React.JSX.Element {
       ) : (
         <Workspace active={bootDone} />
       )}
-      {!bootDone && <BootAnimation programName={t.app.name} variant={variant} skipHint={t.app.skipHint} onDone={() => setBootDone(true)} />}
+      {!bootDone && <BootAnimation programName={t.app.name} variant={variant} scene={scene} skipHint={t.app.skipHint} onDone={() => setBootDone(true)} />}
       <SettingsDialog />
       <SavedDialog />
       <QuestionDialog />
