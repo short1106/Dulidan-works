@@ -7,13 +7,17 @@ export interface ToolbarProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Row of controls. Arrow keys move between them, so keyboard users can
- * reach every button without tabbing through all of them.
+ * Row (or column, with aria-orientation="vertical") of controls. Arrow keys
+ * move between them, so keyboard users can reach every button without
+ * tabbing through all of them.
  */
 export function Toolbar({ label, className, children, onKeyDown, ...rest }: ToolbarProps): React.JSX.Element {
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>): void {
     onKeyDown?.(event)
-    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
+    const vertical = event.currentTarget.getAttribute('aria-orientation') === 'vertical'
+    const forward = vertical ? 'ArrowDown' : 'ArrowRight'
+    const backward = vertical ? 'ArrowUp' : 'ArrowLeft'
+    if (event.key !== forward && event.key !== backward) return
     const target = event.target as HTMLElement
     // Do not steal arrow keys from inputs and selects inside the toolbar.
     if (target.matches('input, select, textarea')) return
@@ -23,7 +27,7 @@ export function Toolbar({ label, className, children, onKeyDown, ...rest }: Tool
     const index = items.indexOf(target)
     if (index === -1) return
     event.preventDefault()
-    const next = event.key === 'ArrowRight' ? index + 1 : index - 1
+    const next = event.key === forward ? index + 1 : index - 1
     items[(next + items.length) % items.length]?.focus()
   }
 

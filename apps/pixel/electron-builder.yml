@@ -1,0 +1,44 @@
+# Installer settings for Dulidan Pixel (electron-builder).
+appId: de.dulidan.pixel
+productName: Dulidan Pixel
+copyright: Copyright © Dulidan Studios
+directories:
+  output: release
+  buildResources: build
+files:
+  - out/**
+  - package.json
+extraFiles:
+  - from: ../../THIRD_PARTY_LICENSES.md
+    to: THIRD_PARTY_LICENSES.md
+fileAssociations:
+  - ext: pixel
+    name: Pixel-Projekt
+    description: Dulidan Pixel Projekt
+    mimeType: application/x-dulidan-pixel
+    icon: icon
+    role: Editor
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.ico
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Dulidan Pixel
+  artifactName: Dulidan-Pixel-Setup-${version}.${ext}
+  installerLanguages: [de_DE]
+  language: '1031'
+mac:
+  category: public.app-category.graphics-design
+  icon: build/icon.icns
+  target: dmg
+linux:
+  executableName: dulidan-pixel
+  target: AppImage
+  category: Graphics
+  icon: build/icon.png

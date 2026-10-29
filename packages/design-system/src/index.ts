@@ -22,3 +22,9 @@ export {
   type DropdownMenuProps
 } from './components/Menu'
 export { GlyphLogo, LOGO_GEOMETRY, type GlyphLogoProps } from './logo/GlyphLogo'
+export { Slider, type SliderProps } from './components/Slider'
+export { ModeChooser, type ModeCard, type ModeChooserProps } from './components/ModeChooser'
+export { DulidanMark, DULIDAN_D, type DulidanMarkProps } from './logo/DulidanMark'
+export { BootAnimation, type BootAnimationProps, type BootScene, type BootSize, type BootVariant } from './boot/BootAnimation'
+export { notify, dismissNotice, NoticeArea, type NoticeItem, type NoticeAreaProps } from './components/Notices'
+export { ask, QuestionDialog, type Choice } from './components/Ask'
