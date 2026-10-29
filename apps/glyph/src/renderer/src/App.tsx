@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
+import { BootAnimation, type BootVariant } from '@dulidan/design-system'
 import type { Mode } from '@dulidan/core'
 import { NoticeArea } from './dialogs/NoticeArea'
 import { QuestionDialog } from './dialogs/QuestionDialog'
 import { SavedDialog } from './dialogs/SavedDialog'
 import { SettingsDialog } from './dialogs/SettingsDialog'
 import { ModeChooser } from './first-run/ModeChooser'
-import { StartAnimation, type StartVariant } from './start/StartAnimation'
 import { applySettingsToDocument, prefersReducedMotion, settingsStore, updateSettings, useSettings } from './state/settings'
+import { t } from './i18n'
 import { Workspace } from './workspace/Workspace'
 
 /** Picks the start animation once, from the settings at startup. */
-function startVariant(): StartVariant {
+function startVariant(): BootVariant {
   const settings = settingsStore.get()
   if (prefersReducedMotion() || !settings.animations) return 'static'
   // The first start (no mode yet) gets the full show.
@@ -33,7 +34,9 @@ export function App(): React.JSX.Element {
   return (
     <>
       {settings.mode === null ? <ModeChooser onChoose={chooseMode} /> : <Workspace active={startDone} />}
-      {!startDone && <StartAnimation variant={variant} onDone={() => setStartDone(true)} />}
+      {!startDone && (
+        <BootAnimation programName={t.app.name} variant={variant} skipHint={t.start.skipHint} onDone={() => setStartDone(true)} />
+      )}
       <SettingsDialog />
       <SavedDialog />
       <QuestionDialog />

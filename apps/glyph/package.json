@@ -10,7 +10,7 @@
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
-    "icons": "electron ../../packages/design-system/scripts/export-icons.cjs ../../packages/design-system/src/logo/glyph-logo.svg build",
+    "icons": "electron ../../packages/design-system/scripts/export-icons.cjs ../../packages/design-system/src/logo/dulidan-app-icon.svg build",
     "dist:win": "npm run build && electron-builder --win --x64 --publish never",
     "dist:mac": "npm run build && electron-builder --mac --publish never",
     "dist:linux": "npm run build && electron-builder --linux --publish never"

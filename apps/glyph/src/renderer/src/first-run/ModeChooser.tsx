@@ -1,5 +1,5 @@
 import { Briefcase, Feather, Sparkles, type LucideIcon } from 'lucide-react'
-import { CornerBrackets, GlyphLogo } from '@dulidan/design-system'
+import { CornerBrackets, DulidanMark } from '@dulidan/design-system'
 import type { Mode } from '@dulidan/core'
 import { t } from '../i18n'
 import './mode-chooser.css'
@@ -19,7 +19,7 @@ export function ModeChooser({ onChoose }: Props): React.JSX.Element {
   return (
     <main className="chooser">
       <div className="chooser__head">
-        <GlyphLogo size={56} title="" />
+        <DulidanMark size={56} tile title="" />
         <h1 className="chooser__title">{t.modes.chooserTitle}</h1>
         <p className="chooser__text">{t.modes.chooserText}</p>
       </div>

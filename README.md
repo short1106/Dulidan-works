@@ -116,4 +116,9 @@ npm run dist:win     # Glyph-Installer (auf Windows)
 npm run dist:win:pixel  # Pixel-Installer (auf Windows)
 ```
 
-Das App-Icon wird aus dem SVG-Logo erzeugt: `npm run icons --workspace @dulidan/glyph`.
+Logo und App-Icon: das Dulidan D (`packages/design-system/src/logo/dulidan-d.svg`, als App-Icon
+`dulidan-app-icon.svg`). Die Icons (ICO, ICNS, PNG 1024 px) werden daraus erzeugt:
+`npm run icons --workspace @dulidan/glyph` bzw. `--workspace @dulidan/pixel`.
+
+Start-Animation: `BootAnimation` aus dem Design-System. Jedes Programm übergibt nur seinen
+Namen (`programName="Glyph"`); Pixel nutzt zusätzlich seine eigene Pixel-Szene.

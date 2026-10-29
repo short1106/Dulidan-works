@@ -3,7 +3,7 @@
  *
  * Usage in an app:
  *   import '@dulidan/design-system/styles.css'
- *   import { Button, Card, GlyphLogo } from '@dulidan/design-system'
+ *   import { Button, Card, DulidanMark } from '@dulidan/design-system'
  */
 export { colors, type ColorToken } from './tokens'
 export { cx } from './components/cx'
@@ -21,7 +21,6 @@ export {
   type MenuBarProps,
   type DropdownMenuProps
 } from './components/Menu'
-export { GlyphLogo, LOGO_GEOMETRY, type GlyphLogoProps } from './logo/GlyphLogo'
 export { Slider, type SliderProps } from './components/Slider'
 export { ModeChooser, type ModeCard, type ModeChooserProps } from './components/ModeChooser'
 export { DulidanMark, DULIDAN_D, type DulidanMarkProps } from './logo/DulidanMark'

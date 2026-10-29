@@ -13,10 +13,11 @@
 .dd-boot__grid {
   position: absolute;
   inset: 0;
+  opacity: 0;
   background:
-    radial-gradient(ellipse at 50% 45%, rgb(129 34 181 / 26%), transparent 60%),
-    linear-gradient(rgb(129 34 181 / 12%) 1px, transparent 1px) 0 0 / 28px 28px,
-    linear-gradient(90deg, rgb(129 34 181 / 12%) 1px, transparent 1px) 0 0 / 28px 28px;
+    radial-gradient(ellipse at 50% 45%, rgb(129 34 181 / 24%), transparent 60%),
+    linear-gradient(rgb(129 34 181 / 11%) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgb(129 34 181 / 11%) 1px, transparent 1px) 0 0 / 28px 28px;
 }
 
 .dd-boot__canvas {
@@ -26,34 +27,70 @@
   height: 100%;
 }
 
-.dd-boot__still {
+/* The D with the name to its right. */
+.dd-boot__lockup {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
 }
 
-.dd-boot__brand,
-.dd-boot__name {
+.dd-boot__mark {
+  width: 190px;
+  height: 190px;
+  margin-right: -14px;
+  overflow: visible;
+}
+
+.dd-boot__tip {
+  filter: drop-shadow(0 0 3px #f5b8f2) drop-shadow(0 0 8px #c020b8);
+}
+
+.dd-boot__word {
+  position: relative;
   margin: 0;
-  font-family: var(--dd-font-display);
-  text-transform: uppercase;
+  font-family: 'Rajdhani', var(--dd-font-display);
+  font-size: 64px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  white-space: pre;
+}
+
+.dd-boot__ghost {
+  visibility: hidden;
+}
+
+.dd-boot__typed {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .dd-boot__brand {
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.6em;
-  margin-right: -0.6em;
-  color: #f5b8f2;
+  color: #f3eaff;
 }
 
-.dd-boot__name {
-  font-size: 44px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  margin-right: -0.18em;
+.dd-boot__program {
+  color: #c020b8;
+}
+
+.dd-boot__cursor,
+.dd-boot__cursor-space {
+  display: inline-block;
+  width: 6px;
+  height: 0.9em;
+  margin-left: 6px;
+}
+
+.dd-boot__cursor {
+  border-radius: 2px;
+  background: #c020b8;
+  box-shadow: 0 0 10px rgb(192 32 184 / 80%);
+  opacity: 0;
 }
 
 .dd-boot__hint {

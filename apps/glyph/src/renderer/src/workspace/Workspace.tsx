@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { EditorContent, useEditor } from '@tiptap/react'
 import type { Editor } from '@tiptap/core'
-import { GlyphLogo } from '@dulidan/design-system'
+import { DulidanMark } from '@dulidan/design-system'
 import { AUTOSAVE_INTERVAL_MS, clampZoom } from '@dulidan/core'
 import { ACTIONS, type ActionId } from '../actions'
 import { LinkDialog } from '../dialogs/LinkDialog'
@@ -177,7 +177,7 @@ export function Workspace({ active }: Props): React.JSX.Element {
     <div className={`workspace workspace--${mode}`}>
       <header className="topbar">
         <div className="topbar__brand">
-          <GlyphLogo size={mode === 'basic' ? 34 : 26} title="" />
+          <DulidanMark size={mode === 'basic' ? 34 : 26} tile title="" />
           <span className="topbar__name">{t.app.name}</span>
         </div>
         {mode !== 'basic' && <AppMenuBar editor={editor} />}

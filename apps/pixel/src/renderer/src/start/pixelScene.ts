@@ -87,7 +87,8 @@ function dOutline(): Cell[] {
   const line = (x0: number, y0: number, x1: number, y1: number, steps: number): void => {
     for (let i = 0; i < steps; i++) points.push({ x: x0 + ((x1 - x0) * i) / steps, y: y0 + ((y1 - y0) * i) / steps })
   }
-  line(33, 74, 33, 26, 40)
+  // Same order as DULIDAN_D.path: up the back, over the bowl, back along the bottom.
+  line(33, 64, 33, 26, 32)
   line(33, 26, 47, 26, 12)
   // Half circle around (47, 50) with radius 24, from the top over the right to the bottom.
   for (let i = 0; i <= 60; i++) {
@@ -159,10 +160,8 @@ export function createPixelScene(): BootScene {
     context.strokeStyle = colors.textOnDark
     context.lineWidth = DULIDAN_D.strokeWidth
     context.lineJoin = 'round'
+    context.lineCap = 'round'
     context.stroke(dPath)
-    const { dot } = DULIDAN_D
-    context.fillStyle = colors.accent
-    context.fillRect(dot.x, dot.y, dot.size, dot.size)
     context.restore()
   }
 
@@ -235,16 +234,14 @@ export function createPixelScene(): BootScene {
       originX = size.width / 2 - logoSize / 2
       originY = size.height / 2 - logoSize / 2
       cell = Math.max(5, Math.round(Math.min(size.width, size.height) / 100))
-      // Cells of the D: the stroke and the small square.
+      // Cells of the D stroke.
       dCells = sampleCells(logoSize, logoSize, cell, (context) => {
         context.scale(scale, scale)
         context.strokeStyle = '#ffffff'
         context.lineWidth = DULIDAN_D.strokeWidth
         context.lineJoin = 'round'
+        context.lineCap = 'round'
         context.stroke(new Path2D(DULIDAN_D.path))
-        const { dot } = DULIDAN_D
-        context.fillStyle = '#ffffff'
-        context.fillRect(dot.x, dot.y, dot.size, dot.size)
       }).map((point) => ({ x: point.x + originX, y: point.y + originY }))
       void document.fonts.load('700 100px Rajdhani')
       buildWord(size)
