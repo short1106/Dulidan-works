@@ -5,7 +5,8 @@
   "description": "Gemeinsamer Kern: Modus-Logik, Einstellungen, Dateiformat",
   "exports": {
     ".": "./src/index.ts",
-    "./node": "./src/node/index.ts"
+    "./node": "./src/node/index.ts",
+    "./electron": "./src/electron/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
