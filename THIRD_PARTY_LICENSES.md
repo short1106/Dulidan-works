@@ -4,6 +4,19 @@ Diese Datei listet alle fremden Bibliotheken, die Dulidan Works verwendet.
 Erlaubt sind nur MIT, Apache 2.0, BSD und ISC, bei Schriften die SIL Open
 Font License (OFL). Keine GPL, keine AGPL.
 
+## In Dulidan Cortex enthalten
+
+Cortex nutzt dieselben Grundbausteine wie Glyph (electron, react, TipTap mit
+Checklisten und Tabellen, lucide-react, Schriften) und zusätzlich diese
+Bibliotheken. Der Suchindex ist `node:sqlite`, das in Electron/Node.js schon
+eingebaut ist (keine zusätzliche Bibliothek).
+
+| Bibliothek | Version | Lizenz | Wofür |
+| --- | --- | --- | --- |
+| marked | 18.1.2 | MIT | Markdown-Dateien lesen |
+| @tiptap/suggestion | 3.32.1 | MIT | Vorschlagsliste beim Verknüpfen mit `[[` |
+| @tiptap/extension-list (Checklisten), @tiptap/extension-table | 3.32.1 | MIT | wie in Glyph |
+
 ## In Dulidan Relay enthalten
 
 Relay nutzt dieselben Grundbausteine wie Glyph (electron, react, TipTap für den

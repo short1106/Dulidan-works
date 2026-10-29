@@ -1,0 +1,110 @@
+/*
+ * PDF and printing: only the note (title and text) on white paper,
+ * without the app around it. Page size (A4) and margins come from the
+ * shared PDF settings in @dulidan/core/electron.
+ */
+@media print {
+  @page {
+    size: A4;
+  }
+
+  html,
+  body {
+    height: auto;
+    overflow: visible;
+    background: #ffffff !important;
+  }
+
+  #root,
+  .dd-notice-area,
+  dialog {
+    display: none !important;
+  }
+
+  .print-sheet {
+    display: block;
+    color: #1a1222;
+    font-family: var(--dd-font-ui);
+    font-size: 11.5pt;
+    line-height: 1.55;
+  }
+
+  .print-sheet__title {
+    margin: 0 0 14pt;
+    font-family: var(--dd-font-display);
+    font-size: 24pt;
+    letter-spacing: 0.02em;
+  }
+
+  .print-sheet h1,
+  .print-sheet h2,
+  .print-sheet h3 {
+    font-family: var(--dd-font-display);
+    break-after: avoid;
+  }
+
+  .print-sheet a {
+    color: #1f5fbf;
+  }
+
+  .print-sheet img {
+    max-width: 100%;
+    height: auto;
+    break-inside: avoid;
+  }
+
+  .print-sheet blockquote {
+    margin: 8pt 0;
+    padding-left: 10pt;
+    border-left: 3px solid #8122b5;
+    color: #4a4155;
+  }
+
+  .print-sheet pre {
+    padding: 8pt;
+    border: 1px solid #ddd;
+    background: #f7f5fa;
+    white-space: pre-wrap;
+  }
+
+  .print-sheet table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0;
+  }
+
+  .print-sheet th,
+  .print-sheet td {
+    padding: 4pt 6pt;
+    border: 1px solid #c9bfd6;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .print-sheet th {
+    background: #f3ecfa;
+  }
+
+  /* Checklists: a box in front of every item. */
+  .print-sheet ul[data-type='taskList'] {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .print-sheet li[data-type='taskItem'] {
+    display: flex;
+    gap: 8pt;
+  }
+
+  .print-sheet li[data-type='taskItem']::before {
+    content: '☐';
+  }
+
+  .print-sheet li[data-type='taskItem'][data-checked='true']::before {
+    content: '☑';
+  }
+
+  .print-sheet li[data-type='taskItem'] p {
+    margin: 0;
+  }
+}

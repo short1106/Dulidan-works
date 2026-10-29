@@ -1,0 +1,21 @@
+{
+  "name": "@dulidan/notes-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Notizen ohne Oberfläche: Markdown-Dateien, Suchindex, Papierkorb, Verknüpfungen (Cortex)",
+  "exports": {
+    ".": "./src/index.ts",
+    "./node": "./src/node/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@dulidan/core": "*",
+    "marked": "^18.1.2"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.5"
+  }
+}

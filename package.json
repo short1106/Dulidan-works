@@ -10,10 +10,12 @@
     "dev": "npm run dev --workspace @dulidan/glyph",
     "dev:pixel": "npm run dev --workspace @dulidan/pixel",
     "dev:relay": "npm run dev --workspace @dulidan/relay",
+    "dev:cortex": "npm run dev --workspace @dulidan/cortex",
     "build": "npm run build --workspaces --if-present",
     "dist:win": "npm run dist:win --workspace @dulidan/glyph",
     "dist:win:pixel": "npm run dist:win --workspace @dulidan/pixel",
     "dist:win:relay": "npm run dist:win --workspace @dulidan/relay",
+    "dist:win:cortex": "npm run dist:win --workspace @dulidan/cortex",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present"
   },

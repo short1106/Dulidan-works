@@ -8,6 +8,7 @@ Alle Dateien bleiben auf deinem Computer.
 | **Dulidan Glyph** | Textverarbeitung | Version 1 fertig |
 | **Dulidan Pixel** | Malen und Bildbearbeitung | Version 1 fertig |
 | **Dulidan Relay** | Mail und Kalender | Version 1 fertig |
+| **Dulidan Cortex** | Notizen | Version 1 fertig |
 
 ## Glyph starten (Windows)
 
@@ -101,6 +102,56 @@ Auf dem Mac oder unter Linux: `relay-starten.command`.
 | R / Umschalt+R | Antworten / Allen antworten |
 | Pfeil hoch / runter | Vorherige / nächste Mail |
 
+## Cortex starten (Windows)
+
+Genauso wie Glyph: Doppelklick auf **`Cortex starten.bat`**.
+**`Cortex testen (wie neu).bat`** zeigt Start-Animation und Moduswahl wie beim ersten Mal und
+arbeitet mit einer Kopie der Beispielnotizen (deine echten Notizen bleiben unberührt).
+**`Cortex-Installer bauen.bat`** baut die Setup-Datei (liegt danach in `apps\cortex\release`).
+Auf dem Mac oder unter Linux: `cortex-starten.command`.
+
+### Was du in Cortex ausprobieren kannst
+
+- **Notizen als normale Dateien:** Jede Notiz ist eine Markdown-Datei (`.md`) im Notizordner
+  (Standard: `Dokumente\Cortex`, änderbar in den Einstellungen). Bilder liegen im Unterordner
+  `attachments`. Die Notizen lassen sich ohne Cortex lesen und mit jedem Backup sichern.
+- **Schreiben:** Überschriften, Fett, Kursiv, Listen, Checklisten zum Abhaken, Links, Bilder
+  (auch per Einfügen oder Hineinziehen, Größe mit der Maus ändern), Tabellen, Zitate, Code.
+  Cortex speichert 2 Sekunden nach der letzten Eingabe von selbst.
+- **Wiederfinden:** Suche über Titel und Text, auch bei tausenden Notizen sofort.
+  Notizen anheften, Liste oder Karten-Ansicht.
+- **Experte:** Ordner (auch verschachtelt), Schlagwörter, Verknüpfungen mit `[[Notiztitel]]`
+  samt Vorschlagsliste beim Tippen und „Diese Notizen verlinken hierher“, Dateien anhängen,
+  Export als PDF oder Markdown, Import von Markdown- und Textdateien.
+- **Schnellnotiz:** **Strg+Umschalt+Leertaste** öffnet überall ein kleines Fenster (solange
+  Cortex geöffnet ist). Die Notiz landet im Ordner „Posteingang“.
+- **Modi:** Basis (bunte Zettel, große Knöpfe, Checkliste, Bild, Papierkorb), Experte (alles)
+  und Pro (wie Experte, mit April-Platzhalter).
+
+### So schützt Cortex deine Notizen
+
+- **Sicheres Speichern:** Erst in eine Temporärdatei, dann umbenennen. Eine Notiz ist nie halb
+  geschrieben.
+- **Absturzschutz:** Ungespeicherter Text wird zusätzlich gesichert und nach einem Absturz
+  zur Wiederherstellung angeboten.
+- **Papierkorb:** Gelöschte Notizen bleiben 30 Tage im Papierkorb (Ordner `.papierkorb` im
+  Notizordner). Erst danach kannst du sie endgültig löschen, und Cortex fragt vorher nach.
+- **Änderungen von außen:** Ändert ein anderes Programm eine Notiz, zeigt Cortex die neue
+  Fassung. Hast du gleichzeitig daran geschrieben, fragt Cortex, welche Fassung bleiben soll.
+- **Kein Internet:** Cortex hat keinen Netzwerkzugriff und verschickt nichts. April ist nur ein
+  Platzhalter.
+
+| Taste | Aktion |
+| --- | --- |
+| Strg+N | Neue Notiz |
+| Strg+F | Suchen |
+| Strg+S | Sofort speichern |
+| Strg+B / Strg+I | Fett / Kursiv |
+| Strg+K | Link |
+| `[[` | Notiz verknüpfen (Vorschlagsliste) |
+| Strg + Klick | Link oder verknüpfte Notiz öffnen |
+| Strg+Umschalt+Leertaste | Schnellnotiz (Experte und Pro) |
+
 ## Fertige EXE-Dateien herunterladen (ohne Node.js)
 
 Bei jedem Hochladen baut GitHub die Programme automatisch auf einem Windows-Rechner und legt sie
@@ -114,6 +165,8 @@ auf der Seite **Releases → „Dulidan Works – neueste Version“** ab. Die L
 | [Dulidan-Pixel-Setup.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Pixel-Setup.exe) | Pixel installieren (Startmenü, Desktop-Symbol, .pixel-Dateien per Doppelklick) |
 | [Dulidan-Relay.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Relay.exe) | Relay direkt starten, ohne Installation |
 | [Dulidan-Relay-Setup.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Relay-Setup.exe) | Relay installieren (Startmenü, Desktop-Symbol) |
+| [Dulidan-Cortex.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Cortex.exe) | Cortex direkt starten, ohne Installation |
+| [Dulidan-Cortex-Setup.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Cortex-Setup.exe) | Cortex installieren (Startmenü, Desktop-Symbol) |
 
 Das Repository ist privat: Die Links funktionieren, wenn du bei GitHub angemeldet bist.
 
@@ -155,12 +208,16 @@ apps/
   glyph/            Die Textverarbeitung (Electron, React, TipTap)
   pixel/            Malen und Bildbearbeitung (Electron, React, Canvas 2D)
   relay/            Mail und Kalender (Electron, React)
+  cortex/           Notizen (Electron, React, TipTap), Beispielnotizen in test/beispiel-notizen
 packages/
   mail-core/        Mail ohne Oberfläche: Konten, IMAP, SMTP, Zwischenspeicher, Vorlagen,
                     Antwort-Erkennung, Kalender mit Zeitzonen und Serien
   editor/           Schlanker Text-Editor für Mails (TipTap)
+  notes-core/       Notizen ohne Oberfläche: Markdown-Dateien, Suchindex, Papierkorb,
+                    Verknüpfungen, Import und Export
   design-system/    Farben, Schriften, Bausteine, Logos, Start-Animation, Moduswahl, Icon-Export
-  core/             Modus-Logik, Einstellungen, Dateiformate, Rückgängig, sicheres Speichern, Autosave
+  core/             Modus-Logik, Einstellungen, Dateiformate, Rückgängig, sicheres Speichern, Autosave,
+                    SQLite-Hilfen, PDF-Export (gemeinsam für Glyph und Cortex)
 THIRD_PARTY_LICENSES.md
 ```
 
@@ -171,12 +228,15 @@ npm install          # einmalig
 npm run dev          # Glyph mit Live-Neuladen
 npm run dev:pixel    # Pixel mit Live-Neuladen
 npm run dev:relay    # Relay mit Live-Neuladen
+npm run dev:cortex   # Cortex mit Live-Neuladen
 npm test             # Tests (Dateiformate, Speichern, Autosave, Rückgängig, Modi, Malwerkzeuge,
-                     #  Mail-Konten, Zwischenspeicher, Vorlagen, Antworten, Zeitzonen, Papierkorb)
+                     #  Mail-Konten, Zwischenspeicher, Vorlagen, Antworten, Zeitzonen, Papierkorb,
+                     #  Notiz-Dateien, Suchindex, Verknüpfungen)
 npm run typecheck    # Typprüfung
 npm run dist:win     # Glyph-Installer (auf Windows)
 npm run dist:win:pixel  # Pixel-Installer (auf Windows)
 npm run dist:win:relay  # Relay-Installer (auf Windows)
+npm run dist:win:cortex # Cortex-Installer (auf Windows)
 ```
 
 Logo und App-Icon: das Dulidan D (`packages/design-system/src/logo/dulidan-d.svg`, als App-Icon
