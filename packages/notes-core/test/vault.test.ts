@@ -230,17 +230,20 @@ describe('NotesService: index, search, links', () => {
     }
     const startOpen = performance.now()
     const service = await open()
-    const openMs = performance.now() - startOpen
-    const startSearch = performance.now()
-    const hits = service.search('garten')
-    const searchMs = performance.now() - startSearch
-    // 286 notes match; the list shows the best 200.
-    expect(hits).toHaveLength(200)
-    expect(searchMs).toBeLessThan(150)
-    const resyncStart = performance.now()
-    await service.syncNow()
-    expect(performance.now() - resyncStart).toBeLessThan(2000)
-    expect(openMs).toBeLessThan(20_000)
-    service.close()
+    try {
+      const openMs = performance.now() - startOpen
+      const startSearch = performance.now()
+      const hits = service.search('garten')
+      const searchMs = performance.now() - startSearch
+      // 286 notes match; the list shows the best 200.
+      expect(hits).toHaveLength(200)
+      expect(searchMs).toBeLessThan(150)
+      const resyncStart = performance.now()
+      await service.syncNow()
+      expect(performance.now() - resyncStart).toBeLessThan(2000)
+      expect(openMs).toBeLessThan(20_000)
+    } finally {
+      service.close()
+    }
   }, 60_000)
 })

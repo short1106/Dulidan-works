@@ -14,6 +14,8 @@ import type { FileStamp, Vault } from './vault'
  */
 const SCHEMA_VERSION = '1'
 const EXCERPT_LENGTH = 240
+/** Notes written to the index in one step during a full pass. */
+const SYNC_BATCH = 500
 
 export interface SearchHit extends NoteSummary {
   /** Text around the hit; the found words are between \u0001 and \u0002. */
@@ -129,38 +131,40 @@ export class NoteIndex {
 
   /** Adds or updates one note in the index. */
   put(path: string, note: Note, stamp: FileStamp): void {
+    transaction(this.db, () => this.putRows(path, note, stamp))
+  }
+
+  private putRows(path: string, note: Note, stamp: FileStamp): void {
     const plain = markdownToPlain(note.body)
     const image = plain.firstImage ? attachmentNameFromFile(plain.firstImage, path) : null
     const fileName = path.slice(path.lastIndexOf('/') + 1).replace(/\.md$/i, '')
-    transaction(this.db, () => {
-      this.removeRows(path)
-      this.db
-        .prepare(
-          `INSERT INTO notes (path, folder, title, title_key, file_key, tags, created, modified, pinned, color, excerpt, tasks_done, tasks_total, image, mtime, size)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-        )
-        .run(
-          path,
-          folderOf(path),
-          note.meta.title,
-          linkKey(note.meta.title),
-          linkKey(fileName),
-          JSON.stringify(note.meta.tags),
-          note.meta.created,
-          note.meta.modified,
-          note.meta.pinned ? 1 : 0,
-          note.meta.color,
-          plain.text.slice(0, EXCERPT_LENGTH),
-          plain.tasksDone,
-          plain.tasksTotal,
-          image,
-          stamp.mtimeMs,
-          stamp.size
-        )
-      this.db.prepare('INSERT INTO notes_fts (path, title, body) VALUES (?, ?, ?)').run(path, note.meta.title, `${plain.text} ${note.meta.tags.join(' ')}`)
-      const addLink = this.db.prepare('INSERT INTO links (source, target_key) VALUES (?, ?)')
-      for (const key of linkKeys(note.body)) addLink.run(path, key)
-    })
+    this.removeRows(path)
+    this.db
+      .prepare(
+        `INSERT INTO notes (path, folder, title, title_key, file_key, tags, created, modified, pinned, color, excerpt, tasks_done, tasks_total, image, mtime, size)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+      .run(
+        path,
+        folderOf(path),
+        note.meta.title,
+        linkKey(note.meta.title),
+        linkKey(fileName),
+        JSON.stringify(note.meta.tags),
+        note.meta.created,
+        note.meta.modified,
+        note.meta.pinned ? 1 : 0,
+        note.meta.color,
+        plain.text.slice(0, EXCERPT_LENGTH),
+        plain.tasksDone,
+        plain.tasksTotal,
+        image,
+        stamp.mtimeMs,
+        stamp.size
+      )
+    this.db.prepare('INSERT INTO notes_fts (path, title, body) VALUES (?, ?, ?)').run(path, note.meta.title, `${plain.text} ${note.meta.tags.join(' ')}`)
+    const addLink = this.db.prepare('INSERT INTO links (source, target_key) VALUES (?, ?)')
+    for (const key of linkKeys(note.body)) addLink.run(path, key)
   }
 
   private removeRows(path: string): void {
@@ -184,20 +188,30 @@ export class NoteIndex {
       (this.db.prepare('SELECT path, mtime, size FROM notes').all() as Array<{ path: string; mtime: number; size: number }>).map((row) => [row.path, row])
     )
     const changed: string[] = []
+    // Read first, then write in a few big steps: one database step per note
+    // is slow on Windows (every step waits for the disk).
+    let batch: Array<{ path: string; loaded: Awaited<ReturnType<Vault['read']>> }> = []
+    const flush = (): void => {
+      transaction(this.db, () => {
+        for (const item of batch) this.putRows(item.path, item.loaded.note, item.loaded)
+      })
+      batch = []
+    }
     for (const file of files) {
       const row = known.get(file.path)
       known.delete(file.path)
       if (row && row.mtime === file.mtimeMs && row.size === file.size) continue
       try {
-        const loaded = await vault.read(file.path)
-        this.put(file.path, loaded.note, loaded)
+        batch.push({ path: file.path, loaded: await vault.read(file.path) })
         changed.push(file.path)
       } catch {
         // Unreadable right now (e.g. being written): the next sync tries again.
       }
+      if (batch.length >= SYNC_BATCH) flush()
     }
+    if (batch.length > 0) flush()
     const removed = [...known.keys()]
-    for (const path of removed) this.remove(path)
+    if (removed.length > 0) transaction(this.db, () => removed.forEach((path) => this.removeRows(path)))
     return { changed, removed }
   }
 
