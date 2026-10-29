@@ -4,7 +4,8 @@
   "private": true,
   "description": "Gemeinsame Mail- und Kalenderlogik ohne Oberfläche (Relay, später Radar)",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./time": "./src/calendar/time.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",

@@ -4,6 +4,33 @@ Diese Datei listet alle fremden Bibliotheken, die Dulidan Works verwendet.
 Erlaubt sind nur MIT, Apache 2.0, BSD und ISC, bei Schriften die SIL Open
 Font License (OFL). Keine GPL, keine AGPL.
 
+## In Dulidan Relay enthalten
+
+Relay nutzt dieselben Grundbausteine wie Glyph (electron, react, TipTap für den
+Mail-Editor, lucide-react, Schriften) und zusätzlich diese Bibliotheken für Mail
+und Kalender. Die Datenbank ist `node:sqlite`, das in Electron/Node.js schon
+eingebaut ist (keine zusätzliche Bibliothek).
+
+| Bibliothek | Version | Lizenz | Wofür |
+| --- | --- | --- | --- |
+| imapflow | 2.9.1 | MIT | Mails abrufen (IMAP) |
+| nodemailer | 10.3.0 | MIT-0 | Mails zusammenbauen und senden (SMTP) |
+| mailparser | 3.13.0 | MIT | Mails lesen und zerlegen |
+| @zone-eu/mailsplit | 5.4.29 | MIT (wahlweise MIT oder EUPL; wir nutzen MIT) | von mailparser |
+| libmime, libbase64, libqp | 5.6.3, 1.4.1, 3.0.1 | MIT | Mail-Kodierungen |
+| node-ical | 0.27.3 | Apache-2.0 | Kalenderdateien (.ics) lesen |
+| rrule-temporal, temporal-polyfill, temporal-utils | 2.2.8, 1.0.6, 1.0.3 | MIT | Wiederholungen in .ics-Dateien |
+| temporal-spec | 1.0.1 | Apache-2.0 | von node-ical |
+| dompurify | 3.4.17 | Apache-2.0 (wahlweise MPL-2.0 oder Apache-2.0; wir nutzen Apache-2.0) | HTML-Mails säubern |
+| html-to-text, selderee, parseley, leac, peberminta | 10.0.1, 0.12.0, 0.13.1, 0.7.0, 0.10.0 | MIT | von mailparser |
+| htmlparser2, dom-serializer | 10.1.0, 2.0.0 | MIT | von mailparser |
+| domhandler, domutils, domelementtype, entities | 5.0.3, 3.2.2, 2.3.0, 4.5.0/7.0.1 | BSD-2-Clause | von mailparser |
+| deepmerge-ts | 8.0.2 | BSD-3-Clause | von node-ical |
+| pino, pino-std-serializers, pino-abstract-transport, @pinojs/redact, sonic-boom, thread-stream, on-exit-leak-free, atomic-sleep, quick-format-unescaped, safe-stable-stringify, real-require, process-warning | 10.x und andere | MIT | von imapflow (Protokoll ist in Relay ausgeschaltet) |
+| split2 | 4.2.0 | ISC | von imapflow |
+| socks, ip-address, smart-buffer | 2.8.10, 10.7.5, 4.2.0 | MIT | von imapflow |
+| encoding-japanese, iconv-lite, safer-buffer, he, punycode.js, linkify-it, uc.micro, tlds | verschiedene | MIT | Zeichensätze und Links in Mails |
+
 ## In Dulidan Pixel enthalten
 
 Pixel nutzt keine eigenen zusätzlichen Bibliotheken. Ausgeliefert werden:
@@ -57,6 +84,9 @@ werden nicht mit den Programmen ausgeliefert.
 | vitest | 5.0.5 | MIT |
 | typescript | 5.9.3 | Apache-2.0 |
 | @types/node, @types/react, @types/react-dom | 22.x, 19.x | MIT |
+| smtp-server (lokaler Test-Mailserver) | 3.21.2 | MIT-0 |
+| hoodiecrow-imap (lokaler Test-IMAP-Server) | 3.3.1 | MIT |
+| @types/nodemailer, @types/mailparser, @types/smtp-server | | MIT |
 
 Hinweis: Diese Bauwerkzeuge nutzen intern ein paar Pakete mit anderen
 Lizenzen: `lightningcss` (MPL-2.0) und `caniuse-lite` (CC-BY-4.0) über Vite,

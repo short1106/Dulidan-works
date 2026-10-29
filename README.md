@@ -7,6 +7,7 @@ Alle Dateien bleiben auf deinem Computer.
 | --- | --- | --- |
 | **Dulidan Glyph** | Textverarbeitung | Version 1 fertig |
 | **Dulidan Pixel** | Malen und Bildbearbeitung | Version 1 fertig |
+| **Dulidan Relay** | Mail und Kalender | Version 1 fertig |
 
 ## Glyph starten (Windows)
 
@@ -55,6 +56,51 @@ Auf dem Mac oder unter Linux: `pixel-starten.command`.
 | Strg+Umschalt+N | Neue Ebene |
 | Strg+0 / Strg+1 | Einpassen / 100 % |
 
+## Relay starten (Windows)
+
+Genauso wie Glyph: Doppelklick auf **`Relay starten.bat`**.
+**`Relay testen (wie neu).bat`** zeigt Start-Animation, Moduswahl und Konto-Einrichtung wie beim
+ersten Mal, **`Relay-Installer bauen.bat`** baut die Setup-Datei (liegt danach in `apps\relay\release`).
+Auf dem Mac oder unter Linux: `relay-starten.command`.
+
+### Was du in Relay ausprobieren kannst
+
+- **Konto einrichten:** IONOS oder Gmail auswählen, Adresse und Passwort eingeben, fertig.
+  Für Gmail brauchst du ein App-Passwort; Relay zeigt Schritt für Schritt, wie du es bekommst.
+  Relay prüft die Verbindung, bevor es das Konto speichert.
+- **Mails:** Ordner, Lesen, Antworten, Allen antworten, Weiterleiten (mit Anhängen), neue Mail
+  mit Signatur und Anhängen, Entwürfe, Suche in allen abgerufenen Mails, Benachrichtigungen.
+  Neue Mails holt Relay alle paar Minuten (einstellbar) oder sofort mit **F5**.
+- **Kalender:** Monats- und Wochenansicht, Termine mit Ort, Notiz und Erinnerung, Serien
+  (täglich, wöchentlich, monatlich), Kalenderdateien (.ics) importieren, auch direkt aus einem
+  Mail-Anhang. Alle Zeiten in deutscher Zeit mit Sommer- und Winterzeit.
+- **Modi:** Basis (nur Posteingang, Lesen, Antworten, Neue Mail, Anhang, Papierkorb und
+  Monatskalender), Experte (alles) und Pro (wie Experte, mit April-Platzhalter).
+
+### So schützt Relay dich
+
+- **Nur lesen und senden:** Löschen legt Mails in den Papierkorb deines Anbieters.
+  Endgültiges Löschen gibt es in Version 1 nicht.
+- **HTML-Mails** werden gesäubert und ohne Skripte in einem abgeschotteten Fenster gezeigt.
+- **Bilder aus dem Internet** lädt Relay nicht von selbst (Schutz vor Verfolgung).
+  Der Knopf **Bilder laden** erlaubt sie nur für diese eine Mail.
+- **Links** öffnen sich erst nach einer Rückfrage, die die echte Zieladresse zeigt. Steht im Text
+  eine andere Adresse als im Link, warnt Relay ausdrücklich.
+- **Mehr als zehn Empfänger** auf einmal: Relay fragt vorher nach.
+- **Passwörter** liegen nur verschlüsselt im Schlüsselspeicher von Windows (Electron safeStorage).
+  Gibt es keinen sicheren Speicher, speichert Relay gar kein Passwort.
+- **Netzwerk:** Relay spricht nur mit deinen Mailservern. Das Fenster selbst darf nichts aus dem
+  Internet laden.
+- **April** ist nur ein Platzhalter: Er sendet nichts und verschickt keine Daten.
+
+| Taste | Aktion |
+| --- | --- |
+| Strg+N | Neue Mail |
+| F5 | Mails abrufen |
+| Entf | In den Papierkorb |
+| R / Umschalt+R | Antworten / Allen antworten |
+| Pfeil hoch / runter | Vorherige / nächste Mail |
+
 ## Fertige EXE-Dateien herunterladen (ohne Node.js)
 
 Bei jedem Hochladen baut GitHub die Programme automatisch auf einem Windows-Rechner und legt sie
@@ -66,6 +112,8 @@ auf der Seite **Releases → „Dulidan Works – neueste Version“** ab. Die L
 | [Dulidan-Glyph-Setup.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Glyph-Setup.exe) | Glyph installieren (Startmenü, Desktop-Symbol, .glyph-Dateien per Doppelklick) |
 | [Dulidan-Pixel.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Pixel.exe) | Pixel direkt starten, ohne Installation |
 | [Dulidan-Pixel-Setup.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Pixel-Setup.exe) | Pixel installieren (Startmenü, Desktop-Symbol, .pixel-Dateien per Doppelklick) |
+| [Dulidan-Relay.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Relay.exe) | Relay direkt starten, ohne Installation |
+| [Dulidan-Relay-Setup.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Relay-Setup.exe) | Relay installieren (Startmenü, Desktop-Symbol) |
 
 Das Repository ist privat: Die Links funktionieren, wenn du bei GitHub angemeldet bist.
 
@@ -106,7 +154,11 @@ jedes Mal kurz entpackt; die installierte Version startet schneller.
 apps/
   glyph/            Die Textverarbeitung (Electron, React, TipTap)
   pixel/            Malen und Bildbearbeitung (Electron, React, Canvas 2D)
+  relay/            Mail und Kalender (Electron, React)
 packages/
+  mail-core/        Mail ohne Oberfläche: Konten, IMAP, SMTP, Zwischenspeicher, Vorlagen,
+                    Antwort-Erkennung, Kalender mit Zeitzonen und Serien
+  editor/           Schlanker Text-Editor für Mails (TipTap)
   design-system/    Farben, Schriften, Bausteine, Logos, Start-Animation, Moduswahl, Icon-Export
   core/             Modus-Logik, Einstellungen, Dateiformate, Rückgängig, sicheres Speichern, Autosave
 THIRD_PARTY_LICENSES.md
@@ -118,10 +170,13 @@ THIRD_PARTY_LICENSES.md
 npm install          # einmalig
 npm run dev          # Glyph mit Live-Neuladen
 npm run dev:pixel    # Pixel mit Live-Neuladen
-npm test             # Tests (Dateiformate, Speichern, Autosave, Rückgängig, Modi, Malwerkzeuge)
+npm run dev:relay    # Relay mit Live-Neuladen
+npm test             # Tests (Dateiformate, Speichern, Autosave, Rückgängig, Modi, Malwerkzeuge,
+                     #  Mail-Konten, Zwischenspeicher, Vorlagen, Antworten, Zeitzonen, Papierkorb)
 npm run typecheck    # Typprüfung
 npm run dist:win     # Glyph-Installer (auf Windows)
 npm run dist:win:pixel  # Pixel-Installer (auf Windows)
+npm run dist:win:relay  # Relay-Installer (auf Windows)
 ```
 
 Logo und App-Icon: das Dulidan D (`packages/design-system/src/logo/dulidan-d.svg`, als App-Icon
@@ -130,3 +185,6 @@ Logo und App-Icon: das Dulidan D (`packages/design-system/src/logo/dulidan-d.svg
 
 Start-Animation: `BootAnimation` aus dem Design-System. Jedes Programm übergibt nur seinen
 Namen (`programName="Glyph"`); Pixel nutzt zusätzlich seine eigene Pixel-Szene.
+
+Relay-Tests laufen nur gegen lokale Test-Server (`hoodiecrow-imap` und `smtp-server` auf
+127.0.0.1), nie gegen ein echtes Postfach.

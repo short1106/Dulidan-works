@@ -1,0 +1,25 @@
+{
+  "name": "@dulidan/editor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Schlanker Text-Editor (TipTap) für Dulidan-Programme, z. B. Mails in Relay",
+  "exports": {
+    ".": "./src/index.ts",
+    "./editor.css": "./src/editor.css"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "dependencies": {
+    "@dulidan/design-system": "*",
+    "@tiptap/extension-image": "^3.32.1",
+    "@tiptap/extensions": "^3.32.1",
+    "@tiptap/pm": "^3.32.1",
+    "@tiptap/react": "^3.32.1",
+    "@tiptap/starter-kit": "^3.32.1",
+    "lucide-react": "^1.63.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}
