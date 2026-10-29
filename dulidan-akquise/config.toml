@@ -1,0 +1,42 @@
+# Dulidan Studios – Akquise-Konfiguration (wird von der Oberfläche geschrieben)
+# Zugangsdaten stehen in secrets.json bzw. Umgebungsvariablen, nicht hier.
+
+[suche]
+regionen = ["Öhringen", "Heilbronn", "Hohenlohe"]
+branchen = ["Zimmerei"]
+umkreis_km = 20
+min_schlecht_score = 2
+website_veraltet_ab_jahren = 4
+max_google_anfragen_pro_suche = 150
+parallel = 6
+ausschliessen_kategorien = ["Arzt", "Zahnarzt", "Physiotherapeut", "Poliklinik", "Gesundheit", "Fußpflege", "Immobilienagentur", "Versicherungsagentur", "Behörde", "Kommunalverwaltung", "Postamt", "Apartmenthaus", "Beherbergung", "POI - Ort von Interesse", "Vereinigung / Organisation", "Veranstaltungsstätte", "Barbecuebereich", "Versanddienstleister", "Transportdienst", "Bekleidungsgeschäft", "Sportgeschäft", "Geschäftsstelle", "Berater"]
+ausschliessen_woerter = ["Immobilien", "Praxis", "Therap", "Heilprakt", "Psycholog", "Versicherung", "Hausverwaltung", "Physio", "Fußpflege", "Podo", "Medien", "Transporte"]
+
+[suchbegriffe]
+Zimmerei = ["Holzbau", "Zimmerer"]
+
+[versand]
+max_mails_pro_tag = 20
+pause_min_sekunden = 90
+pause_max_sekunden = 240
+betreff = "Kurze Idee zu Ihrer Website"
+absender_name = "Shaquille El Moussaoui"
+absender_email = "info@dulidan-studios.com"
+anrede_fallback = "Guten Tag,"
+
+[smtp]
+host = "smtp.ionos.de"
+port = 587
+user = "info@dulidan-studios.com"
+
+[imap]
+host = "imap.ionos.de"
+port = 993
+gesendet_ordner = "Gesendete Objekte"
+im_gesendet_ablegen = true
+
+[websuche]
+aktiv = true
+max_seiten_oeffnen = 3
+
+[google]

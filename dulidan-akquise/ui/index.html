@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dulidan Akquise</title>
+<style>
+:root {
+  --bg: #f6f5f2; --panel: #ffffff; --panel-2: #faf9f7; --line: #e6e3dd; --text: #1d1c1a; --muted: #6d6a64;
+  --accent: #2f6b4f; --accent-soft: #e5f0ea; --accent-text: #fff;
+  --ok: #2f6b4f; --ok-soft: #e5f0ea; --warn: #9a6400; --warn-soft: #fbf0d9; --info: #2b5c9e; --info-soft: #e4ecf8;
+  --bad: #b23a2e; --bad-soft: #fae6e3; --purple: #6a4aa0; --purple-soft: #eee8f7; --gray-soft: #efede9;
+  --shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 16px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161615; --panel: #1f1f1d; --panel-2: #252523; --line: #33322f; --text: #ecebe8; --muted: #9c9993;
+    --accent: #5fb38a; --accent-soft: #1f3a2d; --accent-text: #0e1a14;
+    --ok: #5fb38a; --ok-soft: #1f3a2d; --warn: #e0a640; --warn-soft: #3a2f1a; --info: #7aa7e6; --info-soft: #1d2a3d;
+    --bad: #e57b6f; --bad-soft: #3d2320; --purple: #b39ae0; --purple-soft: #2e2540; --gray-soft: #2a2a28;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.3);
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--text); font: 14px/1.5 "Segoe UI", system-ui, -apple-system, sans-serif; }
+a { color: var(--info); }
+button, input, select, textarea { font: inherit; color: inherit; }
+.app { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+nav { background: var(--panel); border-right: 1px solid var(--line); padding: 20px 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+.brand { font-weight: 700; font-size: 16px; padding: 0 10px 18px; letter-spacing: -.01em; }
+.brand small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+nav button { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; border: 0; background: none; padding: 9px 10px; border-radius: 8px; cursor: pointer; color: var(--muted); font-weight: 500; }
+nav button:hover { background: var(--panel-2); color: var(--text); }
+nav button.active { background: var(--accent-soft); color: var(--accent); }
+nav button .count { margin-left: auto; font-size: 12px; background: var(--gray-soft); color: var(--muted); border-radius: 10px; padding: 0 7px; }
+nav .spacer { flex: 1; }
+nav .foot { font-size: 12px; color: var(--muted); padding: 10px; }
+main { padding: 28px 32px 120px; max-width: 1280px; width: 100%; }
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -.02em; }
+.sub { color: var(--muted); margin: 0 0 22px; }
+h2 { font-size: 15px; margin: 0 0 12px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow); margin-bottom: 18px; }
+.grid { display: grid; gap: 14px; }
+.kpis { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin-bottom: 18px; }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); }
+.kpi .v { font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+.kpi .l { color: var(--muted); font-size: 13px; }
+.kpi .bar { height: 5px; background: var(--gray-soft); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+.kpi .bar i { display: block; height: 100%; background: var(--accent); }
+.btn { border: 1px solid var(--line); background: var(--panel); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+.btn:hover { background: var(--panel-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.btn.primary:hover { filter: brightness(1.07); }
+.btn.danger { color: var(--bad); }
+.btn.small { padding: 3px 10px; font-size: 13px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+label.f { display: block; margin-bottom: 14px; }
+label.f > span { display: block; font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+label.f > small { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+input[type=text], input[type=number], input[type=password], input[type=email], select, textarea {
+  width: 100%; border: 1px solid var(--line); background: var(--panel-2); border-radius: 8px; padding: 7px 10px; outline: none; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); background: var(--panel); }
+textarea { resize: vertical; }
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+.cols3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 18px; }
+.hint { background: var(--info-soft); color: var(--text); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; }
+.hint.warn { background: var(--warn-soft); }
+.muted { color: var(--muted); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.chip { border: 1px solid var(--line); background: var(--panel); border-radius: 20px; padding: 3px 12px; cursor: pointer; font-size: 13px; }
+.chip.on { background: var(--text); color: var(--bg); border-color: var(--text); }
+.chip b { font-weight: 600; margin-left: 4px; opacity: .7; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; padding: 8px 10px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--panel); }
+td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr.click { cursor: pointer; }
+tr.click:hover td { background: var(--panel-2); }
+.tablewrap { overflow: auto; max-height: calc(100vh - 290px); border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.badge { display: inline-block; border-radius: 6px; padding: 1px 8px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.b-bereit, .b-ja { background: var(--ok-soft); color: var(--ok); }
+.b-pruefen { background: var(--warn-soft); color: var(--warn); }
+.b-keine_email { background: var(--info-soft); color: var(--info); }
+.b-website_ok, .b-nein, .b-übersprungen, .b-offen, .b-fremd { background: var(--gray-soft); color: var(--muted); }
+.b-gesendet { background: var(--purple-soft); color: var(--purple); }
+.b-fehler, .b-unzustellbar, .b-abgemeldet { background: var(--bad-soft); color: var(--bad); }
+.firm { font-weight: 600; }
+.small { font-size: 12px; }
+.ellip { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Drawer */
+.drawer-bg { position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 20; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(560px, 100vw); background: var(--panel); z-index: 21; box-shadow: -8px 0 30px rgba(0,0,0,.15); padding: 22px 24px; overflow: auto; }
+.drawer h2 { font-size: 18px; margin-bottom: 2px; }
+.kv { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; margin: 14px 0 18px; font-size: 13px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; word-break: break-word; }
+.mail { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; white-space: pre-wrap; font-size: 13px; }
+.mail .subj { font-weight: 700; margin-bottom: 10px; white-space: normal; }
+/* Aktivität */
+.activity { position: fixed; right: 20px; bottom: 20px; width: 440px; max-width: calc(100vw - 40px); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,.18); z-index: 15; }
+.activity .head { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; }
+.activity .head .t { font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.activity .last { padding: 0 14px 10px; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.activity .log { max-height: 320px; overflow: auto; border-top: 1px solid var(--line); padding: 8px 14px; font: 12px/1.55 Consolas, ui-monospace, monospace; }
+.log .WARNING { color: var(--warn); } .log .ERROR { color: var(--bad); }
+.log .tm { color: var(--muted); margin-right: 6px; }
+.spin { width: 14px; height: 14px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: s 0.8s linear infinite; flex: none; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); flex: none; }
+@keyframes s { to { transform: rotate(360deg); } }
+.toast { position: fixed; left: 50%; top: 18px; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: 8px; z-index: 50; box-shadow: var(--shadow); max-width: 90vw; }
+.toast.bad { background: var(--bad); color: #fff; }
+.tpl { display: grid; grid-template-columns: 220px 1fr; gap: 18px; }
+.tpl-list button { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 7px 10px; border-radius: 7px; cursor: pointer; font-family: Consolas, monospace; font-size: 13px; }
+.tpl-list button.on { background: var(--accent-soft); color: var(--accent); }
+.ph { font-family: Consolas, monospace; font-size: 12px; }
+.empty { text-align: center; color: var(--muted); padding: 40px 0; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 40; display: grid; place-items: center; padding: 16px; }
+.modal { background: var(--panel); border-radius: 14px; padding: 22px 24px; max-width: 460px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+.modal h2 { font-size: 17px; }
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; }
+  nav { position: static; height: auto; flex-direction: row; flex-wrap: wrap; padding: 10px; }
+  nav .brand, nav .spacer, nav .foot { display: none; }
+  nav button { width: auto; }
+  main { padding: 18px 16px 140px; }
+  .cols2, .cols3, .tpl { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav id="nav">
+    <div class="brand">Dulidan Akquise<small>Kaltakquise-Werkzeug</small></div>
+    <button data-v="uebersicht">Übersicht</button>
+    <button data-v="suchen">Firmen suchen</button>
+    <button data-v="leads">Leads <span class="count" id="c-leads"></span></button>
+    <button data-v="versand">Versand <span class="count" id="c-bereit"></span></button>
+    <button data-v="kontakte">Angeschrieben <span class="count" id="c-kontakte"></span></button>
+    <button data-v="vorlagen">Vorlagen</button>
+    <button data-v="einstellungen">Einstellungen</button>
+    <div class="spacer"></div>
+    <div class="foot">Fenster mit dem schwarzen Terminal offen lassen, solange du arbeitest.</div>
+  </nav>
+  <main id="main"></main>
+</div>
+<div id="activity"></div>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const STATUS = {
+  bereit: "Bereit", pruefen: "Prüfen", keine_email: "Anrufen", website_ok: "Website ok", nein: "Ausgeschlossen",
+  gesendet: "Gesendet", "übersprungen": "Übersprungen", fehler: "Fehler", fremd: "Andere Branche",
+};
+const REPLY = { "": "offen", ja: "Antwort", abgemeldet: "Abgemeldet", unzustellbar: "Unzustellbar" };
+const badge = (s, map = STATUS) => `<span class="badge b-${esc(s || "offen")}">${esc(map[s] ?? s)}</span>`;
+
+async function api(path, opts = {}) {
+  const o = { headers: { "Content-Type": "application/json" }, ...opts };
+  if (o.body && typeof o.body !== "string") o.body = JSON.stringify(o.body);
+  const r = await fetch(path, o);
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || `Fehler ${r.status}`);
+  return data;
+}
+function toast(msg, bad = false) {
+  const t = document.createElement("div");
+  t.className = "toast" + (bad ? " bad" : "");
+  t.textContent = msg;
+  document.body.append(t);
+  setTimeout(() => t.remove(), bad ? 6000 : 2800);
+}
+function confirmBox(title, text, okLabel = "OK") {
+  return new Promise(res => {
+    const bg = document.createElement("div");
+    bg.className = "modal-bg";
+    bg.innerHTML = `<div class="modal"><h2>${esc(title)}</h2><p class="muted">${text}</p>
+      <div class="row" style="justify-content:flex-end;margin-top:18px">
+      <button class="btn" data-a="0">Abbrechen</button><button class="btn primary" data-a="1">${esc(okLabel)}</button></div></div>`;
+    bg.onclick = e => { const a = e.target.dataset.a; if (a !== undefined || e.target === bg) { bg.remove(); res(a === "1"); } };
+    document.body.append(bg);
+  });
+}
+
+// ------------------------------------------------------------------ Navigation
+let view = "uebersicht";
+try { view = localStorage.getItem("view") || view; } catch (e) {}
+const views = {};
+function go(v) {
+  view = v;
+  try { localStorage.setItem("view", v); } catch (e) {}
+  document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("active", b.dataset.v === v));
+  views[v]();
+}
+$("#nav").addEventListener("click", e => { const b = e.target.closest("button[data-v]"); if (b) go(b.dataset.v); });
+
+async function refreshCounts() {
+  try {
+    const o = await api("/api/overview");
+    $("#c-leads").textContent = o.leads_total;
+    $("#c-bereit").textContent = o.by_status.bereit || 0;
+    $("#c-kontakte").textContent = o.contacted_total;
+    return o;
+  } catch (e) { return null; }
+}
+
+// ------------------------------------------------------------------ Übersicht
+views.uebersicht = async () => {
+  const main = $("#main");
+  const o = await refreshCounts();
+  if (!o) { main.innerHTML = `<div class="empty">Server nicht erreichbar – läuft das Terminal-Fenster noch?</div>`; return; }
+  const s = o.by_status, g = o.usage.google || 0, br = o.usage.brave || 0;
+  const missing = Object.entries({ google: "Google API-Key", ionos: "IONOS-Passwort", brave: "Brave API-Key (optional)" })
+    .filter(([k]) => !o.keys[k]).map(([, v]) => v);
+  main.innerHTML = `
+    <h1>Übersicht</h1><p class="sub">Stand ${new Date().toLocaleString("de-DE")}</p>
+    ${missing.length ? `<div class="hint warn">Noch nicht eingerichtet: <b>${esc(missing.join(", "))}</b> → <a href="#" data-go="einstellungen">Einstellungen</a></div>` : ""}
+    <div class="grid kpis">
+      ${kpi(s.bereit || 0, "bereit zum Anschreiben")}
+      ${kpi(`${o.sent_today}/${o.limit}`, "heute gesendet", o.sent_today / o.limit)}
+      ${kpi(o.contacted_total, "angeschrieben gesamt")}
+      ${kpi(o.replies.ja, "Antworten")}
+      ${kpi(s.keine_email || 0, "zum Anrufen (keine E-Mail)")}
+      ${kpi(s.pruefen || 0, "E-Mail prüfen")}
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+      <div class="card"><h2>Nächste Schritte</h2>
+        <div class="grid" style="gap:10px">
+          ${step("Neue Firmen suchen", "Region + Branche, findet auch Betriebe ohne Website", "suchen")}
+          ${(s.pruefen || 0) ? step(`${s.pruefen} unsichere E-Mails prüfen`, "Kurz bestätigen, ob die Adresse zur Firma passt", "leads", "pruefen") : ""}
+          ${step(`${s.bereit || 0} Mails verschicken`, `heute noch ${Math.max(0, o.limit - o.sent_today)} möglich`, "versand")}
+          ${step("Antworten prüfen", "IONOS-Postfach nach Antworten & Abmeldungen durchsuchen", "kontakte")}
+        </div></div>
+      <div class="card"><h2>Kosten diesen Monat</h2>
+        ${usageBar("Google Maps", g, 1000)}${usageBar("Brave Websuche", br, 1000)}
+        <p class="muted small">Pro Monat je ca. 1.000 Anfragen gratis. Darüber: Google ca. 3,5 ct, Brave ca. 0,5 ct pro Anfrage.</p>
+        <h2 style="margin-top:16px">Zuletzt angeschrieben</h2>
+        ${o.recent.length ? o.recent.map(c => `<div class="row small" style="justify-content:space-between;padding:3px 0"><span>${esc(c.firma)}</span><span>${badge(c.geantwortet, REPLY)} <span class="muted">${esc(c.datum.slice(0, 10))}</span></span></div>`).join("") : `<p class="muted">Noch niemand.</p>`}
+      </div>
+    </div>`;
+  main.querySelectorAll("[data-go]").forEach(a => a.onclick = e => {
+    e.preventDefault();
+    if (a.dataset.filter) leadFilter = a.dataset.filter;
+    go(a.dataset.go);
+  });
+};
+const kpi = (v, l, frac) => `<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div>${frac !== undefined ? `<div class="bar"><i style="width:${Math.min(100, frac * 100)}%"></i></div>` : ""}</div>`;
+const step = (t, d, v, f = "") => `<a href="#" data-go="${v}" data-filter="${f}" class="card" style="margin:0;padding:12px 14px;text-decoration:none;color:inherit;box-shadow:none"><b>${esc(t)} →</b><div class="muted small">${esc(d)}</div></a>`;
+const usageBar = (l, n, max) => `<div style="margin-bottom:10px"><div class="row small" style="justify-content:space-between"><span>${l}</span><span class="muted">${n} / ${max} gratis</span></div><div class="kpi" style="padding:0;border:0;box-shadow:none"><div class="bar"><i style="width:${Math.min(100, n / max * 100)}%;${n > max ? "background:var(--bad)" : ""}"></i></div></div></div>`;
+
+// ------------------------------------------------------------------ Suchen
+views.suchen = async () => {
+  const main = $("#main");
+  const [{ config: c, keys }, o] = await Promise.all([api("/api/config"), api("/api/overview")]);
+  const s = c.suche;
+  main.innerHTML = `
+    <h1>Firmen suchen</h1><p class="sub">Durchsucht Google Maps, prüft jede Website und sucht die E-Mail-Adresse.</p>
+    ${!keys.google ? `<div class="hint warn">Zuerst den Google API-Key unter <a href="#" onclick="go('einstellungen');return false">Einstellungen</a> eintragen.</div>` : ""}
+    <div class="card">
+      <div class="cols2">
+        <label class="f"><span>Orte / Regionen</span><input type="text" id="s-reg" value="${esc(s.regionen.join(", "))}">
+          <small>Mehrere mit Komma trennen, z.B. „Öhringen, Heilbronn, Schwäbisch Hall“</small></label>
+        <label class="f"><span>Umkreis in km</span><input type="number" id="s-km" min="0" max="100" value="${esc(s.umkreis_km)}">
+          <small>Um jeden Ort herum suchen. 0 = nur innerhalb der Ortsgrenzen.</small></label>
+      </div>
+      <label class="f"><span>Branchen</span><input type="text" id="s-br" value="${esc(s.branchen.join(", "))}">
+        <small>z.B. „Zimmerei, Dachdecker, Schreinerei“. Für jede Branche wird eine eigene Mail-Vorlage genutzt, falls vorhanden.</small></label>
+      <div id="s-terms"></div>
+      <div class="hint">Google liefert pro Suchanfrage höchstens 60 Treffer. Ist ein Gebiet „voll“, teilt das Tool es automatisch in kleinere Kacheln und sucht dort weiter – so werden auch in dichten Gebieten alle Betriebe gefunden.
+        Max. <b>${esc(s.max_google_anfragen_pro_suche)}</b> Google-Anfragen pro Suche (diesen Monat schon <b>${o.usage.google || 0}</b> von 1.000 gratis genutzt).</div>
+      <div class="row"><button class="btn primary" id="s-go" ${keys.google ? "" : "disabled"}>Suche starten</button>
+        <span class="muted small">Fortschritt erscheint unten rechts.</span></div>
+    </div>
+    <div class="card"><h2>Weitere Werkzeuge</h2>
+      <div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0 12px">
+        <div><b>E-Mails im Web suchen</b><div class="muted small">Für Leads ohne E-Mail (meist ohne Website): sucht „Firma Ort E-Mail“ bei Brave. ${(o.by_status.keine_email || 0)} Leads betroffen.</div></div>
+        <button class="btn" id="t-web" ${keys.brave ? "" : "disabled title='Brave-Key fehlt'"}>Starten</button></div>
+      <div class="row" style="justify-content:space-between;padding:12px 0 2px">
+        <div><b>Websites erneut prüfen</b><div class="muted small">Für Leads ohne E-Mail, die eine Website haben. Kostet nichts.</div></div>
+        <button class="btn" id="t-re">Starten</button></div>
+    </div>`;
+  const terms = { ...c.suchbegriffe };
+  const drawTerms = () => {
+    const br = $("#s-br").value.split(",").map(x => x.trim()).filter(Boolean);
+    $("#s-terms").innerHTML = br.length ? `<div class="f" style="margin-bottom:14px"><span style="font-weight:600;font-size:13px">Zusätzliche Suchbegriffe</span>
+      <div class="muted small" style="margin-bottom:6px">Findet Betriebe, die bei Google anders heißen (z.B. „Holzbau“ statt „Zimmerei“).</div>
+      ${br.map(b => `<div class="row" style="margin-bottom:6px"><span style="width:140px" class="small"><b>${esc(b)}</b></span>
+        <input type="text" style="flex:1" data-term="${esc(b)}" value="${esc((terms[b] || []).join(", "))}" placeholder="z.B. Begriff 1, Begriff 2"></div>`).join("")}</div>` : "";
+    $("#s-terms").querySelectorAll("input").forEach(i => i.oninput = () => terms[i.dataset.term] = i.value.split(",").map(x => x.trim()).filter(Boolean));
+  };
+  $("#s-br").oninput = drawTerms;
+  drawTerms();
+  $("#s-go").onclick = async () => {
+    const branchen = $("#s-br").value.split(",").map(x => x.trim()).filter(Boolean);
+    const suchbegriffe = {};
+    branchen.forEach(b => suchbegriffe[b] = terms[b] || []);
+    Object.keys(terms).forEach(k => { if (!(k in suchbegriffe)) suchbegriffe[k] = terms[k]; });
+    await runJob("suchen", { regionen: $("#s-reg").value, branchen, umkreis_km: +$("#s-km").value || 0, suchbegriffe });
+  };
+  $("#t-web").onclick = () => runJob("websuche");
+  $("#t-re").onclick = () => runJob("nachpruefen");
+};
+
+// ------------------------------------------------------------------ Leads
+let leadFilter = "bereit", leadSearch = "", leadCache = [], selected = new Set();
+views.leads = async () => {
+  leadCache = await api("/api/leads");
+  selected.clear();
+  drawLeads();
+};
+function drawLeads() {
+  const main = $("#main");
+  const counts = {};
+  leadCache.forEach(l => counts[l.status] = (counts[l.status] || 0) + 1);
+  const order = ["bereit", "pruefen", "keine_email", "website_ok", "gesendet", "nein", "fremd", "fehler", "übersprungen"];
+  const q = leadSearch.toLowerCase();
+  const rows = leadCache.filter(l => (leadFilter === "alle" || l.status === leadFilter) &&
+    (!q || `${l.firma} ${l.ort} ${l.email} ${l.branche}`.toLowerCase().includes(q)));
+  main.innerHTML = `
+    <h1>Leads</h1><p class="sub">Alle gefundenen Firmen. Klick auf eine Zeile für Details, E-Mail-Vorschau und Bearbeiten.</p>
+    <div class="chips">
+      <span class="chip ${leadFilter === "alle" ? "on" : ""}" data-f="alle">Alle<b>${leadCache.length}</b></span>
+      ${order.filter(s => counts[s]).map(s => `<span class="chip ${leadFilter === s ? "on" : ""}" data-f="${s}">${STATUS[s]}<b>${counts[s]}</b></span>`).join("")}
+    </div>
+    ${leadFilter === "pruefen" ? `<div class="hint warn">Diese E-Mails kommen aus Branchenverzeichnissen und passen nicht eindeutig zum Firmennamen. Öffne die Quelle, prüfe kurz und setze dann auf <b>Bereit</b> oder <b>Ausgeschlossen</b>.</div>` : ""}
+    ${leadFilter === "fremd" ? `<div class="hint">Diese Treffer gehören laut Google-Kategorie oder Name zu einer anderen Branche (Arzt, Ferienwohnung, Versicherung …) und werden nicht angeschrieben. Die Regeln findest du unter Einstellungen.</div>` : ""}
+    ${leadFilter === "keine_email" ? `<div class="hint">Für diese Firmen wurde keine E-Mail gefunden – am besten anrufen. Trag Ergebnisse als Notiz ein, oder eine E-Mail, falls sie dir eine nennen.</div>` : ""}
+    <div class="row" style="margin-bottom:12px">
+      <input type="text" id="l-q" placeholder="Suchen: Firma, Ort, E-Mail …" value="${esc(leadSearch)}" style="max-width:320px">
+      <span id="l-bulk" class="row"></span>
+    </div>
+    <div class="tablewrap"><table>
+      <thead><tr><th style="width:30px"><input type="checkbox" id="l-all"></th><th>Firma</th><th>Website</th><th>E-Mail / Telefon</th><th>Status</th></tr></thead>
+      <tbody>${rows.length ? rows.map(l => `
+        <tr class="click" data-id="${esc(l.place_id)}">
+          <td><input type="checkbox" data-sel="${esc(l.place_id)}" ${selected.has(l.place_id) ? "checked" : ""}></td>
+          <td><div class="firm">${esc(l.firma)}</div><div class="muted small">${esc(l.branche)} · ${esc(l.ort)}${l.kategorie ? ` · <i>${esc(l.kategorie)}</i>` : ""}</div></td>
+          <td class="small"><div class="ellip">${l.website ? esc(l.website.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")) : "<span class='muted'>–</span>"}</div><div class="muted ellip">${esc(l.website_status)}</div></td>
+          <td class="small"><div class="ellip">${esc(l.email) || "<span class='muted'>keine E-Mail</span>"}</div><div class="muted">${esc(l.telefon)}</div>${l.notiz ? `<div class="muted ellip">📝 ${esc(l.notiz)}</div>` : ""}</td>
+          <td>${badge(l.status)}</td>
+        </tr>`).join("") : `<tr><td colspan="5" class="empty">Keine Leads in dieser Ansicht.</td></tr>`}
+      </tbody></table></div>`;
+  main.querySelectorAll(".chip").forEach(c => c.onclick = () => { leadFilter = c.dataset.f; selected.clear(); drawLeads(); });
+  const qi = $("#l-q");
+  qi.oninput = () => { leadSearch = qi.value; const pos = qi.selectionStart; drawLeads(); const n = $("#l-q"); n.focus(); n.setSelectionRange(pos, pos); };
+  main.querySelector("tbody").onclick = e => {
+    const cb = e.target.closest("[data-sel]");
+    if (cb) { cb.checked ? selected.add(cb.dataset.sel) : selected.delete(cb.dataset.sel); drawBulk(); return; }
+    const tr = e.target.closest("tr[data-id]");
+    if (tr) openLead(tr.dataset.id);
+  };
+  $("#l-all").onchange = e => { rows.forEach(l => e.target.checked ? selected.add(l.place_id) : selected.delete(l.place_id)); drawLeads(); };
+  drawBulk();
+}
+function drawBulk() {
+  const el = $("#l-bulk");
+  if (!el) return;
+  el.innerHTML = selected.size ? `<span class="muted small">${selected.size} ausgewählt:</span>
+    <button class="btn small" data-b="bereit">Bereit</button><button class="btn small" data-b="nein">Ausschließen</button>` : "";
+  el.querySelectorAll("[data-b]").forEach(b => b.onclick = async () => {
+    const r = await api("/api/leads/bulk", { method: "POST", body: { ids: [...selected], status: b.dataset.b } });
+    toast(`${r.changed} Leads geändert` + (b.dataset.b === "bereit" && r.changed < selected.size ? " (ohne E-Mail übersprungen)" : ""));
+    views.leads(); refreshCounts();
+  });
+}
+async function openLead(id) {
+  const l = leadCache.find(x => x.place_id === id) || (await api("/api/leads")).find(x => x.place_id === id);
+  closeDrawer();
+  const bg = document.createElement("div"); bg.className = "drawer-bg"; bg.onclick = closeDrawer;
+  const d = document.createElement("div"); d.className = "drawer"; d.id = "drawer";
+  const locked = l.status === "gesendet";
+  d.innerHTML = `
+    <div class="row" style="justify-content:space-between;align-items:flex-start"><div><h2>${esc(l.firma)}</h2><div class="muted">${esc(l.branche)} · ${esc(l.ort)}</div></div>
+      <button class="btn small" onclick="closeDrawer()">Schließen</button></div>
+    <dl class="kv">
+      <dt>Adresse</dt><dd>${esc(l.adresse)}</dd>
+      <dt>Telefon</dt><dd>${l.telefon ? `<a href="tel:${esc(l.telefon.replace(/\s/g, ""))}">${esc(l.telefon)}</a>` : "–"}</dd>
+      <dt>Website</dt><dd>${l.website ? `<a href="${esc(l.website)}" target="_blank" rel="noopener">${esc(l.website)}</a>` : "keine"}<div class="muted">${esc(l.website_status)}</div></dd>
+      <dt>Google Maps</dt><dd>${l.maps_url ? `<a href="${esc(l.maps_url)}" target="_blank" rel="noopener">Profil öffnen</a>` : "–"}</dd>
+      <dt>E-Mail-Quelle</dt><dd>${l.email_quelle && l.email_quelle.startsWith("http") ? `<a href="${esc(l.email_quelle)}" target="_blank" rel="noopener">${esc(l.email_quelle)}</a>` : esc(l.email_quelle || "–")}</dd>
+      <dt>Google-Kategorie</dt><dd>${esc(l.kategorie || "–")}</dd>
+      <dt>Gefunden</dt><dd>${esc(l.gefunden_am)}</dd>
+    </dl>
+    <label class="f"><span>E-Mail</span><input type="email" id="d-email" value="${esc(l.email)}" ${locked ? "disabled" : ""}></label>
+    <label class="f"><span>Anrede</span><input type="text" id="d-anrede" value="${esc(l.anrede)}" ${locked ? "disabled" : ""}><small>z.B. „Hallo Herr Müller,“ oder „Guten Tag,“</small></label>
+    <label class="f"><span>Notiz</span><textarea id="d-notiz" rows="2" placeholder="z.B. angerufen am …, Rückruf Dienstag">${esc(l.notiz)}</textarea></label>
+    <label class="f"><span>Status</span><select id="d-status" ${locked ? "disabled" : ""}>
+      ${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === l.status ? "selected" : ""}>${v}</option>`).join("")}</select>
+      <small>Nur Leads mit Status „Bereit“ werden beim Versand angeschrieben.</small></label>
+    <div class="row" style="margin-bottom:18px">
+      <button class="btn primary" id="d-save">Speichern</button>
+      ${locked ? "" : `<button class="btn" id="d-find">E-Mail suchen</button>`}
+      ${l.email ? `<button class="btn" id="d-prev">Mail-Vorschau</button>` : ""}
+    </div>
+    <div id="d-mail"></div>`;
+  document.body.append(bg, d);
+  $("#d-save").onclick = async () => {
+    try {
+      const body = { notiz: $("#d-notiz").value };
+      if (!locked) Object.assign(body, { email: $("#d-email").value, anrede: $("#d-anrede").value, status: $("#d-status").value });
+      if (body.status === "bereit" && !body.email) throw new Error("Ohne E-Mail kann der Lead nicht auf „Bereit“.");
+      await api(`/api/leads/${encodeURIComponent(id)}`, { method: "PATCH", body });
+      toast("Gespeichert"); closeDrawer(); views.leads(); refreshCounts();
+    } catch (e) { toast(e.message, true); }
+  };
+  if ($("#d-find")) $("#d-find").onclick = async e => {
+    e.target.disabled = true; e.target.textContent = "Suche läuft …";
+    try {
+      const r = await api(`/api/leads/${encodeURIComponent(id)}/kontakt_suchen`, { method: "POST" });
+      toast(r.email ? `Gefunden: ${r.email}` : "Keine E-Mail gefunden");
+      leadCache = await api("/api/leads"); openLead(id); drawLeads();
+    } catch (err) { toast(err.message, true); e.target.disabled = false; }
+  };
+  if ($("#d-prev")) $("#d-prev").onclick = async () => {
+    const m = await api(`/api/leads/${encodeURIComponent(id)}/vorschau`);
+    $("#d-mail").innerHTML = mailHtml(m);
+  };
+}
+function closeDrawer() { document.querySelectorAll(".drawer, .drawer-bg").forEach(e => e.remove()); }
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+const mailHtml = m => `<div class="muted small" style="margin-bottom:6px">An: ${esc(m.to)} · Vorlage: <span class="ph">${esc(m.vorlage)}</span></div>
+  <div class="mail"><div class="subj">${esc(m.subject)}</div>${esc(m.body)}</div>`;
+
+// ------------------------------------------------------------------ Versand
+views.versand = async () => {
+  const main = $("#main");
+  const [o, mails, { config: c }] = await Promise.all([api("/api/overview"), api("/api/vorschau_bereit?n=50"), api("/api/config")]);
+  const left = Math.max(0, o.limit - o.sent_today);
+  const bereit = o.by_status.bereit || 0;
+  const v = c.versand;
+  main.innerHTML = `
+    <h1>Versand</h1><p class="sub">Verschickt die Mails an alle Leads mit Status „Bereit“ – mit zufälligen Pausen dazwischen, damit es natürlich wirkt.</p>
+    <div class="grid kpis">${kpi(bereit, "Leads bereit")}${kpi(`${o.sent_today}/${o.limit}`, "heute gesendet", o.sent_today / o.limit)}${kpi(left, "heute noch möglich")}</div>
+    ${!o.keys.ionos ? `<div class="hint warn">IONOS-Passwort fehlt → <a href="#" onclick="go('einstellungen');return false">Einstellungen</a></div>` : ""}
+    <div class="card">
+      <div class="row">
+        <label class="f" style="margin:0;width:140px"><span>Anzahl jetzt</span><input type="number" id="v-n" min="1" max="${left}" value="${Math.min(left, bereit)}"></label>
+        <div class="muted small" style="flex:1;min-width:220px">Pause zwischen den Mails: ${v.pause_min_sekunden}–${v.pause_max_sekunden} s → <span id="v-eta"></span>.<br>Das Browserfenster darfst du schließen, das Terminal-Fenster nicht.</div>
+        <button class="btn primary" id="v-go" ${left && bereit && o.keys.ionos ? "" : "disabled"}>Jetzt senden</button>
+      </div>
+      <p class="muted small" style="margin:12px 0 0">Tipp: Am besten unter der Woche zwischen 8 und 10 Uhr senden. Mails mitten in der Nacht wirken automatisiert.</p>
+    </div>
+    <h2>Diese Mails gehen als Nächstes raus (${mails.length}${bereit > mails.length ? ` von ${bereit}` : ""})</h2>
+    ${mails.length ? mails.map((m, i) => `<details class="card" style="padding:12px 16px" ${i === 0 ? "open" : ""}>
+      <summary style="cursor:pointer"><b>${esc(m.firma)}</b> <span class="muted small">· ${esc(m.to)} · ${esc(m.subject)}</span>
+        <button class="btn small" style="float:right" data-open="${esc(m.place_id)}">Bearbeiten</button></summary>
+      <div style="margin-top:12px">${mailHtml(m)}</div></details>`).join("") : `<div class="empty">Keine Leads auf „Bereit“. <a href="#" onclick="go('suchen');return false">Neue Firmen suchen</a></div>`}`;
+  const eta = () => { const n = +$("#v-n").value || 0; const mins = Math.round(n * (v.pause_min_sekunden + v.pause_max_sekunden) / 2 / 60); $("#v-eta").textContent = n > 1 ? `dauert ca. ${mins} Min.` : "sofort"; };
+  $("#v-n").oninput = eta; eta();
+  main.querySelectorAll("[data-open]").forEach(b => b.onclick = async e => { e.preventDefault(); leadCache = await api("/api/leads"); openLead(b.dataset.open); });
+  $("#v-go").onclick = async () => {
+    const n = +$("#v-n").value;
+    if (!n) return;
+    if (await confirmBox("Mails wirklich verschicken?", `Es werden jetzt <b>${n}</b> echte E-Mails von deinem IONOS-Konto verschickt. Das lässt sich nicht rückgängig machen.`, `${n} Mails senden`))
+      runJob("senden", { live: true, anzahl: n });
+  };
+};
+
+// ------------------------------------------------------------------ Angeschrieben
+let contactFilter = "alle";
+views.kontakte = async () => {
+  const main = $("#main");
+  const rows = await api("/api/contacted");
+  const f = rows.filter(c => contactFilter === "alle" || (c.geantwortet || "") === contactFilter);
+  const n = k => rows.filter(c => (c.geantwortet || "") === k).length;
+  main.innerHTML = `
+    <h1>Angeschrieben</h1><p class="sub">Alle verschickten Mails (gespeichert in contacted_companies.csv).</p>
+    <div class="row" style="justify-content:space-between;margin-bottom:12px">
+      <div class="chips" style="margin:0">${[["alle", "Alle", rows.length], ["", "Offen", n("")], ["ja", "Antwort", n("ja")], ["abgemeldet", "Abgemeldet", n("abgemeldet")], ["unzustellbar", "Unzustellbar", n("unzustellbar")]]
+        .map(([k, l, c]) => `<span class="chip ${contactFilter === k ? "on" : ""}" data-f="${k}">${l}<b>${c}</b></span>`).join("")}</div>
+      <button class="btn primary" id="k-check">Antworten prüfen</button>
+    </div>
+    <div class="tablewrap"><table><thead><tr><th>Datum</th><th>Firma</th><th>E-Mail</th><th>Website</th><th>Antwort</th></tr></thead>
+      <tbody>${f.length ? f.map(c => `<tr><td class="small">${esc(c.datum)}</td><td><div class="firm">${esc(c.firma)}</div><div class="muted small">${esc(c.ort)} · ${esc(c.telefon)}</div></td>
+        <td class="small">${esc(c.email)}</td><td class="small muted"><div class="ellip">${esc(c.website_status)}</div></td>
+        <td>${badge(c.geantwortet || "", REPLY)}${c.antwort_datum ? `<div class="muted small">${esc(c.antwort_datum)}</div>` : ""}</td></tr>`).join("")
+        : `<tr><td colspan="5" class="empty">Noch keine Einträge.</td></tr>`}</tbody></table></div>`;
+  main.querySelectorAll(".chip").forEach(c => c.onclick = () => { contactFilter = c.dataset.f; views.kontakte(); });
+  $("#k-check").onclick = () => runJob("antworten");
+};
+
+// ------------------------------------------------------------------ Vorlagen
+let tplCurrent = null;
+views.vorlagen = async () => {
+  const main = $("#main");
+  const [list, { config: c }] = await Promise.all([api("/api/vorlagen"), api("/api/config")]);
+  if (!tplCurrent || !list.find(t => t.name === tplCurrent)) tplCurrent = list[0]?.name;
+  const cur = list.find(t => t.name === tplCurrent) || { name: "", text: "" };
+  const usage = await Promise.all(c.suche.branchen.map(b => api(`/api/vorlage_fuer?branche=${encodeURIComponent(b)}`).then(r => ({ b, ...r }))));
+  main.innerHTML = `
+    <h1>Vorlagen</h1><p class="sub">Die erste Zeile „Betreff: …“ ist der Betreff. Platzhalter werden pro Firma ersetzt.</p>
+    <div class="hint">Welche Vorlage genommen wird: <span class="ph">branche_ohne_website</span> für Firmen ohne Website, sonst <span class="ph">branche</span>, sonst <span class="ph">standard</span>.
+      ${usage.map(u => `<br><b>${esc(u.b)}</b>: mit Website → <span class="ph">${esc(u.mit_website)}</span>, ohne Website → <span class="ph">${esc(u.ohne_website)}</span>`).join("")}</div>
+    <div class="tpl">
+      <div class="card tpl-list" style="padding:10px">
+        ${list.map(t => `<button class="${t.name === tplCurrent ? "on" : ""}" data-t="${esc(t.name)}">${esc(t.name)}</button>`).join("")}
+        <button id="t-new" style="color:var(--accent);font-family:inherit">+ Neue Vorlage</button>
+      </div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between;margin-bottom:10px"><b class="ph">${esc(cur.name)}.txt</b>
+          <div class="row">${["anrede", "firma", "ort", "branche", "website"].map(p => `<button class="btn small ph" data-ph="${p}">{${p}}</button>`).join("")}</div></div>
+        <textarea id="t-text" rows="24" style="font-family:Consolas,monospace;font-size:13px">${esc(cur.text)}</textarea>
+        <div class="row" style="margin-top:12px"><button class="btn primary" id="t-save">Speichern</button><span class="muted small">{anrede} wird z.B. zu „Hallo Herr Müller,“ oder „Guten Tag,“</span></div>
+      </div>
+    </div>`;
+  main.querySelectorAll("[data-t]").forEach(b => b.onclick = () => { tplCurrent = b.dataset.t; views.vorlagen(); });
+  main.querySelectorAll("[data-ph]").forEach(b => b.onclick = () => {
+    const ta = $("#t-text"), ins = `{${b.dataset.ph}}`;
+    ta.setRangeText(ins, ta.selectionStart, ta.selectionEnd, "end"); ta.focus();
+  });
+  $("#t-save").onclick = async () => {
+    try { await api("/api/vorlagen", { method: "POST", body: { name: tplCurrent, text: $("#t-text").value } }); toast("Vorlage gespeichert"); }
+    catch (e) { toast(e.message, true); }
+  };
+  $("#t-new").onclick = async () => {
+    const name = (prompt("Name der neuen Vorlage (z.B. dachdecker oder dachdecker_ohne_website):") || "").trim().toLowerCase()
+      .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss").replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+    if (!name) return;
+    try {
+      await api("/api/vorlagen", { method: "POST", body: { name, text: cur.text } });
+      tplCurrent = name; toast("Vorlage angelegt – Text aus der aktuellen Vorlage übernommen"); views.vorlagen();
+    } catch (e) { toast(e.message, true); }
+  };
+};
+
+// ------------------------------------------------------------------ Einstellungen
+views.einstellungen = async () => {
+  const main = $("#main");
+  const { config: c, keys } = await api("/api/config");
+  const v = c.versand, s = c.suche;
+  const keyField = (id, label, set, help) => `<label class="f"><span>${label} ${set ? `<span class="badge b-bereit">eingerichtet</span>` : `<span class="badge b-pruefen">fehlt</span>`}</span>
+    <input type="password" id="${id}" placeholder="${set ? "leer lassen = unverändert" : "hier einfügen"}" autocomplete="off"><small>${help}</small></label>`;
+  main.innerHTML = `
+    <h1>Einstellungen</h1><p class="sub">Wird in config.toml gespeichert, Zugangsdaten in secrets.json im Tool-Ordner.</p>
+    <div class="card"><h2>Zugangsdaten</h2>
+      ${keyField("k-google", "Google Maps API-Key", keys.google, "Google Cloud Console → Places API (New)")}
+      ${keyField("k-brave", "Brave Search API-Key", keys.brave, "Optional: für E-Mails von Firmen ohne Website (api-dashboard.search.brave.com)")}
+      ${keyField("k-ionos", "IONOS E-Mail-Passwort", keys.ionos, `für ${esc(c.smtp.user)}`)}
+      <button class="btn" id="e-test">IONOS-Login testen</button>
+    </div>
+    <div class="card"><h2>Versand</h2>
+      <div class="cols3">
+        ${num("versand.max_mails_pro_tag", "Max. Mails pro Tag", v.max_mails_pro_tag, "Für neue Absender 20–30 empfohlen")}
+        ${num("versand.pause_min_sekunden", "Pause min. (Sek.)", v.pause_min_sekunden)}
+        ${num("versand.pause_max_sekunden", "Pause max. (Sek.)", v.pause_max_sekunden)}
+      </div>
+      <div class="cols2">
+        ${txt("versand.absender_name", "Absender-Name", v.absender_name)}
+        ${txt("versand.absender_email", "Absender-E-Mail", v.absender_email)}
+        ${txt("versand.anrede_fallback", "Anrede, wenn kein Name gefunden", v.anrede_fallback)}
+        ${txt("versand.betreff", "Standard-Betreff (falls Vorlage keinen hat)", v.betreff)}
+      </div>
+      <label class="row" style="gap:8px"><input type="checkbox" data-k="imap.im_gesendet_ablegen" ${c.imap.im_gesendet_ablegen ? "checked" : ""}> Kopie jeder Mail im IONOS-Ordner „Gesendete Objekte“ ablegen</label>
+    </div>
+    <div class="card"><h2>Suche &amp; Website-Bewertung</h2>
+      <div class="cols3">
+        ${num("suche.min_schlecht_score", "Ab wann ist eine Website „schlecht“?", s.min_schlecht_score, "Punkte: kein HTTPS +2, nicht mobil +2, veraltete Technik +1–2, altes Copyright +1, langsam +1. 1 = strenger (mehr Leads)")}
+        ${num("suche.website_veraltet_ab_jahren", "Copyright älter als (Jahre)", s.website_veraltet_ab_jahren)}
+        ${num("suche.max_google_anfragen_pro_suche", "Max. Google-Anfragen pro Suche", s.max_google_anfragen_pro_suche, "Schutz vor Kosten. 1 Anfrage = bis 20 Firmen")}
+        ${num("suche.parallel", "Websites gleichzeitig prüfen", s.parallel)}
+      </div>
+      <label class="f"><span>Andere Branche: diese Google-Kategorien ausschließen</span><textarea rows="3" data-k="suche.ausschliessen_kategorien">${esc(s.ausschliessen_kategorien.join(", "))}</textarea><small>Mit Komma getrennt. Steht die gesuchte Branche im Firmennamen, wird die Firma trotzdem behalten.</small></label>
+      <label class="f"><span>… und Firmen mit diesen Wörtern im Namen</span><textarea rows="2" data-k="suche.ausschliessen_woerter">${esc(s.ausschliessen_woerter.join(", "))}</textarea></label>
+      <label class="row" style="gap:8px"><input type="checkbox" data-k="websuche.aktiv" ${c.websuche.aktiv ? "checked" : ""}> Bei Firmen ohne E-Mail automatisch im Web suchen (Brave)</label>
+    </div>
+    <details class="card"><summary style="cursor:pointer"><b>Server (nur ändern, wenn nötig)</b></summary>
+      <div class="cols2" style="margin-top:14px">
+        ${txt("smtp.host", "SMTP-Server", c.smtp.host)}${num("smtp.port", "SMTP-Port", c.smtp.port)}
+        ${txt("smtp.user", "Benutzer (E-Mail)", c.smtp.user)}${txt("imap.gesendet_ordner", "Ordner für gesendete Mails", c.imap.gesendet_ordner)}
+        ${txt("imap.host", "IMAP-Server", c.imap.host)}${num("imap.port", "IMAP-Port", c.imap.port)}
+      </div></details>
+    <button class="btn primary" id="e-save">Einstellungen speichern</button>`;
+  $("#e-save").onclick = async () => {
+    const cfg = {};
+    main.querySelectorAll("[data-k]").forEach(el => {
+      const [sec, k] = el.dataset.k.split(".");
+      (cfg[sec] ||= {})[k] = el.type === "checkbox" ? el.checked : el.value;
+    });
+    try {
+      await api("/api/config", { method: "POST", body: { config: cfg, secrets: { google_api_key: $("#k-google").value, brave_api_key: $("#k-brave").value, ionos_password: $("#k-ionos").value } } });
+      toast("Gespeichert"); views.einstellungen(); refreshCounts();
+    } catch (e) { toast(e.message, true); }
+  };
+  $("#e-test").onclick = async e => {
+    e.target.disabled = true;
+    try { await api("/api/test_ionos", { method: "POST" }); toast("IONOS-Login funktioniert ✓"); }
+    catch (err) { toast(err.message, true); }
+    e.target.disabled = false;
+  };
+};
+const num = (k, l, v, h = "") => `<label class="f"><span>${l}</span><input type="number" data-k="${k}" value="${esc(v)}">${h ? `<small>${h}</small>` : ""}</label>`;
+const txt = (k, l, v, h = "") => `<label class="f"><span>${l}</span><input type="text" data-k="${k}" value="${esc(v)}">${h ? `<small>${h}</small>` : ""}</label>`;
+
+// ------------------------------------------------------------------ Hintergrund-Aufgaben
+let jobLog = [], jobOpen = false, jobWasRunning = false;
+try { jobOpen = localStorage.getItem("jobOpen") === "1"; } catch (e) {}
+async function runJob(name, body = {}) {
+  try {
+    await api(`/api/jobs/${name}`, { method: "POST", body });
+    jobLog = []; jobOpen = true; pollJob(true);
+  } catch (e) { toast(e.message, true); }
+}
+let pollTimer;
+async function pollJob(now) {
+  clearTimeout(pollTimer);
+  try {
+    const j = await api(`/api/job?since=${now ? 0 : jobLog.length}`);
+    if (now) jobLog = [];
+    jobLog.push(...j.log);
+    drawActivity(j);
+    if (jobWasRunning && !j.running) { refreshCounts(); if (["leads", "versand", "kontakte", "uebersicht"].includes(view)) views[view](); toast(`${j.title} abgeschlossen`); }
+    jobWasRunning = j.running;
+    pollTimer = setTimeout(() => pollJob(false), j.running ? 1000 : 4000);
+  } catch (e) { pollTimer = setTimeout(() => pollJob(false), 5000); }
+}
+function drawActivity(j) {
+  const el = $("#activity");
+  if (!j.name) { el.innerHTML = ""; return; }
+  const last = jobLog[jobLog.length - 1];
+  const atBottom = !$(".activity .log") || $(".activity .log").scrollTop + $(".activity .log").clientHeight >= $(".activity .log").scrollHeight - 20;
+  el.innerHTML = `<div class="activity">
+    <div class="head" id="a-head">${j.running ? `<div class="spin"></div>` : `<div class="dot"></div>`}
+      <div class="t">${esc(j.title)} ${j.running ? "läuft …" : "fertig"}</div>
+      ${j.running ? `<button class="btn small danger" id="a-stop">Abbrechen</button>` : `<button class="btn small" id="a-close">✕</button>`}
+      <span class="muted small">${jobOpen ? "▾" : "▸"}</span></div>
+    ${jobOpen ? `<div class="log">${jobLog.map(l => `<div class="${l.lvl}"><span class="tm">${l.t}</span>${esc(l.msg)}</div>`).join("")}</div>`
+      : `<div class="last">${last ? esc(last.msg) : ""}</div>`}</div>`;
+  const lg = $(".activity .log"); if (lg && atBottom) lg.scrollTop = lg.scrollHeight;
+  $("#a-head").onclick = e => { if (e.target.closest("button")) return; jobOpen = !jobOpen; try { localStorage.setItem("jobOpen", jobOpen ? "1" : "0"); } catch (x) {} drawActivity(j); };
+  if ($("#a-stop")) $("#a-stop").onclick = async () => { await api("/api/jobs/stop", { method: "POST" }); toast("Wird abgebrochen …"); };
+  if ($("#a-close")) $("#a-close").onclick = () => { el.innerHTML = ""; j.name = null; clearTimeout(pollTimer); pollTimer = setTimeout(() => pollJob(false), 4000); hiddenJob = j.finished; };
+}
+let hiddenJob = null;
+const _draw = drawActivity;
+drawActivity = j => { if (!j.running && hiddenJob && j.finished === hiddenJob) { $("#activity").innerHTML = ""; return; } _draw(j); };
+
+go(view);
+refreshCounts();
+pollJob(true);
+</script>
+</body>
+</html>
