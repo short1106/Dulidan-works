@@ -1,0 +1,196 @@
+/* Ledger layout. Colors and fonts come from the design system (tokens.css). */
+.ledger-shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+.ledger-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-right: 1px solid var(--dd-accent, #c020b8);
+}
+.ledger-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-family: Rajdhani, sans-serif;
+  font-weight: 700;
+}
+.ledger-main {
+  padding: 24px 32px;
+  overflow: auto;
+}
+.ledger-page h1 {
+  font-family: Rajdhani, sans-serif;
+}
+.ledger-split {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(360px, 2fr);
+  gap: 24px;
+}
+.ledger-column {
+  min-width: 0;
+}
+.ledger-card {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 16px;
+}
+.ledger-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.ledger-form label,
+.ledger-card > label {
+  display: grid;
+  gap: 4px;
+}
+.ledger-check {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+.ledger-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+.ledger-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.ledger-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.ledger-linkbutton {
+  all: unset;
+  cursor: pointer;
+  display: block;
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.ledger-linkbutton[aria-current='true'] {
+  outline: 2px solid var(--dd-accent, #c020b8);
+}
+.ledger-muted {
+  opacity: 0.75;
+  font-size: 0.9em;
+}
+.ledger-items {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ledger-items th,
+.ledger-items td {
+  padding: 6px;
+  text-align: left;
+  vertical-align: top;
+}
+.ledger-edit input,
+.ledger-edit select {
+  width: 100%;
+  box-sizing: border-box;
+}
+.ledger-sums {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 16px;
+  justify-content: end;
+  margin: 12px 0;
+}
+.ledger-sums dt,
+.ledger-sums dd {
+  margin: 0;
+}
+.ledger-sums dd {
+  text-align: right;
+}
+.ledger-document {
+  background: #ffffff;
+  color: #1a1420;
+  padding: 32px;
+  border-radius: 6px;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+}
+.ledger-document-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.ledger-document-head h2 {
+  margin: 0 0 8px;
+  font-family: Rajdhani, sans-serif;
+}
+.ledger-document-meta {
+  text-align: right;
+}
+.ledger-cancelled {
+  color: #b00020;
+  font-weight: 700;
+}
+.ledger-address {
+  margin-bottom: 32px;
+  font-style: normal;
+}
+.ledger-document .ledger-items th {
+  border-bottom: 1px solid #1a1420;
+}
+.ledger-document .ledger-items td {
+  border-bottom: 1px solid #ddd;
+}
+.ledger-note {
+  margin-top: 24px;
+  white-space: pre-line;
+}
+.ledger-document-foot {
+  margin-top: 40px;
+  font-size: 12px;
+  color: #555;
+}
+.ledger-document .ledger-muted {
+  color: #777;
+}
+
+/* Printing or PDF: only the document, nothing else. */
+@media print {
+  .ledger-nav,
+  .ledger-nav-column,
+  .ledger-no-print {
+    display: none !important;
+  }
+  .ledger-shell {
+    display: block;
+  }
+  .ledger-main,
+  .ledger-split,
+  .ledger-detail {
+    padding: 0;
+    display: block;
+  }
+  .ledger-document {
+    padding: 0;
+  }
+}
+
+/* Basis mode: bigger text and buttons for beginners. */
+[data-mode='basic'] .ledger-main {
+  font-size: 18px;
+}
+[data-mode='basic'] .ledger-nav button {
+  min-height: 48px;
+}

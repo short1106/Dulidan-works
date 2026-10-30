@@ -19,7 +19,7 @@ Zielgruppe: Privatleute, Senioren, PC-Einsteiger, Kleinbetriebe (z. B. Handwerke
 | Relay | Mail und Kalender (Outlook) | fertig (Version 1), Logik in `packages/mail-core` |
 | Cortex | Notizen (OneNote) | fertig (Version 1), Notizen als `.md`, Logik in `packages/notes-core` |
 | Radar | Akquise per Mail (Brief fehlt noch) | Version 1 gebaut (30.10.2026), `apps/radar`. Vorlage: `dulidan-akquise/` (s. u.) |
-| Ledger | Rechnungen und Angebote | nicht angelegt |
+| Ledger | Rechnungen und Angebote | Version 1 gebaut (30.10.2026), `apps/ledger` (PDF, Nummern, Storno) |
 | Grid / Prism / Vertex | Tabelle / Folien / Vektordesign | nicht angelegt |
 | April | KI in allen Programmen (Pro-Modus) | nur Platzhalter-Seitenleiste, sendet nichts |
 
@@ -35,7 +35,8 @@ Als Nächstes, in dieser Reihenfolge:
 3. ~~Radar Version 1~~ (gebaut 30.10.2026): Suche über Google Places, Website-Prüfung auf E-Mail,
    Firmenliste mit Status und Notiz, Sperrliste, Versand mit Pausen und Tageslimit (Standard 20),
    Modi. Offen für Radar: Antworten per IMAP erkennen, Brief-Export, Test mit echtem Konto.
-4. Als Nächstes: unklar. Der Nutzer entscheidet zwischen Ledger, Grid, Prism und Vertex.
+4. Ledger Version 1 gebaut (30.10.2026): Kunden, Angebote und Rechnungen, feste Nummern, Storno, PDF. Offen: Test mit echter Firma, rechtliche Prüfung vor dem Verkauf.
+5. Als Nächstes: unklar. Der Nutzer entscheidet zwischen Grid, Prism und Vertex.
 
 Details je Programm: `docs/programme.md`.
 

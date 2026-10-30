@@ -34,7 +34,15 @@ Passwörter und Schlüssel nur verschlüsselt im Schlüsselspeicher von Windows.
 Noch nicht drin: Antworten per IMAP erkennen, Brief-Export. Erst nach rechtlicher Prüfung
 verkaufen (UWG, DSGVO).
 
+## Ledger (Rechnungen und Angebote) – Version 1 gebaut
+Kunden, Angebote und Rechnungen mit Positionen, MwSt. 0/7/19 %, PDF über den Druck des Fensters.
+Feste Regeln: Nur Entwürfe lassen sich ändern oder löschen. Ausstellen vergibt eine lückenlose
+Nummer (RE-2026-0001, AN-2026-0001) und friert das Dokument ein. Ausgestellte Dokumente werden
+nur storniert, nie gelöscht. Anschrift und Firmendaten werden beim Ausstellen gespeichert.
+Kleinunternehmer (§ 19 UStG) ist eine Einstellung mit dem nötigen Hinweis.
+Noch nicht drin: Rechnungs-Export für den Steuerberater (DATEV), Zahlungseingänge, Mahnungen.
+Vor dem Verkauf rechtlich prüfen lassen (Steuerberater).
+
 ## Später
-- **Ledger:** Rechnungen und Angebote. Erst nach Prüfung durch Steuerberater/Anwalt verkaufen.
 - **Grid** (Tabelle), **Prism** (Folien), **Vertex** (Vektordesign).
 - **April:** KI im Pro-Modus. Bisher nur Platzhalter-Seitenleiste in Glyph, Pixel, Relay, Cortex.
