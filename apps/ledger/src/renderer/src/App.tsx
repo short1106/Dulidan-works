@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { CircleAlert, CircleCheck, Info, Briefcase, Feather, Sparkles } from 'lucide-react'
-import { BootAnimation, Button, DulidanMark, ModeChooser, NoticeArea, type BootVariant } from '@dulidan/design-system'
+import { BootAnimation, Button, DulidanMark, ModeChooser, NoticeArea, type BootVariant, QuestionDialog } from '@dulidan/design-system'
 import type { Mode } from '@dulidan/core'
 import { de as t } from './i18n/de'
 import { CustomersPage } from './pages/CustomersPage'
@@ -33,7 +33,12 @@ export function App(): React.JSX.Element {
     document.title = t.app.name
   }, [])
 
-  const notices = <NoticeArea icons={{ info: <Info />, success: <CircleCheck />, error: <CircleAlert /> }} closeLabel={t.notices.close} />
+  const notices = (
+    <>
+      <NoticeArea icons={{ info: <Info />, success: <CircleCheck />, error: <CircleAlert /> }} closeLabel={t.notices.close} />
+      <QuestionDialog />
+    </>
+  )
 
   if (!bootDone) {
     return <BootAnimation programName={t.app.name} variant={variant} skipHint={t.app.skipHint} onDone={() => setBootDone(true)} />

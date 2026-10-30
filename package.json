@@ -13,6 +13,7 @@
     "dev:cortex": "npm run dev --workspace @dulidan/cortex",
     "dev:radar": "npm run dev --workspace @dulidan/radar",
     "dev:ledger": "npm run dev --workspace @dulidan/ledger",
+    "dev:prism": "npm run dev --workspace @dulidan/prism",
     "build": "npm run build --workspaces --if-present",
     "dist:win": "npm run dist:win --workspace @dulidan/glyph",
     "dist:win:pixel": "npm run dist:win --workspace @dulidan/pixel",
@@ -20,6 +21,7 @@
     "dist:win:cortex": "npm run dist:win --workspace @dulidan/cortex",
     "dist:win:radar": "npm run dist:win --workspace @dulidan/radar",
     "dist:win:ledger": "npm run dist:win --workspace @dulidan/ledger",
+    "dist:win:prism": "npm run dist:win --workspace @dulidan/prism",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present"
   },

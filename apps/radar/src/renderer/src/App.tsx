@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { CircleAlert, CircleCheck, Feather, Briefcase, Info, Sparkles } from 'lucide-react'
-import { BootAnimation, Button, DulidanMark, ModeChooser, NoticeArea, type BootVariant } from '@dulidan/design-system'
+import { BootAnimation, Button, DulidanMark, ModeChooser, NoticeArea, type BootVariant, QuestionDialog } from '@dulidan/design-system'
 import type { Mode } from '@dulidan/core'
 import { de as t } from './i18n/de'
 import { SearchPage } from './pages/SearchPage'
@@ -51,6 +51,7 @@ export function App(): React.JSX.Element {
           onChoose={(mode: Mode) => void updateSettings({ mode })}
         />
         <NoticeArea icons={{ info: <Info />, success: <CircleCheck />, error: <CircleAlert /> }} closeLabel={t.notices.close} />
+        <QuestionDialog />
       </>
     )
   }
@@ -83,6 +84,7 @@ export function App(): React.JSX.Element {
       </nav>
       <main className="radar-main">{current.view}</main>
       <NoticeArea icons={{ info: <Info />, success: <CircleCheck />, error: <CircleAlert /> }} closeLabel={t.notices.close} />
+      <QuestionDialog />
     </div>
   )
 }

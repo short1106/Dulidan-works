@@ -1,0 +1,215 @@
+/* Prism layout. Colors and fonts come from the design system (tokens.css). */
+.prism-shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+.prism-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-right: 1px solid var(--dd-accent, #c020b8);
+}
+.prism-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-family: Rajdhani, sans-serif;
+  font-weight: 700;
+}
+.prism-main {
+  padding: 24px 32px;
+  overflow: auto;
+  min-width: 0;
+}
+.prism-page h1 {
+  font-family: Rajdhani, sans-serif;
+}
+.prism-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+.prism-muted {
+  opacity: 0.75;
+  font-size: 0.9em;
+}
+.prism-split {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 20px;
+}
+.prism-thumbs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+.prism-thumb {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid var(--dd-accent, #c020b8);
+  border-radius: 6px;
+}
+.prism-thumb[aria-current='true'] {
+  outline: 2px solid var(--dd-accent-light, #f5b8f2);
+}
+.prism-thumb-number {
+  font-family: Rajdhani, sans-serif;
+  font-weight: 700;
+}
+.prism-thumb-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.prism-editor {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+.prism-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+.prism-card label {
+  display: grid;
+  gap: 4px;
+}
+
+/* One slide: 16:9, dark, with the Dulidan accents. */
+.prism-slide {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6% 8%;
+  background: #0b0614;
+  color: #f3eaff;
+  border: 1px solid #c020b8;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.prism-slide-titel {
+  align-items: center;
+  text-align: center;
+}
+.prism-slide-title {
+  margin: 0 0 4%;
+  font-family: Rajdhani, sans-serif;
+  font-size: clamp(20px, 4.5vw, 56px);
+  line-height: 1.1;
+}
+.prism-slide-body {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: clamp(14px, 2.4vw, 28px);
+  display: grid;
+  gap: 0.4em;
+}
+.prism-slide-body .prism-bullet::before {
+  content: '▸ ';
+  color: #c020b8;
+}
+.prism-slide-number {
+  position: absolute;
+  right: 3%;
+  bottom: 3%;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* Presentation: the slide fills the screen. */
+.prism-present {
+  position: fixed;
+  inset: 0;
+  background: #0b0614;
+  display: grid;
+  place-items: center;
+  padding: 3vh 4vw;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.prism-present .prism-slide {
+  width: min(100%, calc((100vh - 6rem) * 16 / 9));
+  border: none;
+  border-radius: 0;
+}
+.prism-present-bar {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 12px;
+  background: #150b24;
+  border: 1px solid #c020b8;
+  border-radius: 8px;
+  opacity: 0.85;
+}
+.prism-present-bar:hover {
+  opacity: 1;
+}
+
+/* The print layout is only shown when the PDF is made. */
+.prism-print {
+  display: none;
+}
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+  .prism-nav,
+  .prism-main,
+  .prism-no-print {
+    display: none !important;
+  }
+  .prism-shell {
+    display: block;
+  }
+  .prism-print {
+    display: block;
+  }
+  .prism-print-page {
+    width: 100%;
+    height: 100vh;
+    break-after: page;
+    display: grid;
+    place-items: center;
+    padding: 6mm;
+    box-sizing: border-box;
+  }
+  .prism-print-page .prism-slide {
+    width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+  }
+}
+
+/* Basis mode: bigger text and buttons for beginners. */
+[data-mode='basic'] .prism-main {
+  font-size: 18px;
+}
+[data-mode='basic'] .prism-nav button {
+  min-height: 48px;
+}

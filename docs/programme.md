@@ -43,6 +43,13 @@ Kleinunternehmer (§ 19 UStG) ist eine Einstellung mit dem nötigen Hinweis.
 Noch nicht drin: Rechnungs-Export für den Steuerberater (DATEV), Zahlungseingänge, Mahnungen.
 Vor dem Verkauf rechtlich prüfen lassen (Steuerberater).
 
+## Prism (Folien) – Version 1 gebaut
+Folien mit Titel und Text (Titelfolie oder Inhaltsfolie), Aufzählung mit "- ", Folien kopieren, verschieben, löschen.
+Vorführen im Vollbild mit Pfeiltasten, Leertaste oder Klick. PDF: eine Folie pro Seite.
+Dateien mit der Endung .prism (JSON mit Versionsnummer). Eine Sicherungskopie wird während des Bearbeitens
+gespeichert; nach einem Absturz wird sie beim Start angeboten.
+Noch nicht drin: Bilder, Designs und Farben pro Folie, Übergänge.
+
 ## Später
-- **Grid** (Tabelle), **Prism** (Folien), **Vertex** (Vektordesign).
+- **Grid** (Tabelle), **Vertex** (Vektordesign).
 - **April:** KI im Pro-Modus. Bisher nur Platzhalter-Seitenleiste in Glyph, Pixel, Relay, Cortex.

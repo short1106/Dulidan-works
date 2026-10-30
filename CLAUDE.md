@@ -20,7 +20,8 @@ Zielgruppe: Privatleute, Senioren, PC-Einsteiger, Kleinbetriebe (z. B. Handwerke
 | Cortex | Notizen (OneNote) | fertig (Version 1), Notizen als `.md`, Logik in `packages/notes-core` |
 | Radar | Akquise per Mail (Brief fehlt noch) | Version 1 gebaut (30.10.2026), `apps/radar`. Vorlage: `dulidan-akquise/` (s. u.) |
 | Ledger | Rechnungen und Angebote | Version 1 gebaut (30.10.2026), `apps/ledger` (PDF, Nummern, Storno) |
-| Grid / Prism / Vertex | Tabelle / Folien / Vektordesign | nicht angelegt |
+| Prism | Folien (PowerPoint) | Version 1 gebaut (30.10.2026), `apps/prism` (Folien, Vorführung, PDF, Wiederherstellung) |
+| Grid / Vertex | Tabelle / Vektordesign | nicht angelegt |
 | April | KI in allen Programmen (Pro-Modus) | nur Platzhalter-Seitenleiste, sendet nichts |
 
 Als Nächstes, in dieser Reihenfolge:
@@ -36,7 +37,8 @@ Als Nächstes, in dieser Reihenfolge:
    Firmenliste mit Status und Notiz, Sperrliste, Versand mit Pausen und Tageslimit (Standard 20),
    Modi. Offen für Radar: Antworten per IMAP erkennen, Brief-Export, Test mit echtem Konto.
 4. Ledger Version 1 gebaut (30.10.2026): Kunden, Angebote und Rechnungen, feste Nummern, Storno, PDF. Offen: Test mit echter Firma, rechtliche Prüfung vor dem Verkauf.
-5. Als Nächstes: unklar. Der Nutzer entscheidet zwischen Grid, Prism und Vertex.
+5. Prism Version 1 gebaut (30.10.2026): Folien mit Titel und Text, Vorführung, PDF, Sicherung nach Absturz. Offen: Bilder, Designs.
+6. Als Nächstes: unklar. Der Nutzer entscheidet zwischen Grid und Vertex.
 
 Details je Programm: `docs/programme.md`.
 
