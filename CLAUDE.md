@@ -10,7 +10,7 @@ einem npm-Monorepo. Hersteller: Dulidan Studios (Einzelgründer).
 Einmalkauf ohne Abo, alle Dateien lokal, keine Cloud, keine Konten, keine Telemetrie.
 Zielgruppe: Privatleute, Senioren, PC-Einsteiger, Kleinbetriebe (z. B. Handwerker).
 
-## Programme und Status (Stand 30.10.2026)
+## Programme und Status (Stand 11.11.2026)
 
 | Programm | Aufgabe (Gegenstück) | Status |
 | --- | --- | --- |
@@ -18,9 +18,9 @@ Zielgruppe: Privatleute, Senioren, PC-Einsteiger, Kleinbetriebe (z. B. Handwerke
 | Pixel | Malen, Bildbearbeitung (Paint) | fertig (Version 1), `.pixel`-Format |
 | Relay | Mail und Kalender (Outlook) | fertig (Version 1), Logik in `packages/mail-core` |
 | Cortex | Notizen (OneNote) | fertig (Version 1), Notizen als `.md`, Logik in `packages/notes-core` |
-| Radar | Akquise per Mail (Brief fehlt noch) | Version 1 gebaut (30.10.2026), `apps/radar`. Vorlage: `dulidan-akquise/` (s. u.) |
-| Ledger | Rechnungen und Angebote | Version 1 gebaut (30.10.2026), `apps/ledger` (PDF, Nummern, Storno) |
-| Prism | Folien (PowerPoint) | Version 1 gebaut (30.10.2026), `apps/prism` (Folien, Vorführung, PDF, Wiederherstellung) |
+| Radar | Akquise per Mail und Brief | fertig (Version 1, 11.11.2026), `apps/radar`: Antworten per IMAP, Brief-PDF. Vorlage: `dulidan-akquise/` |
+| Ledger | Rechnungen und Angebote | fertig (Version 1, 11.11.2026), `apps/ledger`: Zahlungen, Mahnungen, DATEV-Export |
+| Prism | Folien (PowerPoint) | fertig (Version 1, 11.11.2026), `apps/prism`: Designs, Folienfarben, Bilder, Übergänge |
 | Grid / Vertex | Tabelle / Vektordesign | nicht angelegt |
 | April | KI in allen Programmen (Pro-Modus) | nur Platzhalter-Seitenleiste, sendet nichts |
 
@@ -33,12 +33,13 @@ Als Nächstes, in dieser Reihenfolge:
    Baustein: `packages/core/src/electron/updater.ts`. Jede App hat eine eigene Feed-Datei
    (`glyph.yml` usw.). Build-Version: `1.0.<Lauf-Nummer>` (in der CI gesetzt).
    Die portable EXE aktualisiert sich nicht selbst.
-3. ~~Radar Version 1~~ (gebaut 30.10.2026): Suche über Google Places, Website-Prüfung auf E-Mail,
-   Firmenliste mit Status und Notiz, Sperrliste, Versand mit Pausen und Tageslimit (Standard 20),
-   Modi. Offen für Radar: Antworten per IMAP erkennen, Brief-Export, Test mit echtem Konto.
-4. Ledger Version 1 gebaut (30.10.2026): Kunden, Angebote und Rechnungen, feste Nummern, Storno, PDF. Offen: Test mit echter Firma, rechtliche Prüfung vor dem Verkauf.
-5. Prism Version 1 gebaut (30.10.2026): Folien mit Titel und Text, Vorführung, PDF, Sicherung nach Absturz. Offen: Bilder, Designs.
-6. Als Nächstes: unklar. Der Nutzer entscheidet zwischen Grid und Vertex.
+3. ~~Radar, Ledger, Prism Version 1 fertig~~ (11.11.2026). Offen nur noch Tests mit echten Daten
+   durch den Nutzer: Radar mit echtem Konto, Ledger mit echter Firma, erste DATEV-Datei vom
+   Steuerberater prüfen lassen; rechtliche Prüfung vor dem Verkauf (Ledger, Radar).
+4. Zentral seit 11.11.2026: `packages/design-system/src/base.css` (Grundschrift, Farben, weißes Papier
+   beim Drucken), Hellakzent im hellen Design = #8122b5 (WCAG AA), `renderPdf` mit Optionen
+   (Querformat, ohne Rand) und ohne Schreib-Cursor; BootAnimation `pace="quick"` (Glyph, etwa 3 s).
+5. Als Nächstes: unklar. Der Nutzer entscheidet zwischen Grid und Vertex.
 
 Details je Programm: `docs/programme.md`.
 
@@ -69,7 +70,7 @@ nie committen, nie lesen oder ausgeben, außer der Nutzer verlangt es ausdrückl
 
 ## Befehle (im Hauptordner)
 
-- Starten: `npm run dev` (Glyph), `npm run dev:pixel`, `npm run dev:relay`, `npm run dev:cortex`
+- Starten: `npm run dev` (Glyph), `npm run dev:pixel`, `npm run dev:relay`, `npm run dev:cortex`, usw.
 - Tests: `npm test` (alle) oder `npm test --workspace @dulidan/<name>`
 - Typprüfung: `npm run typecheck`
 - Bauen: `npm run build`; Windows-Installer: `npm run dist:win`, `dist:win:pixel`,

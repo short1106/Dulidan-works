@@ -25,7 +25,7 @@ Papierkorb 30 Tage (`.papierkorb`). Suche, Anheften, Ordner, Schlagwörter, `[[V
 Schnellnotiz (Strg+Umschalt+Leertaste), Export PDF/Markdown. Erkennt Änderungen von außen.
 Nutzt `packages/editor` und `packages/notes-core`.
 
-## Radar (Akquise) – Version 1 gebaut
+## Radar (Akquise) – fertig
 Suche über Google Places (eigener Schlüssel des Nutzers), Website-Prüfung auf Mailadressen,
 Firmenliste mit Status und Notiz, Sperrliste (Adresse oder ganze Domain mit @), Versand über
 den eigenen Mailserver mit Pausen (Standard 90–240 s) und Tageslimit (Standard 20). Firmen
@@ -38,7 +38,7 @@ Brief-Export: ausgewählte Firmen als ein PDF, ein Brief pro Seite (DIN 5008 For
 mit Absender-Anschrift aus den Einstellungen und Hinweis zur Herkunft der Anschrift.
 Erst nach rechtlicher Prüfung verkaufen (UWG, DSGVO).
 
-## Ledger (Rechnungen und Angebote) – Version 1 gebaut
+## Ledger (Rechnungen und Angebote) – fertig
 Kunden, Angebote und Rechnungen mit Positionen, MwSt. 0/7/19 %, PDF über den Druck des Fensters.
 Feste Regeln: Nur Entwürfe lassen sich ändern oder löschen. Ausstellen vergibt eine lückenlose
 Nummer (RE-2026-0001, AN-2026-0001) und friert das Dokument ein. Ausgestellte Dokumente werden
@@ -54,7 +54,7 @@ und Steuersatz (Debitor an Erlöskonto, brutto), Stornos als Gegenbuchung; SKR03
 Datei in Windows-1252. Die erste Datei vom Steuerberater prüfen lassen.
 Vor dem Verkauf rechtlich prüfen lassen (Steuerberater).
 
-## Prism (Folien) – Version 1 gebaut
+## Prism (Folien) – fertig
 Folien mit Titel und Text (Titelfolie oder Inhaltsfolie), Aufzählung mit "- ", Folien kopieren, verschieben, löschen.
 Vorführen im Vollbild mit Pfeiltasten, Leertaste oder Klick. PDF: eine Folie pro Seite.
 Dateien mit der Endung .prism (JSON, Version 2; Version 1 lässt sich weiter öffnen). Eine Sicherungskopie

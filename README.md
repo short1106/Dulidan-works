@@ -9,6 +9,9 @@ Alle Dateien bleiben auf deinem Computer.
 | **Dulidan Pixel** | Malen und Bildbearbeitung | Version 1 fertig |
 | **Dulidan Relay** | Mail und Kalender | Version 1 fertig |
 | **Dulidan Cortex** | Notizen | Version 1 fertig |
+| **Dulidan Radar** | Kunden finden und anschreiben (Akquise) | Version 1 fertig, vor dem Verkauf rechtlich prüfen |
+| **Dulidan Ledger** | Angebote, Rechnungen, Zahlungen, Mahnungen | Version 1 fertig, vor dem Verkauf vom Steuerberater prüfen |
+| **Dulidan Prism** | Folien und Präsentationen | Version 1 fertig |
 
 ## Glyph starten (Windows)
 
@@ -152,6 +155,31 @@ Auf dem Mac oder unter Linux: `cortex-starten.command`.
 | Strg + Klick | Link oder verknüpfte Notiz öffnen |
 | Strg+Umschalt+Leertaste | Schnellnotiz (Experte und Pro) |
 
+## Radar, Ledger und Prism starten (Windows)
+
+Genauso wie Glyph: Doppelklick auf **`Radar starten.bat`**, **`Ledger starten.bat`** oder
+**`Prism starten.bat`**. Die Dateien „… testen (wie neu).bat“ starten wie beim ersten Mal, mit eigenem
+Test-Ordner; deine echten Daten bleiben unberührt.
+
+### Radar (Akquise)
+- Firmen über Google Places suchen (eigener Google-Schlüssel), Websites nach Mailadressen durchsuchen.
+- Mails mit Vorlagen verschicken: mit Pausen, Tageslimit (Standard 20) und Sperrliste.
+- **Antworten prüfen:** Radar schaut in deinen Posteingang und markiert Firmen, die geantwortet haben,
+  oder deren Mail nicht zustellbar war.
+- **Brief als PDF:** ausgewählte Firmen bekommen ein Anschreiben auf Papier (passt ins Fensterkuvert).
+
+### Ledger (Rechnungen)
+- Kunden, Angebote und Rechnungen mit fester, lückenloser Nummer; Stornieren statt Löschen; PDF.
+- **Zahlungen:** Zahlungseingang eintragen (auch Teilzahlungen), „Offene Posten“ mit Summe,
+  überfällige Rechnungen sind rot markiert.
+- **Mahnungen** (Experte): Zahlungserinnerung, 1. und 2. Mahnung als PDF.
+- **DATEV-Export** (Experte): alle Rechnungen eines Zeitraums als Datei für den Steuerberater.
+
+### Prism (Folien)
+- Folien mit Titel und Text, Vorführen im Vollbild, PDF (eine Folie pro Seite).
+- **Designs** für die ganze Präsentation, eigene **Farbe** pro Folie, **Bilder** auf Folien,
+  **Übergänge** beim Vorführen.
+
 ## Fertige EXE-Dateien herunterladen (ohne Node.js)
 
 Bei jedem Hochladen baut GitHub die Programme automatisch auf einem Windows-Rechner und legt sie
@@ -167,6 +195,9 @@ auf der Seite **Releases → „Dulidan Works – neueste Version“** ab. Die L
 | [Dulidan-Relay-Setup.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Relay-Setup.exe) | Relay installieren (Startmenü, Desktop-Symbol) |
 | [Dulidan-Cortex.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Cortex.exe) | Cortex direkt starten, ohne Installation |
 | [Dulidan-Cortex-Setup.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Cortex-Setup.exe) | Cortex installieren (Startmenü, Desktop-Symbol) |
+| [Dulidan-Radar.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Radar.exe) / [Setup](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Radar-Setup.exe) | Radar direkt starten / installieren |
+| [Dulidan-Ledger.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Ledger.exe) / [Setup](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Ledger-Setup.exe) | Ledger direkt starten / installieren |
+| [Dulidan-Prism.exe](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Prism.exe) / [Setup](https://github.com/short1106/Dulidan-works/releases/latest/download/Dulidan-Prism-Setup.exe) | Prism direkt starten / installieren |
 
 Das Repository ist privat: Die Links funktionieren, wenn du bei GitHub angemeldet bist.
 
