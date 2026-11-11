@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import { formatEuro, totals, VAT_RATES } from '../../../main/logic'
 import type { CompanyData, Customer, Document } from '../../../shared/api'
 import { de as t } from '../i18n/de'
+import { germanDate } from './ReminderView'
 
 export interface Parties {
   company: CompanyData
@@ -98,6 +99,7 @@ export function DocumentView({ doc, parties }: { doc: Document; parties: Parties
         </dd>
       </dl>
 
+      {doc.kind === 'rechnung' && doc.dueDate && doc.status === 'ausgestellt' && <p className="ledger-note">{t.documents.dueDate(germanDate(doc.dueDate))}</p>}
       {doc.note && <p className="ledger-note">{doc.note}</p>}
       <footer className="ledger-document-foot">
         {parties.company.iban && (

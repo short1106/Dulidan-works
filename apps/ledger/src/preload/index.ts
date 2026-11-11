@@ -22,8 +22,13 @@ const api: LedgerApi = {
     remove: (id) => invoke(IPC.documentRemove, id),
     issue: (id) => invoke(IPC.documentIssue, id),
     cancel: (id) => invoke(IPC.documentCancel, id),
-    toInvoice: (id) => invoke(IPC.documentToInvoice, id)
+    toInvoice: (id) => invoke(IPC.documentToInvoice, id),
+    addPayment: (id, payment) => invoke(IPC.paymentAdd, id, payment),
+    removePayment: (id, paymentId) => invoke(IPC.paymentRemove, id, paymentId),
+    addReminder: (id) => invoke(IPC.reminderAdd, id)
   },
+  billing: { save: (billing) => invoke(IPC.billingSave, billing) },
+  datev: { export: (from, to) => invoke(IPC.datevExport, from, to) },
   pdf: { export: (name) => invoke(IPC.pdfExport, name) }
 }
 

@@ -1,10 +1,11 @@
 import { useSyncExternalStore } from 'react'
 import { createStore } from '@dulidan/core'
 import { notify } from '@dulidan/design-system'
+import { DEFAULT_BILLING } from '../../../main/billing'
 import type { LedgerData } from '../../../shared/api'
 
 /** Companies, customers and documents as the main process has them. */
-export const dataStore = createStore<LedgerData>({ company: { name: '', street: '', zip: '', city: '', taxNumber: '', vatId: '', email: '', phone: '', bank: '', iban: '', smallBusiness: false }, customers: [], documents: [] })
+export const dataStore = createStore<LedgerData>({ company: { name: '', street: '', zip: '', city: '', taxNumber: '', vatId: '', email: '', phone: '', bank: '', iban: '', smallBusiness: false }, customers: [], documents: [], billing: DEFAULT_BILLING })
 
 export async function loadData(): Promise<void> {
   dataStore.set(await window.ledger.data.get())

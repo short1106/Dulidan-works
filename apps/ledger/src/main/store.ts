@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { JsonFile } from '@dulidan/core/node'
+import { normalizeBilling, type BillingSettings } from './billing'
+import { addDays, nextReminderLevel, REMINDER_DAYS, balanceOf, type Payment, type Reminder } from './payments'
 import {
   companyProblems,
   documentProblems,
@@ -9,6 +11,8 @@ import {
   type CompanyData,
   type Item
 } from './logic'
+
+export { DEFAULT_BILLING, normalizeBilling, type BillingSettings } from './billing'
 
 export type DocumentKind = 'angebot' | 'rechnung'
 export type DocumentStatus = 'entwurf' | 'ausgestellt' | 'storniert'
@@ -42,6 +46,12 @@ export interface Document {
   createdAt: number
   issuedAt: number | null
   cancelledAt: number | null
+  /** Invoices: pay by this date (set when issued). Older invoices: date + payment term. */
+  dueDate?: string | null
+  /** Money received for an issued invoice. Never changes the invoice itself. */
+  payments?: Payment[]
+  /** Reminders sent for an overdue invoice. */
+  reminders?: Reminder[]
 }
 
 export interface LedgerData {
@@ -50,6 +60,7 @@ export interface LedgerData {
   documents: Document[]
   /** Last used number per kind and year, e.g. "RE-2026": 7. */
   counters: Record<string, number>
+  billing: BillingSettings
 }
 
 export const EMPTY_COMPANY: CompanyData = {
@@ -75,7 +86,8 @@ export function normalizeData(raw: unknown): LedgerData {
     company: { ...company, smallBusiness: company.smallBusiness === true },
     customers: Array.isArray(input.customers) ? input.customers.filter((item): item is Customer => typeof item?.id === 'string') : [],
     documents: Array.isArray(input.documents) ? input.documents.filter((item): item is Document => typeof item?.id === 'string') : [],
-    counters: typeof input.counters === 'object' && input.counters !== null ? (input.counters as Record<string, number>) : {}
+    counters: typeof input.counters === 'object' && input.counters !== null ? (input.counters as Record<string, number>) : {},
+    billing: normalizeBilling(input.billing)
   }
 }
 
@@ -180,7 +192,10 @@ export class LedgerStore {
         company: { ...company },
         customer: { name: customer?.name ?? '', street: customer?.street ?? '', zip: customer?.zip ?? '', city: customer?.city ?? '' }
       },
-      issuedAt: now.getTime()
+      issuedAt: now.getTime(),
+      dueDate: document.kind === 'rechnung' ? addDays(todayIso(now), this.data().billing.paymentTermDays) : null,
+      payments: [],
+      reminders: []
     }
     await this.file.update({
       documents: this.data().documents.map((item) => (item.id === id ? issued : item)),
@@ -196,6 +211,48 @@ export class LedgerStore {
     const cancelled: Document = { ...document, status: 'storniert', cancelledAt: now.getTime() }
     await this.replace(cancelled)
     return cancelled
+  }
+
+  async saveBilling(billing: BillingSettings): Promise<void> {
+    await this.file.update({ billing: normalizeBilling(billing) })
+  }
+
+  private issuedInvoice(id: string): Document {
+    const document = this.find(id)
+    if (document.kind !== 'rechnung' || document.status !== 'ausgestellt') throw new DocumentError('Zahlungen gibt es nur bei ausgestellten Rechnungen.')
+    return document
+  }
+
+  /** Records money received. The invoice itself stays unchanged. */
+  async addPayment(id: string, payment: Omit<Payment, 'id'>): Promise<Document> {
+    const document = this.issuedInvoice(id)
+    if (!Number.isInteger(payment.amountCents) || payment.amountCents <= 0) throw new DocumentError('Bitte einen Betrag über 0 € eingeben.')
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(payment.date)) throw new DocumentError('Bitte ein gültiges Datum eingeben.')
+    const updated: Document = { ...document, payments: [...(document.payments ?? []), { ...payment, note: payment.note.trim(), id: randomUUID() }] }
+    await this.replace(updated)
+    return updated
+  }
+
+  /** Removes a payment that was entered by mistake. */
+  async removePayment(id: string, paymentId: string): Promise<Document> {
+    const document = this.issuedInvoice(id)
+    const updated: Document = { ...document, payments: (document.payments ?? []).filter((payment) => payment.id !== paymentId) }
+    await this.replace(updated)
+    return updated
+  }
+
+  /** Writes down the next reminder (Zahlungserinnerung, 1. Mahnung, 2. Mahnung) with a new deadline. */
+  async addReminder(id: string, now: Date = new Date()): Promise<Document> {
+    const document = this.issuedInvoice(id)
+    const today = todayIso(now)
+    const billing = this.data().billing
+    if (balanceOf(document, today, billing.paymentTermDays).state !== 'ueberfaellig') throw new DocumentError('Diese Rechnung ist nicht überfällig.')
+    const level = nextReminderLevel(document.reminders)
+    if (level === null) throw new DocumentError('Die letzte Mahnung wurde schon geschrieben. Bitte jetzt persönlich nachfassen.')
+    const reminder: Reminder = { level, date: today, dueDate: addDays(today, REMINDER_DAYS), feeCents: level === 1 ? 0 : billing.reminderFeeCents }
+    const updated: Document = { ...document, reminders: [...(document.reminders ?? []), reminder] }
+    await this.replace(updated)
+    return updated
   }
 
   /** Copies an offer into a new draft invoice. */

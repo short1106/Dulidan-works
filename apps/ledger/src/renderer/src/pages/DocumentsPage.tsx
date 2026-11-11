@@ -1,17 +1,30 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ask, Button, Card, notify } from '@dulidan/design-system'
-import { companyProblems, documentProblems, formatEuro, totals, parseEuroToCents, VAT_RATES, type Item, type VatRate } from '../../../main/logic'
+import { companyProblems, documentProblems, formatEuro, todayIso, totals, parseEuroToCents, VAT_RATES, type Item, type VatRate } from '../../../main/logic'
+import { balanceOf, canRemind, nextReminderLevel, type Reminder } from '../../../main/payments'
 import type { Document, DocumentKind } from '../../../shared/api'
 import { DocumentView, partiesOf } from '../components/DocumentView'
+import { germanDate, ReminderView } from '../components/ReminderView'
 import { de as t } from '../i18n/de'
 import { change, cleanMessage, useData } from '../state/data'
+import { useSettings } from '../state/settings'
 
 /** Offers and invoices: list on the left, draft editor or printable view on the right. */
 export function DocumentsPage(): React.JSX.Element {
   const data = useData()
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [onlyOpen, setOnlyOpen] = useState(false)
   const selected = data.documents.find((doc) => doc.id === selectedId) ?? null
-  const sorted = useMemo(() => [...data.documents].sort((a, b) => b.createdAt - a.createdAt), [data.documents])
+  const today = todayIso()
+  const term = data.billing.paymentTermDays
+  // Open items: issued invoices that are not fully paid.
+  const isOpen = (doc: Document): boolean => doc.kind === 'rechnung' && doc.status === 'ausgestellt' && balanceOf(doc, today, term).state !== 'bezahlt'
+  const openSum = data.documents.filter(isOpen).reduce((sum, doc) => sum + balanceOf(doc, today, term).openCents, 0)
+  const sorted = useMemo(
+    () => [...data.documents].filter((doc) => !onlyOpen || isOpen(doc)).sort((a, b) => b.createdAt - a.createdAt),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [data.documents, onlyOpen, today, term]
+  )
 
   async function create(kind: DocumentKind): Promise<void> {
     const customerId = data.customers[0]?.id ?? null
@@ -29,6 +42,17 @@ export function DocumentsPage(): React.JSX.Element {
           </Button>
           <Button onClick={() => void create('angebot')}>{t.documents.newOffer}</Button>
         </div>
+        <div className="ledger-toolbar" role="group" aria-label={t.documents.filterOpen}>
+          <Button variant={onlyOpen ? 'secondary' : 'primary'} onClick={() => setOnlyOpen(false)}>
+            {t.documents.filterAll}
+          </Button>
+          <Button variant={onlyOpen ? 'primary' : 'secondary'} onClick={() => setOnlyOpen(true)}>
+            {t.documents.filterOpen}
+          </Button>
+          <span className="ledger-muted" aria-live="polite">
+            {t.documents.openSum(formatEuro(openSum))}
+          </span>
+        </div>
         {sorted.length === 0 ? (
           <p>{t.documents.empty}</p>
         ) : (
@@ -36,12 +60,14 @@ export function DocumentsPage(): React.JSX.Element {
             {sorted.map((doc) => {
               const customer = data.customers.find((item) => item.id === doc.customerId)
               const name = doc.snapshot?.customer.name ?? customer?.name ?? t.documents.noCustomer
-              const status = doc.status === 'entwurf' ? t.documents.draft : doc.status === 'storniert' ? t.documents.cancelled : t.documents.issued
+              const payment = doc.kind === 'rechnung' && doc.status === 'ausgestellt' ? balanceOf(doc, today, term).state : null
+              const status =
+                doc.status === 'entwurf' ? t.documents.draft : doc.status === 'storniert' ? t.documents.cancelled : payment ? t.payments.state[payment] : t.documents.issued
               return (
                 <li key={doc.id}>
                   <button className="ledger-linkbutton" aria-current={doc.id === selectedId ? 'true' : undefined} onClick={() => setSelectedId(doc.id)}>
                     <strong>{doc.number ?? t.documents.draft}</strong> · {t.documents.kind[doc.kind]} · {name}
-                    <span className="ledger-muted">
+                    <span className={payment === 'ueberfaellig' ? 'ledger-overdue' : 'ledger-muted'}>
                       {' '}
                       · {status} · {formatEuro(totals(doc.items).grossCents)}
                     </span>
@@ -249,6 +275,22 @@ function priceText(item: Item): string {
 function IssuedView({ doc }: { doc: Document }): React.JSX.Element {
   const data = useData()
   const parties = partiesOf(doc, data.company, data.customers)
+  // While a reminder is saved as PDF, the window shows it instead of the invoice.
+  const [printing, setPrinting] = useState<Reminder | null>(null)
+  const balance = balanceOf(doc, todayIso(), data.billing.paymentTermDays)
+
+  async function reminderPdf(reminder: Reminder): Promise<void> {
+    setPrinting(reminder)
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+    try {
+      const path = await window.ledger.pdf.export(`${doc.number ?? 'Rechnung'} ${t.reminders.levels[reminder.level] ?? ''}`)
+      if (path) notify(t.documents.pdfSaved, 'success')
+    } catch (error) {
+      notify(cleanMessage(error), 'error')
+    } finally {
+      setPrinting(null)
+    }
+  }
 
   async function cancel(): Promise<void> {
     const yes = await ask({
@@ -290,7 +332,146 @@ function IssuedView({ doc }: { doc: Document }): React.JSX.Element {
           </Button>
         )}
       </div>
-      <DocumentView doc={doc} parties={parties} />
+      {doc.kind === 'rechnung' && doc.status === 'ausgestellt' && <PaymentsPanel doc={doc} onReminderPdf={(reminder) => void reminderPdf(reminder)} />}
+      {printing ? <ReminderView doc={doc} parties={parties} reminder={printing} balance={balance} /> : <DocumentView doc={doc} parties={parties} />}
     </>
+  )
+}
+
+function PaymentsPanel({ doc, onReminderPdf }: { doc: Document; onReminderPdf: (reminder: Reminder) => void }): React.JSX.Element {
+  const data = useData()
+  const mode = useSettings().mode
+  const today = todayIso()
+  const balance = balanceOf(doc, today, data.billing.paymentTermDays)
+  const [date, setDate] = useState(today)
+  const [amount, setAmount] = useState('')
+  const [note, setNote] = useState('')
+  const level = nextReminderLevel(doc.reminders)
+  const levelName = level ? (t.reminders.levels[level] ?? '') : ''
+
+  async function addPayment(cents: number | null): Promise<void> {
+    if (cents === null || cents <= 0) return notify(t.payments.invalid, 'error')
+    if (await change(() => window.ledger.documents.addPayment(doc.id, { date, amountCents: cents, note }))) {
+      setAmount('')
+      setNote('')
+      notify(t.payments.added, 'success')
+    }
+  }
+
+  async function removePayment(paymentId: string): Promise<void> {
+    const yes = await ask({
+      title: t.payments.removeTitle,
+      text: t.payments.removeText,
+      choices: [
+        { value: 'ja', label: t.payments.remove, variant: 'primary' },
+        { value: 'nein', label: t.documents.cancel, variant: 'ghost' }
+      ],
+      cancelValue: 'nein'
+    })
+    if (yes === 'ja') await change(() => window.ledger.documents.removePayment(doc.id, paymentId))
+  }
+
+  async function writeReminder(): Promise<void> {
+    const yes = await ask({
+      title: t.reminders.writeTitle(levelName),
+      text: t.reminders.writeText,
+      choices: [
+        { value: 'ja', label: t.reminders.confirm, variant: 'primary' },
+        { value: 'nein', label: t.documents.cancel, variant: 'ghost' }
+      ],
+      cancelValue: 'nein'
+    })
+    if (yes !== 'ja') return
+    if (await change(() => window.ledger.documents.addReminder(doc.id))) notify(t.reminders.written, 'success')
+  }
+
+  return (
+    <Card className="ledger-card ledger-no-print">
+      <h2>
+        {t.payments.title}: <span className={balance.state === 'ueberfaellig' ? 'ledger-overdue' : undefined}>{t.payments.state[balance.state]}</span>
+      </h2>
+      <dl className="ledger-sums">
+        <dt>{t.payments.gross}</dt>
+        <dd>{formatEuro(balance.grossCents)}</dd>
+        <dt>{t.payments.paid}</dt>
+        <dd>{formatEuro(balance.paidCents)}</dd>
+        {balance.feesCents > 0 && (
+          <>
+            <dt>{t.payments.fees}</dt>
+            <dd>{formatEuro(balance.feesCents)}</dd>
+          </>
+        )}
+        <dt>{t.payments.open}</dt>
+        <dd>
+          <strong>{formatEuro(balance.openCents)}</strong>
+        </dd>
+      </dl>
+      {balance.state !== 'bezahlt' && <p className="ledger-muted">{t.payments.due(germanDate(balance.dueDate))}</p>}
+
+      {(doc.payments ?? []).length === 0 ? (
+        <p className="ledger-muted">{t.payments.none}</p>
+      ) : (
+        <ul className="ledger-list">
+          {(doc.payments ?? []).map((payment) => (
+            <li key={payment.id} className="ledger-row">
+              <span>
+                {t.payments.entry(germanDate(payment.date), formatEuro(payment.amountCents))}
+                {payment.note && <span className="ledger-muted"> · {payment.note}</span>}
+              </span>
+              <Button variant="ghost" onClick={() => void removePayment(payment.id)}>
+                {t.payments.remove}
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {balance.state !== 'bezahlt' && (
+        <>
+          <div className="ledger-form">
+            <label>
+              {t.payments.date}
+              <input type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+            </label>
+            <label>
+              {t.payments.amount}
+              <input inputMode="decimal" placeholder={(balance.openCents / 100).toFixed(2).replace('.', ',')} value={amount} onChange={(event) => setAmount(event.target.value)} />
+            </label>
+            {mode !== 'basic' && (
+              <label>
+                {t.payments.note}
+                <input value={note} onChange={(event) => setNote(event.target.value)} />
+              </label>
+            )}
+          </div>
+          <div className="ledger-toolbar">
+            <Button variant="primary" onClick={() => void addPayment(balance.openCents)}>
+              {t.payments.markPaid}
+            </Button>
+            <Button onClick={() => void addPayment(parseEuroToCents(amount))} disabled={!amount.trim()}>
+              {t.payments.add}
+            </Button>
+          </div>
+        </>
+      )}
+
+      {mode !== 'basic' && (
+        <>
+          <h3>{t.reminders.title}</h3>
+          {(doc.reminders ?? []).map((reminder) => (
+            <div key={reminder.level} className="ledger-row">
+              <span>{t.reminders.entry(t.reminders.levels[reminder.level] ?? '', germanDate(reminder.date))}</span>
+              <Button onClick={() => onReminderPdf(reminder)}>{t.reminders.pdf}</Button>
+            </div>
+          ))}
+          {canRemind(doc, today, data.billing.paymentTermDays) && (
+            <Button variant="primary" onClick={() => void writeReminder()}>
+              {t.reminders.write(levelName)}
+            </Button>
+          )}
+          {level === null && balance.state !== 'bezahlt' && <p className="ledger-muted">{t.reminders.last}</p>}
+        </>
+      )}
+    </Card>
   )
 }

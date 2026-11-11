@@ -18,8 +18,14 @@ textarea {
   font: inherit;
 }
 
-/* Messages ("Gespeichert") never end up on paper or in a PDF. */
 @media print {
+  /* Paper is white, whatever the window looks like. */
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  /* Messages ("Gespeichert") never end up on paper or in a PDF. */
   .dd-notice-area {
     display: none !important;
   }

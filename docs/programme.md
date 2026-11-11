@@ -44,7 +44,14 @@ Feste Regeln: Nur Entwürfe lassen sich ändern oder löschen. Ausstellen vergib
 Nummer (RE-2026-0001, AN-2026-0001) und friert das Dokument ein. Ausgestellte Dokumente werden
 nur storniert, nie gelöscht. Anschrift und Firmendaten werden beim Ausstellen gespeichert.
 Kleinunternehmer (§ 19 UStG) ist eine Einstellung mit dem nötigen Hinweis.
-Noch nicht drin: Rechnungs-Export für den Steuerberater (DATEV), Zahlungseingänge, Mahnungen.
+Zahlungen: Zahlungseingänge (auch Teilzahlungen) werden neben der eingefrorenen Rechnung gespeichert;
+Stand offen/teilweise/bezahlt/überfällig, Filter „Offene Posten“ mit Summe. Zahlungsziel einstellbar
+(Standard 14 Tage), steht ab jetzt als „Bitte überweisen Sie … bis zum …“ auf neuen Rechnungen.
+Mahnungen (Experte): Zahlungserinnerung (kostenlos), 1. und 2. Mahnung mit neuer Frist von 7 Tagen und
+einstellbarer Gebühr (Standard 0 €), jeweils als PDF.
+DATEV (Experte): Export „EXTF Buchungsstapel“ (Version 700) für einen Zeitraum, eine Buchung pro Rechnung
+und Steuersatz (Debitor an Erlöskonto, brutto), Stornos als Gegenbuchung; SKR03/SKR04, Konten einstellbar,
+Datei in Windows-1252. Die erste Datei vom Steuerberater prüfen lassen.
 Vor dem Verkauf rechtlich prüfen lassen (Steuerberater).
 
 ## Prism (Folien) – Version 1 gebaut

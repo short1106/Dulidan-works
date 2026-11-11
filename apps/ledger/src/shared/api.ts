@@ -4,14 +4,17 @@
  */
 import type { Settings } from '@dulidan/core'
 import type { CompanyData, Item } from '../main/logic'
-import type { Customer, Document, DocumentKind } from '../main/store'
+import type { DatevSettings } from '../main/datev'
+import type { Payment } from '../main/payments'
+import type { BillingSettings, Customer, Document, DocumentKind } from '../main/store'
 
-export type { CompanyData, Item, Customer, Document, DocumentKind }
+export type { BillingSettings, CompanyData, DatevSettings, Item, Customer, Document, DocumentKind, Payment }
 
 export interface LedgerData {
   company: CompanyData
   customers: Customer[]
   documents: Document[]
+  billing: BillingSettings
 }
 
 export interface LedgerApi {
@@ -33,7 +36,14 @@ export interface LedgerApi {
     issue: (id: string) => Promise<LedgerData>
     cancel: (id: string) => Promise<LedgerData>
     toInvoice: (id: string) => Promise<LedgerData>
+    addPayment: (id: string, payment: Omit<Payment, 'id'>) => Promise<LedgerData>
+    removePayment: (id: string, paymentId: string) => Promise<LedgerData>
+    /** Writes down the next reminder level for an overdue invoice. */
+    addReminder: (id: string) => Promise<LedgerData>
   }
+  billing: { save: (billing: BillingSettings) => Promise<LedgerData> }
+  /** DATEV export of the invoices between two ISO dates. Returns the file path or null if cancelled. */
+  datev: { export: (from: string, to: string) => Promise<{ path: string; bookings: number } | null> }
   /** Exports the document that is shown in the window as PDF. Returns the file path or null if cancelled. */
   pdf: { export: (suggestedName: string) => Promise<string | null> }
 }
@@ -52,5 +62,10 @@ export const IPC = {
   documentIssue: 'ledger:document-issue',
   documentCancel: 'ledger:document-cancel',
   documentToInvoice: 'ledger:document-to-invoice',
+  paymentAdd: 'ledger:payment-add',
+  paymentRemove: 'ledger:payment-remove',
+  reminderAdd: 'ledger:reminder-add',
+  billingSave: 'ledger:billing-save',
+  datevExport: 'ledger:datev-export',
   pdfExport: 'ledger:pdf-export'
 } as const

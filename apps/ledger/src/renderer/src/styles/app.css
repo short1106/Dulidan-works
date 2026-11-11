@@ -194,3 +194,15 @@
 [data-mode='basic'] .ledger-nav button {
   min-height: 48px;
 }
+
+.ledger-overdue {
+  color: var(--dd-danger);
+  font-weight: 600;
+}
+
+.ledger-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}

@@ -70,7 +70,53 @@ export const de = {
     cancelledNotice: 'Storniert.',
     pdfSaved: 'PDF gespeichert.',
     notReady: 'Noch nicht vollständig',
-    selectDocument: 'Wähle links ein Dokument oder lege ein neues an.'
+    selectDocument: 'Wähle links ein Dokument oder lege ein neues an.',
+    dueDate: (date: string) => `Bitte überweisen Sie den Betrag bis zum ${date}.`,
+    filterAll: 'Alle',
+    filterOpen: 'Offene Posten',
+    openSum: (sum: string) => `Noch offen: ${sum}`
+  },
+  payments: {
+    title: 'Zahlungen',
+    state: { offen: 'Offen', teilweise: 'Teilweise bezahlt', bezahlt: 'Bezahlt', ueberfaellig: 'Überfällig' } as Record<string, string>,
+    gross: 'Rechnungsbetrag',
+    paid: 'Bereits bezahlt',
+    fees: 'Mahngebühren',
+    open: 'Noch offen',
+    due: (date: string) => `Fällig am ${date}`,
+    none: 'Noch keine Zahlung eingegangen.',
+    date: 'Datum des Zahlungseingangs',
+    amount: 'Betrag (€)',
+    note: 'Notiz (freiwillig)',
+    add: 'Zahlung eintragen',
+    markPaid: 'Als bezahlt markieren',
+    remove: 'Zahlung löschen',
+    removeTitle: 'Zahlung löschen?',
+    removeText: 'Nur löschen, wenn die Zahlung versehentlich eingetragen wurde.',
+    added: 'Zahlung eingetragen.',
+    invalid: 'Bitte einen Betrag über 0 € eingeben.',
+    entry: (date: string, amount: string) => `${date}: ${amount}`
+  },
+  reminders: {
+    title: 'Mahnungen',
+    levels: { 1: 'Zahlungserinnerung', 2: '1. Mahnung', 3: '2. Mahnung' } as Record<number, string>,
+    write: (level: string) => `${level} schreiben`,
+    writeTitle: (level: string) => `${level} schreiben?`,
+    writeText: 'Ledger notiert die Mahnung mit heutigem Datum und einer neuen Frist von 7 Tagen. Danach kannst du sie als PDF speichern und verschicken.',
+    confirm: 'Ja, schreiben',
+    written: 'Mahnung notiert. Speichere sie jetzt als PDF.',
+    pdf: 'Als PDF speichern',
+    last: 'Die letzte Mahnung ist geschrieben. Bitte jetzt persönlich nachfassen.',
+    entry: (level: string, date: string) => `${level} vom ${date}`,
+    subject: (number: string) => `Rechnung Nr. ${number}`,
+    greeting: 'Sehr geehrte Damen und Herren,',
+    text: (level: number, number: string, date: string) =>
+      level === 1
+        ? `sicher ist es Ihrer Aufmerksamkeit entgangen: Zu unserer Rechnung Nr. ${number} vom ${date} ist noch ein Betrag offen.`
+        : `leider ist zu unserer Rechnung Nr. ${number} vom ${date} trotz unserer Erinnerung noch ein Betrag offen.`,
+    request: (due: string) => `Bitte überweisen Sie den offenen Betrag bis zum ${due} auf unser unten genanntes Konto.`,
+    already: 'Falls Sie inzwischen bezahlt haben, betrachten Sie dieses Schreiben bitte als gegenstandslos.',
+    closing: 'Mit freundlichen Grüßen'
   },
   settings: {
     title: 'Firma & Einstellungen',
@@ -93,7 +139,25 @@ export const de = {
     mode: 'Modus',
     theme: 'Farben',
     themeDark: 'Dunkel',
-    themeLight: 'Hell'
+    themeLight: 'Hell',
+    billing: 'Zahlungen und Mahnungen',
+    paymentTerm: 'Zahlungsziel (Tage)',
+    reminderFee: 'Mahngebühr ab der 1. Mahnung (€, 0 = keine)',
+    billingText: 'Die Zahlungserinnerung ist immer kostenlos. Gebühren und Zinsen bitte vorher mit dem Steuerberater klären.',
+    datev: 'Export für den Steuerberater (DATEV)',
+    datevText: 'Erstellt eine Datei im DATEV-Format „Buchungsstapel“ mit allen Rechnungen eines Zeitraums. Lass die erste Datei von deinem Steuerberater prüfen.',
+    consultant: 'Beraternummer',
+    client: 'Mandantennummer',
+    chart: 'Kontenrahmen',
+    debtor: 'Debitorenkonto (Sammelkonto)',
+    revenue19: 'Erlöskonto 19 %',
+    revenue7: 'Erlöskonto 7 %',
+    revenue0: 'Erlöskonto 0 %',
+    revenueSmall: 'Erlöskonto Kleinunternehmer',
+    from: 'Von',
+    to: 'Bis',
+    export: 'DATEV-Datei erstellen',
+    exported: (count: number) => `DATEV-Datei gespeichert (${count} Buchungen).`
   },
   notices: { close: 'Schließen', error: 'Das hat nicht geklappt.' }
 } as const
