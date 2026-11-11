@@ -1,12 +1,14 @@
 import { join } from 'node:path'
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { normalizeSettings, type Settings } from '@dulidan/core'
-import { JsonFile } from '@dulidan/core/node'
+import { atomicWriteFile, JsonFile } from '@dulidan/core/node'
 import { startAutoUpdate } from '@dulidan/core/electron'
 import { verifySmtp } from '@dulidan/mail-core'
 import { IPC, type RadarConfigPatch } from '../shared/api'
 import { RadarConfigStore, radarDataDir } from './config'
-import { findEmailOnWebsite, RadarStore, searchPlaces } from './leads'
+import { findEmailOnWebsite, RadarStore, searchPlaces, type LeadStatus } from './leads'
+import { lettersHtml } from './letters'
+import { checkReplies } from './replies'
 import { Outbox, type SendProgress, type SendSettings } from './outbox'
 import { renderLeadMail, templateById, TEMPLATES } from './templates'
 
@@ -60,6 +62,17 @@ function sendSettingsInput(): SendSettings {
   }
 }
 
+/** Renders the letters in a hidden window without scripts and prints them to PDF. */
+async function lettersPdf(html: string): Promise<Buffer> {
+  const window = new BrowserWindow({ show: false, webPreferences: { sandbox: true, javascript: false, contextIsolation: true } })
+  try {
+    await window.loadURL('data:text/html;charset=utf-8;base64,' + Buffer.from(html, 'utf8').toString('base64'))
+    return await window.webContents.printToPDF({ pageSize: 'A4', printBackground: true, preferCSSPageSize: true })
+  } finally {
+    window.destroy()
+  }
+}
+
 function registerIpc(): void {
   // Settings shared by all Dulidan apps (mode, theme, animations)
   ipcMain.handle(IPC.settingsGet, () => settingsFile.get())
@@ -82,6 +95,33 @@ function registerIpc(): void {
     }
   })
 
+  ipcMain.handle(IPC.repliesCheck, async () => {
+    const login = config.imapLogin()
+    if (!login) throw new Error('Bitte zuerst die Mail-Einstellungen eintragen (Posteingang, Benutzername, Passwort).')
+    return checkReplies(login, store)
+  })
+
+  ipcMain.handle(IPC.lettersExport, async (event, leadIds: string[], templateId: string) => {
+    const leads = leadIds.map((id) => store.leads().find((lead) => lead.id === id)).filter((lead) => lead !== undefined)
+    if (leads.length === 0) throw new Error('Bitte mindestens eine Firma auswählen.')
+    const value = config.get()
+    if (!value.senderAddress.trim()) throw new Error('Bitte zuerst unter Einstellungen deine Anschrift für Briefe eintragen.')
+    const window = BrowserWindow.fromWebContents(event.sender)
+    const day = new Date().toISOString().slice(0, 10)
+    const options = {
+      title: 'Briefe als PDF speichern',
+      defaultPath: join(app.getPath('documents'), `Radar-Briefe-${day}.pdf`),
+      filters: [{ name: 'PDF-Dokument', extensions: ['pdf'] }]
+    }
+    const result = window ? await dialog.showSaveDialog(window, options) : await dialog.showSaveDialog(options)
+    if (result.canceled || !result.filePath) return null
+    const file = result.filePath.toLowerCase().endsWith('.pdf') ? result.filePath : `${result.filePath}.pdf`
+    const html = lettersHtml(leads, templateById(templateId), { name: value.senderName, address: value.senderAddress, email: value.senderEmail }, new Date())
+    await atomicWriteFile(file, await lettersPdf(html))
+    for (const lead of leads) await store.updateLead(lead.id, { letterAt: Date.now() })
+    return file
+  })
+
   ipcMain.handle(IPC.searchRun, async () => {
     const key = config.placesKey()
     if (!key) throw new Error('Bitte zuerst den Google-Schlüssel unter Einstellungen eintragen.')
@@ -96,7 +136,7 @@ function registerIpc(): void {
   })
 
   ipcMain.handle(IPC.leadsList, () => store.leads())
-  ipcMain.handle(IPC.leadsUpdate, async (_event, id: string, patch: { status?: 'neu' | 'kontaktiert' | 'antwort' | 'kein_interesse'; note?: string; email?: string | null }) => {
+  ipcMain.handle(IPC.leadsUpdate, async (_event, id: string, patch: { status?: LeadStatus; note?: string; email?: string | null }) => {
     await store.updateLead(id, patch)
     return store.leads()
   })

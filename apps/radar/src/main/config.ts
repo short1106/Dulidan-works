@@ -10,6 +10,9 @@ const DEFAULT_CONFIG: Omit<RadarConfig, 'hasPlacesKey' | 'hasSmtpPassword'> = {
   smtpHost: 'smtp.ionos.de',
   smtpPort: 587,
   smtpUser: '',
+  imapHost: 'imap.ionos.de',
+  imapPort: 993,
+  senderAddress: '',
   senderName: 'Shaquille El Moussaoui',
   senderEmail: '',
   dailyLimit: 20,
@@ -34,6 +37,9 @@ function normalizeConfig(raw: unknown): StoredConfig {
     smtpHost: text('smtpHost'),
     smtpPort: number('smtpPort', 1, 65535),
     smtpUser: text('smtpUser'),
+    imapHost: text('imapHost'),
+    imapPort: number('imapPort', 1, 65535),
+    senderAddress: text('senderAddress'),
     senderName: text('senderName'),
     senderEmail: text('senderEmail'),
     dailyLimit: number('dailyLimit', 1, 200),
@@ -96,6 +102,14 @@ export class RadarConfigStore {
 
   placesKey(): string | null {
     return this.secrets.placesKey ? decrypt(this.secrets.placesKey) : null
+  }
+
+  /** Login for the inbox (same user and password as for sending), or null if incomplete. */
+  imapLogin(): ServerLogin | null {
+    const config = this.file.get()
+    const smtp = this.smtpLogin()
+    if (!smtp || !config.imapHost) return null
+    return { host: config.imapHost, port: config.imapPort, secure: config.imapPort === 993, user: smtp.user, pass: smtp.pass }
   }
 
   /** Login for the mail server, or null if the settings are not complete. */

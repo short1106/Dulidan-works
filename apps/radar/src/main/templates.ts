@@ -15,7 +15,7 @@ Dulidan Studios
 info@dulidan-studios.com
 www.dulidan-studios.com`
 
-const OPT_OUT_OPEN = 'Ihre Adresse stammt aus einem öffentlichen Branchenverzeichnis. Wenn Sie keine weiteren Nachrichten möchten, antworten Sie einfach mit "Abmelden".'
+export const OPT_OUT_OPEN = 'Ihre Adresse stammt aus einem öffentlichen Branchenverzeichnis. Wenn Sie keine weiteren Nachrichten möchten, antworten Sie einfach mit "Abmelden".'
 
 /** The texts from the Akquise tool (vorlagen/zimmerei*.txt). Edit them here. */
 export const TEMPLATES: RadarTemplate[] = [

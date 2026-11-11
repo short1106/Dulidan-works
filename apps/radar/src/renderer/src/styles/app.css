@@ -90,3 +90,19 @@
 [data-mode='basic'] .radar-nav button {
   min-height: 48px;
 }
+
+.radar-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.radar-field textarea {
+  width: 100%;
+  max-width: 480px;
+}
+
+.radar-reply {
+  font-size: var(--dd-font-size-small);
+  color: var(--dd-accent-light);
+}

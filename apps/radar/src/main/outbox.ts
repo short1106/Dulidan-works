@@ -25,8 +25,8 @@ export interface OutboxDeps {
   login: () => ServerLogin | null
   settings: () => SendSettings
   report: (progress: SendProgress) => void
-  /** Injected for tests; the app uses the real sending. */
-  send?: (login: ServerLogin, mail: OutgoingMail) => Promise<void>
+  /** Injected for tests; the app uses the real sending. Returns the Message-ID of the sent mail. */
+  send?: (login: ServerLogin, mail: OutgoingMail) => Promise<string | void>
   wait?: (ms: number) => Promise<void>
 }
 
@@ -65,7 +65,7 @@ export class Outbox {
     this.stopRequested = false
     this.update({ state: 'laeuft', total: leads.length, done: 0, skipped: 0, current: null, message: null })
 
-    const send = this.deps.send ?? ((smtp: ServerLogin, mail: OutgoingMail) => this.sendReal(smtp, mail))
+    const send = this.deps.send ?? ((smtp: ServerLogin, mail: OutgoingMail): Promise<string | void> => this.sendReal(smtp, mail))
     const wait = this.deps.wait ?? realWait
     let sentInThisRun = 0
 
@@ -95,9 +95,10 @@ export class Outbox {
           attachments: []
         }
         try {
-          await send(login, outgoing)
+          const messageId = await send(login, outgoing)
           await this.deps.store.countSent()
-          await this.deps.store.updateLead(lead.id, { status: 'kontaktiert' })
+          // The Message-ID lets Radar find the reply later.
+          await this.deps.store.updateLead(lead.id, { status: 'kontaktiert', contactedAt: Date.now(), messageId: messageId || null })
           sentInThisRun++
           this.update({ done: this.progress.done + 1, message: null })
         } catch (error) {
@@ -124,9 +125,10 @@ export class Outbox {
     return null
   }
 
-  private async sendReal(login: ServerLogin, mail: OutgoingMail): Promise<void> {
-    const { raw } = await buildMessage(mail)
+  private async sendReal(login: ServerLogin, mail: OutgoingMail): Promise<string> {
+    const { raw, messageId } = await buildMessage(mail)
     await sendRaw(login, mail, raw)
+    return messageId
   }
 
   private update(patch: Partial<SendProgress>): void {

@@ -28,7 +28,24 @@ export const de = {
     remove: 'Entfernen',
     noEmail: 'keine Adresse',
     noWebsite: 'keine Website',
-    status: { neu: 'Neu', kontaktiert: 'Kontaktiert', antwort: 'Antwort da', kein_interesse: 'Kein Interesse' },
+    status: { neu: 'Neu', kontaktiert: 'Kontaktiert', antwort: 'Antwort da', unzustellbar: 'Nicht zustellbar', kein_interesse: 'Kein Interesse' },
+    checkReplies: 'Antworten prüfen',
+    checkingReplies: 'Schaue in den Posteingang …',
+    repliesResult: (replies: number, bounces: number) =>
+      replies === 0 && bounces === 0
+        ? 'Keine neuen Antworten.'
+        : [replies === 1 ? '1 neue Antwort' : replies > 1 ? `${replies} neue Antworten` : '', bounces === 1 ? '1 Mail nicht zustellbar' : bounces > 1 ? `${bounces} Mails nicht zustellbar` : '']
+            .filter(Boolean)
+            .join(', ') + '.',
+    replyOn: (date: string) => `Antwort am ${date}`,
+    bounceOn: (date: string) => `Rückläufer am ${date}`,
+    letterOn: (date: string) => `Brief erstellt am ${date}`,
+    select: (name: string) => `${name} auswählen`,
+    selectShown: 'Alle angezeigten auswählen',
+    selected: (count: number) => `${count} ausgewählt`,
+    letters: 'Brief als PDF',
+    lettersTemplate: 'Vorlage für den Brief',
+    lettersSaved: (count: number) => (count === 1 ? 'Brief gespeichert.' : `${count} Briefe in einer PDF-Datei gespeichert.`),
     columns: { name: 'Firma', address: 'Adresse', email: 'Mail', status: 'Status' },
     note: 'Notiz',
     blocklistTitle: 'Sperrliste',
@@ -71,6 +88,12 @@ export const de = {
     passwordSaved: 'Passwort gespeichert. Leer lassen, um es zu behalten.',
     senderName: 'Absendername',
     senderEmail: 'Absender-Mailadresse',
+    imapHost: 'Posteingang (IMAP), für Antworten',
+    imapPort: 'Port Posteingang',
+    imapText: 'Radar liest nur die Kopfzeilen neuer Mails, um Antworten und Rückläufer zu erkennen. Benutzername und Passwort sind dieselben wie beim Versand.',
+    letter: 'Briefe',
+    senderAddress: 'Deine Anschrift für Briefe',
+    senderAddressText: 'Steht oben rechts im Brief und im Absenderfeld. Eine Zeile pro Eintrag, z. B. Straße und Ort.',
     dailyLimit: 'Mails pro Tag',
     pauseMin: 'Pause mindestens (Sekunden)',
     pauseMax: 'Pause höchstens (Sekunden)',

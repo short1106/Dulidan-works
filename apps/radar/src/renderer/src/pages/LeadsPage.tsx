@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react'
 import { Button, Card, notify } from '@dulidan/design-system'
-import type { Lead, LeadStatus } from '../../../shared/api'
+import type { Lead, LeadStatus, TemplateInfo } from '../../../shared/api'
 import { de as t } from '../i18n/de'
 
-const FILTERS: Array<LeadStatus | 'alle'> = ['alle', 'neu', 'kontaktiert', 'antwort', 'kein_interesse']
+const STATUSES: LeadStatus[] = ['neu', 'kontaktiert', 'antwort', 'unzustellbar', 'kein_interesse']
+const FILTERS: Array<LeadStatus | 'alle'> = ['alle', ...STATUSES]
+const dateFormat = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+
+/** Reply, bounce or letter, in one short line under the status. */
+function history(lead: Lead): string | null {
+  if (lead.replyAt && lead.status === 'antwort') return `${t.leads.replyOn(dateFormat.format(lead.replyAt))}${lead.replySubject ? `: ${lead.replySubject}` : ''}`
+  if (lead.replyAt && lead.status === 'unzustellbar') return t.leads.bounceOn(dateFormat.format(lead.replyAt))
+  if (lead.letterAt) return t.leads.letterOn(dateFormat.format(lead.letterAt))
+  return null
+}
 
 /** All companies with their status, website check and blocklist. */
 export function LeadsPage(): React.JSX.Element {
@@ -11,11 +21,45 @@ export function LeadsPage(): React.JSX.Element {
   const [filter, setFilter] = useState<LeadStatus | 'alle'>('alle')
   const [checking, setChecking] = useState(false)
   const [blocklist, setBlocklist] = useState('')
+  const [checkingReplies, setCheckingReplies] = useState(false)
+  const [chosen, setChosen] = useState<string[]>([])
+  const [templates, setTemplates] = useState<TemplateInfo[]>([])
+  const [templateId, setTemplateId] = useState('zimmerei')
 
   useEffect(() => {
     void window.radar.leads.list().then(setLeads)
     void window.radar.blocklist.get().then((entries) => setBlocklist(entries.join('\n')))
+    void window.radar.templates.list().then(setTemplates)
+    void window.radar.config.get().then((config) => setTemplateId(config.templateId))
   }, [])
+
+  async function checkReplies(): Promise<void> {
+    setCheckingReplies(true)
+    try {
+      const result = await window.radar.replies.check()
+      setLeads(await window.radar.leads.list())
+      notify(t.leads.repliesResult(result.replies, result.bounces), result.replies > 0 ? 'success' : 'info')
+    } catch (error) {
+      notify(error instanceof Error ? error.message : t.notices.error, 'error')
+    } finally {
+      setCheckingReplies(false)
+    }
+  }
+
+  async function exportLetters(): Promise<void> {
+    try {
+      const file = await window.radar.letters.export(chosen, templateId)
+      if (!file) return
+      setLeads(await window.radar.leads.list())
+      notify(t.leads.lettersSaved(chosen.length), 'success')
+    } catch (error) {
+      notify(error instanceof Error ? error.message : t.notices.error, 'error')
+    }
+  }
+
+  function toggle(id: string): void {
+    setChosen((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]))
+  }
 
   const shown = leads.filter((lead) => filter === 'alle' || lead.status === filter)
 
@@ -64,6 +108,27 @@ export function LeadsPage(): React.JSX.Element {
         <Button onClick={() => void checkAll()} disabled={checking}>
           {checking ? t.leads.checking : t.leads.checkAll}
         </Button>
+        <Button onClick={() => void checkReplies()} disabled={checkingReplies}>
+          {checkingReplies ? t.leads.checkingReplies : t.leads.checkReplies}
+        </Button>
+      </div>
+
+      <div className="radar-toolbar">
+        <Button onClick={() => setChosen(chosen.length === shown.length ? [] : shown.map((lead) => lead.id))}>{t.leads.selectShown}</Button>
+        <span aria-live="polite">{t.leads.selected(chosen.length)}</span>
+        <label>
+          {t.leads.lettersTemplate}{' '}
+          <select value={templateId} onChange={(event) => setTemplateId(event.target.value)}>
+            {templates.map((template) => (
+              <option key={template.id} value={template.id}>
+                {template.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <Button variant="primary" onClick={() => void exportLetters()} disabled={chosen.length === 0}>
+          {t.leads.letters}
+        </Button>
       </div>
 
       {shown.length === 0 ? (
@@ -72,6 +137,7 @@ export function LeadsPage(): React.JSX.Element {
         <table className="radar-table">
           <thead>
             <tr>
+              <th />
               <th>{t.leads.columns.name}</th>
               <th>{t.leads.columns.address}</th>
               <th>{t.leads.columns.email}</th>
@@ -84,6 +150,9 @@ export function LeadsPage(): React.JSX.Element {
             {shown.map((lead) => (
               <tr key={lead.id}>
                 <td>
+                  <input type="checkbox" aria-label={t.leads.select(lead.name)} checked={chosen.includes(lead.id)} onChange={() => toggle(lead.id)} />
+                </td>
+                <td>
                   {lead.name}
                   {lead.website ? null : <div className="radar-muted">{t.leads.noWebsite}</div>}
                 </td>
@@ -91,12 +160,13 @@ export function LeadsPage(): React.JSX.Element {
                 <td>{lead.email ?? <span className="radar-muted">{t.leads.noEmail}</span>}</td>
                 <td>
                   <select aria-label={`${t.leads.columns.status}: ${lead.name}`} value={lead.status} onChange={(event) => void changeStatus(lead.id, event.target.value as LeadStatus)}>
-                    {(['neu', 'kontaktiert', 'antwort', 'kein_interesse'] as LeadStatus[]).map((status) => (
+                    {STATUSES.map((status) => (
                       <option key={status} value={status}>
                         {t.leads.status[status]}
                       </option>
                     ))}
                   </select>
+                  {history(lead) && <div className="radar-reply">{history(lead)}</div>}
                 </td>
                 <td>
                   <input

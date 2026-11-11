@@ -18,6 +18,8 @@ const api: RadarApi = {
     saveSecrets: (secrets) => invoke(IPC.configSecrets, secrets)
   },
   smtp: { test: () => invoke(IPC.smtpTest) },
+  replies: { check: () => invoke(IPC.repliesCheck) },
+  letters: { export: (leadIds, templateId) => invoke(IPC.lettersExport, leadIds, templateId) },
   search: { run: () => invoke(IPC.searchRun) },
   leads: {
     list: () => invoke(IPC.leadsList),

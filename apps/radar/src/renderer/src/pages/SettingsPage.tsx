@@ -37,6 +37,9 @@ export function SettingsPage(): React.JSX.Element {
         smtpHost: config.smtpHost,
         smtpPort: config.smtpPort,
         smtpUser: config.smtpUser,
+        imapHost: config.imapHost,
+        imapPort: config.imapPort,
+        senderAddress: config.senderAddress,
         senderName: config.senderName,
         senderEmail: config.senderEmail,
         dailyLimit: config.dailyLimit,
@@ -88,12 +91,26 @@ export function SettingsPage(): React.JSX.Element {
           <TextField label={t.settings.senderName} value={config.senderName} onChange={(event) => set('senderName', event.target.value)} />
           <TextField label={t.settings.senderEmail} type="email" value={config.senderEmail} onChange={(event) => set('senderEmail', event.target.value)} />
         </div>
+        <div className="radar-form">
+          <TextField label={t.settings.imapHost} value={config.imapHost} onChange={(event) => set('imapHost', event.target.value)} />
+          <TextField label={t.settings.imapPort} type="number" value={config.imapPort} onChange={(event) => set('imapPort', Number(event.target.value))} />
+        </div>
+        <p className="radar-muted">{t.settings.imapText}</p>
         <p className="radar-muted">{config.hasSmtpPassword ? t.settings.passwordSaved : null}</p>
         <div className="radar-toolbar">
           <Button onClick={() => void test()} disabled={testing}>
             {t.settings.test}
           </Button>
         </div>
+      </Card>
+
+      <Card className="radar-card">
+        <h2>{t.settings.letter}</h2>
+        <label className="radar-field">
+          {t.settings.senderAddress}
+          <textarea rows={3} value={config.senderAddress} onChange={(event) => set('senderAddress', event.target.value)} />
+        </label>
+        <p className="radar-muted">{t.settings.senderAddressText}</p>
       </Card>
 
       <Card className="radar-card">

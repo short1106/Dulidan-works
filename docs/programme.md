@@ -5,8 +5,8 @@ Ausführliche Beschreibung für Nutzer: `README.md`.
 ## Glyph (Text) – fertig
 Eigenes Dateiformat `.glyph` (ZIP mit fflate). TipTap-Editor, Suchen und Ersetzen, Bilder,
 Drucken und PDF, Versionen, Autosave und Wiederherstellung. Moduswahl beim ersten Start.
-Hat als einziges Programm noch keinen eigenen `test/`-Ordner; Speichern, Wiederherstellung und
-Modus-Logik sind über `packages/core/test` abgedeckt.
+Eigene Tests in `apps/glyph/test` (Speichern/Laden gegen Glyphs Editor-Schema, Modi, Tastenkürzel).
+Start-Animation im schnellen Tempo (etwa 3 Sekunden).
 
 ## Pixel (Malen) – fertig
 Eigenes Format `.pixel`, Export PNG/JPG. Pinsel, Radierer, Füllen, Formen, Text, Pipette,
@@ -31,8 +31,12 @@ Firmenliste mit Status und Notiz, Sperrliste (Adresse oder ganze Domain mit @), 
 den eigenen Mailserver mit Pausen (Standard 90–240 s) und Tageslimit (Standard 20). Firmen
 aus fremden Branchen werden beim Suchen ausgelassen. Vorlagen: Zimmerei mit und ohne Website.
 Passwörter und Schlüssel nur verschlüsselt im Schlüsselspeicher von Windows.
-Noch nicht drin: Antworten per IMAP erkennen, Brief-Export. Erst nach rechtlicher Prüfung
-verkaufen (UWG, DSGVO).
+Antworten erkennen: Jede Mail merkt sich ihre Message-ID. „Antworten prüfen“ liest nur die Kopfzeilen
+neuer Mails im Posteingang (IMAP, gleiche Anmeldung wie beim Versand) und setzt Firmen auf „Antwort da“
+oder bei Rückläufern auf „Nicht zustellbar“. Von Hand gesetzte Status bleiben unberührt.
+Brief-Export: ausgewählte Firmen als ein PDF, ein Brief pro Seite (DIN 5008 Form B, Fensterkuvert),
+mit Absender-Anschrift aus den Einstellungen und Hinweis zur Herkunft der Anschrift.
+Erst nach rechtlicher Prüfung verkaufen (UWG, DSGVO).
 
 ## Ledger (Rechnungen und Angebote) – Version 1 gebaut
 Kunden, Angebote und Rechnungen mit Positionen, MwSt. 0/7/19 %, PDF über den Druck des Fensters.

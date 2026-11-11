@@ -14,7 +14,12 @@ export interface RadarConfig {
   smtpHost: string
   smtpPort: number
   smtpUser: string
+  /** Inbox server for finding replies (same user and password as for sending). */
+  imapHost: string
+  imapPort: number
   senderName: string
+  /** Postal address of the sender for letters, one line per row. */
+  senderAddress: string
   senderEmail: string
   dailyLimit: number
   pauseMinSeconds: number
@@ -36,6 +41,12 @@ export interface SearchResult {
 export interface SmtpTestResult {
   ok: boolean
   message: string
+}
+
+export interface ReplyCheckResult {
+  replies: number
+  bounces: number
+  checked: number
 }
 
 export interface TemplateInfo {
@@ -63,6 +74,10 @@ export interface RadarApi {
     saveSecrets: (secrets: { placesKey?: string; smtpPassword?: string }) => Promise<RadarConfig>
   }
   smtp: { test: () => Promise<SmtpTestResult> }
+  /** Looks into the inbox for replies and bounces. */
+  replies: { check: () => Promise<ReplyCheckResult> }
+  /** Letters as one PDF (one page per company); returns the file path, or null if cancelled. */
+  letters: { export: (leadIds: string[], templateId: string) => Promise<string | null> }
   search: { run: () => Promise<SearchResult> }
   leads: {
     list: () => Promise<Lead[]>
@@ -94,6 +109,8 @@ export const IPC = {
   configUpdate: 'radar:config-update',
   configSecrets: 'radar:config-secrets',
   smtpTest: 'radar:smtp-test',
+  repliesCheck: 'radar:replies-check',
+  lettersExport: 'radar:letters-export',
   searchRun: 'radar:search-run',
   leadsList: 'radar:leads-list',
   leadsUpdate: 'radar:leads-update',

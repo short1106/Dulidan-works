@@ -129,6 +129,25 @@ export class ImapSession {
     }
   }
 
+  /**
+   * Only the headers (sender, subject, Message-ID, In-Reply-To, ...) of the
+   * mails that arrived since a date. Small and fast, e.g. to find replies.
+   */
+  async headersSince(path: string, since: Date): Promise<ParsedMail[]> {
+    const lock = await this.client.getMailboxLock(path)
+    try {
+      const uids = await this.client.search({ since }, { uid: true })
+      if (!uids || uids.length === 0) return []
+      const mails: ParsedMail[] = []
+      for await (const message of this.client.fetch(uids.join(','), { uid: true, headers: true, flags: true }, { uid: true })) {
+        if (message.headers) mails.push(await parseMail(message.headers, message.uid, message.flags?.has('\\Seen') ?? false))
+      }
+      return mails
+    } finally {
+      lock.release()
+    }
+  }
+
   /** The complete raw mail, e.g. for attachments. */
   async source(path: string, uid: number): Promise<Buffer | null> {
     const lock = await this.client.getMailboxLock(path)

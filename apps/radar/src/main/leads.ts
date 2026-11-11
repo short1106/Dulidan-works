@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { JsonFile } from '@dulidan/core/node'
 import { extractEmails, isBlocked, isForeignBusiness, pickEmail, dayKey } from './logic'
 
-export type LeadStatus = 'neu' | 'kontaktiert' | 'antwort' | 'kein_interesse'
+export type LeadStatus = 'neu' | 'kontaktiert' | 'antwort' | 'unzustellbar' | 'kein_interesse'
 
 export interface Lead {
   id: string
@@ -18,6 +18,13 @@ export interface Lead {
   note: string
   contactedAt: number | null
   createdAt: number
+  /** Message-ID of the mail Radar sent, to recognize the reply. */
+  messageId?: string | null
+  /** When an answer or bounce was found, and its subject. */
+  replyAt?: number | null
+  replySubject?: string | null
+  /** When a letter (PDF) was made for this company. */
+  letterAt?: number | null
 }
 
 export interface RadarData {
@@ -77,7 +84,10 @@ export class RadarStore {
     return fresh.length
   }
 
-  async updateLead(id: string, patch: Partial<Pick<Lead, 'status' | 'note' | 'email' | 'checkedAt'>>): Promise<void> {
+  async updateLead(
+    id: string,
+    patch: Partial<Pick<Lead, 'status' | 'note' | 'email' | 'checkedAt' | 'contactedAt' | 'messageId' | 'replyAt' | 'replySubject' | 'letterAt'>>
+  ): Promise<void> {
     const leads = this.leads().map((lead) => (lead.id === id ? { ...lead, ...patch } : lead))
     await this.file.update({ leads })
   }
