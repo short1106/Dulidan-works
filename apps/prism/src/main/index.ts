@@ -100,7 +100,8 @@ function registerIpc(settingsFile: JsonFile<Settings>): void {
       filters: [{ name: 'PDF', extensions: ['pdf'] }]
     })
     if (result.canceled || !result.filePath) return null
-    await atomicWriteFile(result.filePath, await renderPdf(window.webContents))
+    // One slide per landscape page, edge to edge; the slides carry their own numbers.
+    await atomicWriteFile(result.filePath, await renderPdf(window.webContents, { landscape: true, noMargins: true, pageNumbers: false }))
     return result.filePath
   })
 }

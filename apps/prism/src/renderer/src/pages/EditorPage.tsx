@@ -1,6 +1,20 @@
 import { useState } from 'react'
-import { ask, Button, Card } from '@dulidan/design-system'
-import { addSlide, duplicateSlide, moveSlide, removeSlide, updateSlide, type Layout } from '../../../main/deck'
+import { ask, Button, Card, notify } from '@dulidan/design-system'
+import {
+  addSlide,
+  duplicateSlide,
+  moveSlide,
+  removeSlide,
+  SLIDE_COLORS,
+  THEMES,
+  TRANSITIONS,
+  updateSlide,
+  type ImagePlacement,
+  type Layout,
+  type ThemeId,
+  type TransitionId
+} from '../../../main/deck'
+import { imageToDataUrl, MAX_IMAGE_BYTES, pickImage } from '../lib/images'
 import { SlideView } from '../components/SlideView'
 import { de as t } from '../i18n/de'
 import { edit, newPresentation, openDeck, saveDeck, useDeckState } from '../state/deck'
@@ -12,6 +26,19 @@ export function EditorPage({ onPrint }: { onPrint: () => Promise<void> }): React
   const index = Math.min(selected, deck.slides.length - 1)
   const slide = deck.slides[index]
   const name = path ? path.split(/[\\/]/).pop() : t.file.untitled
+
+  async function choosePicture(): Promise<void> {
+    const file = await pickImage()
+    if (!file) return
+    if (file.size > MAX_IMAGE_BYTES) return notify(t.editor.imageTooBig, 'error')
+    try {
+      const src = await imageToDataUrl(file)
+      const alt = slide?.image?.alt || file.name.replace(/\.[^.]+$/, '')
+      edit((d) => updateSlide(d, index, { image: { src, alt, placement: slide?.image?.placement ?? 'rechts' } }))
+    } catch {
+      notify(t.editor.imageError, 'error')
+    }
+  }
 
   async function confirmDiscard(): Promise<boolean> {
     return (await ask({
@@ -56,13 +83,35 @@ export function EditorPage({ onPrint }: { onPrint: () => Promise<void> }): React
           {slide ? (
             <>
               <div className="prism-preview prism-no-print">
-                <SlideView slide={slide} number={index + 1} />
+                <SlideView slide={slide} deck={deck} number={index + 1} />
               </div>
               <Card className="prism-card prism-no-print">
                 <label>
                   {t.editor.deckTitle}
                   <input value={deck.title} onChange={(event) => edit((d) => ({ ...d, title: event.target.value }))} />
                 </label>
+                <div className="prism-form-row">
+                  <label>
+                    {t.editor.design}
+                    <select value={deck.theme} onChange={(event) => edit((d) => ({ ...d, theme: event.target.value as ThemeId }))}>
+                      {(Object.keys(THEMES) as ThemeId[]).map((id) => (
+                        <option key={id} value={id}>
+                          {t.editor.designs[id]}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    {t.editor.transition}
+                    <select value={deck.transition} onChange={(event) => edit((d) => ({ ...d, transition: event.target.value as TransitionId }))}>
+                      {TRANSITIONS.map((id) => (
+                        <option key={id} value={id}>
+                          {t.editor.transitions[id]}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
                 <label>
                   {t.editor.slideTitle}
                   <input value={slide.title} onChange={(event) => edit((d) => updateSlide(d, index, { title: event.target.value }))} />
@@ -78,6 +127,56 @@ export function EditorPage({ onPrint }: { onPrint: () => Promise<void> }): React
                     <option value="inhalt">{t.editor.layoutContent}</option>
                   </select>
                 </label>
+                <fieldset className="prism-swatches">
+                  <legend>{t.editor.slideColor}</legend>
+                  <label className="prism-swatch" title={t.editor.slideColorDesign}>
+                    <input type="radio" name="slide-color" checked={slide.background === null} onChange={() => edit((d) => updateSlide(d, index, { background: null }))} />
+                    {t.editor.slideColorDesign}
+                  </label>
+                  {SLIDE_COLORS.map((color) => (
+                    <label key={color} className="prism-swatch" style={{ background: color }} title={t.editor.slideColorName(color)}>
+                      <input
+                        type="radio"
+                        name="slide-color"
+                        aria-label={t.editor.slideColorName(color)}
+                        checked={slide.background === color}
+                        onChange={() => edit((d) => updateSlide(d, index, { background: color }))}
+                      />
+                    </label>
+                  ))}
+                </fieldset>
+                <div className="prism-image-tools">
+                  <span>{t.editor.image}</span>
+                  <Button onClick={() => void choosePicture()}>{slide.image ? t.editor.imageChange : t.editor.imageAdd}</Button>
+                  {slide.image && (
+                    <Button variant="ghost" onClick={() => edit((d) => updateSlide(d, index, { image: null }))}>
+                      {t.editor.imageRemove}
+                    </Button>
+                  )}
+                </div>
+                {slide.image && (
+                  <div className="prism-form-row">
+                    <label>
+                      {t.editor.imageAlt}
+                      <input
+                        value={slide.image.alt}
+                        onChange={(event) => edit((d) => updateSlide(d, index, { image: slide.image && { ...slide.image, alt: event.target.value } }))}
+                      />
+                    </label>
+                    <label>
+                      {t.editor.imagePlacement}
+                      <select
+                        value={slide.image.placement}
+                        onChange={(event) =>
+                          edit((d) => updateSlide(d, index, { image: slide.image && { ...slide.image, placement: event.target.value as ImagePlacement } }))
+                        }
+                      >
+                        <option value="rechts">{t.editor.placements.rechts}</option>
+                        <option value="gross">{t.editor.placements.gross}</option>
+                      </select>
+                    </label>
+                  </div>
+                )}
                 <div className="prism-toolbar">
                   <Button onClick={() => edit((d) => addSlide(d, index))}>{t.editor.add}</Button>
                   <Button onClick={() => edit((d) => duplicateSlide(d, index))}>{t.editor.duplicate}</Button>

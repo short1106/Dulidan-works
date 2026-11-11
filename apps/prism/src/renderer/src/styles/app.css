@@ -97,9 +97,12 @@
   width: 100%;
   box-sizing: border-box;
   padding: 6% 8%;
-  background: #0b0614;
-  color: #f3eaff;
-  border: 1px solid #c020b8;
+  /* Colors come from the design or the slide's own color (set by SlideView). */
+  background: var(--slide-bg, #0b0614);
+  color: var(--slide-text, #f3eaff);
+  border: 1px solid var(--slide-border, #c020b8);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
   border-radius: 6px;
   overflow: hidden;
   display: flex;
@@ -126,7 +129,106 @@
 }
 .prism-slide-body .prism-bullet::before {
   content: '▸ ';
-  color: #c020b8;
+  color: var(--slide-accent, #c020b8);
+}
+
+/* Slides with a picture: next to the text, or large below the title. */
+.prism-has-image {
+  justify-content: flex-start;
+}
+.prism-slide-content {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  gap: 4%;
+}
+.prism-image-rechts .prism-slide-content {
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+.prism-image-gross .prism-slide-content {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.prism-slide-image {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.prism-image-gross .prism-slide-text .prism-slide-body {
+  font-size: clamp(12px, 1.8vw, 22px);
+}
+
+/* Transitions in the presentation (switched off with reduced motion). */
+.prism-anim-blende {
+  animation: prism-fade 450ms ease-out;
+}
+.prism-anim-schieben-vor {
+  animation: prism-slide-in-right 450ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.prism-anim-schieben-zurueck {
+  animation: prism-slide-in-left 450ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes prism-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes prism-slide-in-right {
+  from { transform: translateX(12%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes prism-slide-in-left {
+  from { transform: translateX(-12%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .prism-anim-blende,
+  .prism-anim-schieben-vor,
+  .prism-anim-schieben-zurueck {
+    animation: none;
+  }
+}
+
+/* Color choice for one slide. */
+.prism-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.prism-swatches legend {
+  margin-bottom: 6px;
+}
+.prism-swatch {
+  position: relative;
+  min-width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid rgb(0 0 0 / 30%);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0 8px;
+}
+.prism-swatch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.prism-swatch:has(input:checked) {
+  outline: 3px solid var(--dd-accent, #c020b8);
+  outline-offset: 2px;
+}
+.prism-swatch:has(input:focus-visible) {
+  outline: 3px solid var(--dd-focus, #f5b8f2);
+  outline-offset: 2px;
+}
+[data-mode='basic'] .prism-swatch {
+  min-width: 48px;
+  height: 48px;
 }
 .prism-slide-number {
   position: absolute;
@@ -140,12 +242,15 @@
 .prism-present {
   position: fixed;
   inset: 0;
-  background: #0b0614;
+  background: #000000;
   display: grid;
   place-items: center;
   padding: 3vh 4vw;
   box-sizing: border-box;
   cursor: pointer;
+}
+.prism-present-slide {
+  width: min(100%, calc((100vh - 6rem) * 16 / 9));
 }
 .prism-present .prism-slide {
   width: min(100%, calc((100vh - 6rem) * 16 / 9));
@@ -187,6 +292,11 @@
   .prism-shell {
     display: block;
   }
+  /* White paper around the slides: no dark ink on the edges. */
+  html,
+  body {
+    background: #ffffff !important;
+  }
   .prism-print {
     display: block;
   }
@@ -212,4 +322,16 @@
 }
 [data-mode='basic'] .prism-nav button {
   min-height: 48px;
+}
+
+.prism-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.prism-image-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }

@@ -11,8 +11,16 @@ import { useDeckState } from '../state/deck'
 export function PresentPage({ onExit }: { onExit: () => void }): React.JSX.Element {
   const { deck } = useDeckState()
   const [index, setIndex] = useState(0)
+  const [direction, setDirection] = useState<'vor' | 'zurueck'>('vor')
   const last = deck.slides.length - 1
   const slide = deck.slides[Math.min(index, last)]
+  const go = (step: 1 | -1): void => {
+    setDirection(step === 1 ? 'vor' : 'zurueck')
+    setIndex((i) => Math.min(Math.max(i + step, 0), last))
+  }
+  // No movement when the user turned animations off.
+  const reduced = document.documentElement.dataset['motion'] === 'reduced'
+  const animation = reduced || deck.transition === 'keiner' ? '' : deck.transition === 'blende' ? 'prism-anim-blende' : `prism-anim-schieben-${direction}`
 
   useEffect(() => {
     void document.documentElement.requestFullscreen?.().catch(() => undefined)
@@ -24,24 +32,27 @@ export function PresentPage({ onExit }: { onExit: () => void }): React.JSX.Eleme
   useEffect(() => {
     function onKey(event: KeyboardEvent): void {
       if (event.key === 'Escape') onExit()
-      else if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key)) setIndex((i) => Math.min(i + 1, last))
-      else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) setIndex((i) => Math.max(i - 1, 0))
+      else if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key)) go(1)
+      else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) go(-1)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [last, onExit])
 
   if (!slide) return <p>{t.editor.empty}</p>
 
   return (
-    <div className="prism-present" onClick={() => setIndex((i) => Math.min(i + 1, last))}>
-      <SlideView slide={slide} number={index + 1} />
+    <div className="prism-present" onClick={() => go(1)}>
+      <div key={index} className={`prism-present-slide ${animation}`}>
+        <SlideView slide={slide} deck={deck} number={index + 1} />
+      </div>
       <div className="prism-present-bar" onClick={(event) => event.stopPropagation()}>
-        <Button variant="ghost" disabled={index === 0} onClick={() => setIndex((i) => Math.max(i - 1, 0))}>
+        <Button variant="ghost" disabled={index === 0} onClick={() => go(-1)}>
           {t.present.previous}
         </Button>
         <span>{t.editor.slideNumber(index + 1, deck.slides.length)}</span>
-        <Button variant="ghost" disabled={index === last} onClick={() => setIndex((i) => Math.min(i + 1, last))}>
+        <Button variant="ghost" disabled={index === last} onClick={() => go(1)}>
           {t.present.next}
         </Button>
         <Button variant="ghost" onClick={onExit}>

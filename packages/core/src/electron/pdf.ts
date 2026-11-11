@@ -3,12 +3,23 @@ import { BrowserWindow, type WebContents } from 'electron'
 /** 2.5 cm page margins, given in inches as Electron expects. */
 const MARGIN_INCH = 2.5 / 2.54
 
+export interface PdfOptions {
+  /** Pages lying on their side, e.g. for slides. */
+  landscape?: boolean
+  /** No page margins; the page layout comes from the window's print stylesheet. */
+  noMargins?: boolean
+  /** Small page number at the bottom (default: yes). */
+  pageNumbers?: boolean
+}
+
 /**
  * Turns what a window shows into an A4 PDF. The window's print stylesheet
  * decides what is visible (usually only the document). Chromium splits it
  * into pages; a small page number sits at the bottom. No extra library.
  */
-export async function renderPdf(contents: WebContents): Promise<Buffer> {
+export async function renderPdf(contents: WebContents, options: PdfOptions = {}): Promise<Buffer> {
+  const margin = options.noMargins ? 0 : MARGIN_INCH
+  const pageNumbers = options.pageNumbers ?? true
   // The page margins show the window's background and the color scheme's
   // page color; dark apps would get dark margins. For the PDF both are white.
   // The text cursor of a focused editor would be printed too, so it is hidden.
@@ -19,10 +30,11 @@ export async function renderPdf(contents: WebContents): Promise<Buffer> {
   try {
     return await contents.printToPDF({
       pageSize: 'A4',
+      landscape: options.landscape ?? false,
       printBackground: true,
-      margins: { top: MARGIN_INCH, bottom: MARGIN_INCH, left: MARGIN_INCH, right: MARGIN_INCH },
+      margins: { top: margin, bottom: margin, left: margin, right: margin },
       generateDocumentOutline: true,
-      displayHeaderFooter: true,
+      displayHeaderFooter: pageNumbers,
       headerTemplate: '<span></span>',
       // Small page number at the bottom center, e.g. "2 / 5".
       footerTemplate:

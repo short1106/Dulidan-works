@@ -7,7 +7,7 @@ export function PrintLayout({ deck }: { deck: Deck }): React.JSX.Element {
     <div className="prism-print">
       {deck.slides.map((slide, index) => (
         <div key={slide.id} className="prism-print-page">
-          <SlideView slide={slide} number={index + 1} />
+          <SlideView slide={slide} deck={deck} number={index + 1} />
         </div>
       ))}
     </div>

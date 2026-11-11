@@ -50,9 +50,12 @@ Vor dem Verkauf rechtlich prüfen lassen (Steuerberater).
 ## Prism (Folien) – Version 1 gebaut
 Folien mit Titel und Text (Titelfolie oder Inhaltsfolie), Aufzählung mit "- ", Folien kopieren, verschieben, löschen.
 Vorführen im Vollbild mit Pfeiltasten, Leertaste oder Klick. PDF: eine Folie pro Seite.
-Dateien mit der Endung .prism (JSON mit Versionsnummer). Eine Sicherungskopie wird während des Bearbeitens
-gespeichert; nach einem Absturz wird sie beim Start angeboten.
-Noch nicht drin: Bilder, Designs und Farben pro Folie, Übergänge.
+Dateien mit der Endung .prism (JSON, Version 2; Version 1 lässt sich weiter öffnen). Eine Sicherungskopie
+wird während des Bearbeitens gespeichert; nach einem Absturz wird sie beim Start angeboten.
+Designs für die ganze Präsentation (Dulidan Nacht, Hell, Papier, Ozean, Wald), eigene Farbe pro Folie
+(Schriftfarbe automatisch mit genug Kontrast), ein Bild pro Folie (rechts oder groß, mit Bildbeschreibung,
+in der Datei gespeichert, große Fotos auf 1920 px verkleinert), Übergänge Ohne/Überblenden/Schieben
+(aus bei „Bewegung reduzieren“). PDF im Querformat, eine Folie pro Seite, ohne Rand.
 
 ## Später
 - **Grid** (Tabelle), **Vertex** (Vektordesign).

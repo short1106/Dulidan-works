@@ -23,7 +23,7 @@ describe('Folien bearbeiten', () => {
   })
 
   it('löscht nie die letzte Folie', () => {
-    const deck = { title: 'x', slides: [newDeck().slides[0]] }
+    const deck = { ...newDeck(), title: 'x', slides: [newDeck().slides[0]!] }
     expect(removeSlide(deck, 0).slides).toHaveLength(1)
     expect(removeSlide(newDeck(), 0).slides).toHaveLength(1)
   })
@@ -78,7 +78,7 @@ describe('Dateiformat', () => {
   it('repariert beschädigte Folien, ohne die ganze Präsentation zu verlieren', () => {
     const deck = normalizeDeck({ title: 5, slides: [{ id: 'a', layout: 'quatsch', title: 'Ok', body: 3 }, { nichts: true }] })
     expect(deck.title).toBe('Neue Präsentation')
-    expect(deck.slides).toEqual([{ id: 'a', layout: 'inhalt', title: 'Ok', body: '' }])
+    expect(deck.slides).toEqual([{ id: 'a', layout: 'inhalt', title: 'Ok', body: '', background: null, image: null }])
   })
 
   it('bekommt eine Standardfolie, wenn gar keine Folie übrig ist', () => {

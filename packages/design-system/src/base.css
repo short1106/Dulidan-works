@@ -1,0 +1,26 @@
+/*
+ * Base look of every Dulidan window: font, colors and background from the
+ * tokens. Apps may add their own layout on top of it.
+ */
+body {
+  margin: 0;
+  background: var(--dd-bg);
+  color: var(--dd-text);
+  font-family: var(--dd-font-ui);
+  font-size: var(--dd-font-size);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* Messages ("Gespeichert") never end up on paper or in a PDF. */
+@media print {
+  .dd-notice-area {
+    display: none !important;
+  }
+}
