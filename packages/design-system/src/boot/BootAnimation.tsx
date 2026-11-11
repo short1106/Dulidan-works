@@ -39,6 +39,8 @@ export interface BootAnimationProps {
   scene?: BootScene
   /** Hint at the bottom, e.g. "Klicken oder Taste drücken zum Überspringen". */
   skipHint?: string
+  /** "quick": one blink before typing and faster letters, about 3 seconds in total. */
+  pace?: 'normal' | 'quick'
 }
 
 /** Timings of the full typing animation, in milliseconds. */
@@ -55,9 +57,16 @@ export const BOOT_TIMING = {
   fadeOut: 300
 } as const
 
+/** Changes for the quick pace (about 3 s instead of about 4.5 s). */
+export const BOOT_TIMING_QUICK = {
+  blinksBefore: 1,
+  letterMin: 25,
+  letterMax: 85
+} as const
+
 const BRAND = 'Dulidan'
 
-export function BootAnimation({ programName, variant, onDone, scene, skipHint }: BootAnimationProps): React.JSX.Element {
+export function BootAnimation({ programName, variant, onDone, scene, skipHint, pace = 'normal' }: BootAnimationProps): React.JSX.Element {
   const rootRef = useRef<HTMLDivElement>(null)
   const gridRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -142,12 +151,13 @@ export function BootAnimation({ programName, variant, onDone, scene, skipHint }:
 
       // 3. The magenta cursor appears right of the D and blinks calmly three times.
       setCursor(true)
-      await blink(BOOT_TIMING.blinksBefore)
+      const timing = pace === 'quick' ? { ...BOOT_TIMING, ...BOOT_TIMING_QUICK } : BOOT_TIMING
+      await blink(timing.blinksBefore)
 
       // 4. It types "Dulidan <name>" letter by letter, with uneven gaps like real typing.
       for (let count = 1; count <= text.length && alive; count++) {
         setTyped(count)
-        await sleep(BOOT_TIMING.letterMin + Math.random() * (BOOT_TIMING.letterMax - BOOT_TIMING.letterMin))
+        await sleep(timing.letterMin + Math.random() * (timing.letterMax - timing.letterMin))
       }
       if (!alive) return
 
@@ -212,7 +222,7 @@ export function BootAnimation({ programName, variant, onDone, scene, skipHint }:
       timers.forEach((timer) => clearTimeout(timer))
       animations.forEach((animation) => animation.cancel())
     }
-  }, [variant, scene, useScene, typing, text])
+  }, [variant, scene, useScene, typing, text, pace])
 
   const letters = text.slice(0, typed).split('')
 

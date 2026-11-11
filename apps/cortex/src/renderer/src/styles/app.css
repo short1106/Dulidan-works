@@ -26,10 +26,7 @@ button, input, select, textarea { font: inherit; }
   --note-plain: var(--dd-surface-raised);
   --note-ink: #1a1222;
   --note-ink-muted: #4a4155;
-  /* Link text: light pink on dark, deep purple on light (both WCAG AA). */
-  --cortex-link: var(--dd-accent-light);
 }
-:root[data-theme='light'] { --cortex-link: #8122b5; }
 
 .workspace { height: 100%; display: flex; flex-direction: column; }
 .toolbar__spacer { flex: 1; }
@@ -150,7 +147,7 @@ mark { background: rgb(192 32 184 / 35%); color: inherit; border-radius: 2px; pa
 .note-row:focus-visible { outline: 2px solid var(--dd-focus); outline-offset: -2px; }
 .note-row__head { display: flex; align-items: center; gap: 8px; }
 .note-row__title { flex: 1; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.note-row__pin { width: 15px; height: 15px; color: var(--cortex-link); flex: none; }
+.note-row__pin { width: 15px; height: 15px; color: var(--dd-accent-light); flex: none; }
 .note-row__date { font-size: 12px; color: var(--dd-text-muted); flex: none; }
 .note-row__text { font-size: var(--dd-font-size-small); color: var(--dd-text-muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .note-row__meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
@@ -309,7 +306,7 @@ mark { background: rgb(192 32 184 / 35%); color: inherit; border-radius: 2px; pa
 .note-editor__content h2 { font-size: 1.45em; }
 .note-editor__content h3 { font-size: 1.2em; }
 .note-editor__content p { margin: 0.45em 0; }
-.note-editor__content a { color: var(--cortex-link); text-decoration: underline; }
+.note-editor__content a { color: var(--dd-accent-light); text-decoration: underline; }
 .note-editor__content blockquote { margin: 0.6em 0; padding: 2px 14px; border-left: 3px solid var(--dd-primary); color: var(--dd-text-muted); }
 .note-editor__content code { padding: 1px 5px; border-radius: 4px; background: var(--dd-bg); font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace; font-size: 0.92em; }
 .note-editor__content pre { padding: 12px 14px; border: 1px solid var(--dd-grid); border-radius: 6px; background: var(--dd-bg); overflow-x: auto; }
@@ -344,7 +341,7 @@ mark { background: rgb(192 32 184 / 35%); color: inherit; border-radius: 2px; pa
 .note-editor__content .selectedCell::after { content: ''; position: absolute; inset: 0; background: rgb(192 32 184 / 18%); pointer-events: none; }
 
 /* Links between notes */
-.wiki-link { color: var(--cortex-link); background: rgb(192 32 184 / 12%); border-radius: 3px; cursor: pointer; }
+.wiki-link { color: var(--dd-accent-light); background: rgb(192 32 184 / 12%); border-radius: 3px; cursor: pointer; }
 .link-suggestions {
   position: fixed;
   z-index: 50;

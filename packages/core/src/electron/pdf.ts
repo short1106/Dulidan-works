@@ -11,10 +11,11 @@ const MARGIN_INCH = 2.5 / 2.54
 export async function renderPdf(contents: WebContents): Promise<Buffer> {
   // The page margins show the window's background and the color scheme's
   // page color; dark apps would get dark margins. For the PDF both are white.
+  // The text cursor of a focused editor would be printed too, so it is hidden.
   const window = BrowserWindow.fromWebContents(contents)
   const previous = window?.getBackgroundColor()
   window?.setBackgroundColor('#ffffff')
-  const css = await contents.insertCSS('@media print { :root { color-scheme: light !important; } }')
+  const css = await contents.insertCSS('@media print { :root { color-scheme: light !important; } * { caret-color: transparent !important; } }')
   try {
     return await contents.printToPDF({
       pageSize: 'A4',

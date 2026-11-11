@@ -35,7 +35,7 @@ export function App(): React.JSX.Element {
     <>
       {settings.mode === null ? <ModeChooser onChoose={chooseMode} /> : <Workspace active={startDone} />}
       {!startDone && (
-        <BootAnimation programName={t.app.name} variant={variant} skipHint={t.start.skipHint} onDone={() => setStartDone(true)} />
+        <BootAnimation programName={t.app.name} variant={variant} pace="quick" skipHint={t.start.skipHint} onDone={() => setStartDone(true)} />
       )}
       <SettingsDialog />
       <SavedDialog />

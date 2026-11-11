@@ -70,6 +70,8 @@
   --dd-glow: rgb(129 34 181 / 18%);
   --dd-hover: rgb(129 34 181 / 10%);
   --dd-focus: #8122b5;
+  /* The light pink accent is too pale on white; text and icons use deep purple (WCAG AA). */
+  --dd-accent-light: #8122b5;
   --dd-danger: #c0264f;
   --dd-success: #13855b;
 
